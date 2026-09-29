@@ -115,10 +115,11 @@
     overflow-wrap: break-word;
   }
 
-  /* Lange Wörter in Versal-Titeln auf dem Handy trennen statt überlaufen */
+  /* Lange Wörter in Versal-Titeln trennen statt überlaufen, aber nur wirklich lange (ab 15 Zeichen, je 6 davor/danach) */
   h1,
   h2 {
     hyphens: auto;
+    hyphenate-limit-chars: 15 6 6;
   }
 
   p {
@@ -612,7 +613,7 @@
   width: 0.4em;
   height: 0.4em;
   border-radius: 999px;
-  background: var(--color-violet);
+  background: var(--color-grey-500);
 }
 .article ol {
   counter-reset: li;
@@ -629,7 +630,7 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   font-size: 0.75rem;
-  color: var(--color-violet-deep);
+  color: var(--color-grey-600);
 }
 .article .checklist > li::before {
   content: "";

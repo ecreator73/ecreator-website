@@ -54,7 +54,7 @@ export function SectionIntro({ meta, title, id, children, variant = "center", as
         {title}
       </H>
       {children && (
-        <div className={`t-lead mt-5 max-w-[52ch] text-grey-700 [.studio_&]:text-grey-300 ${center ? "mx-auto" : ""}`}>
+        <div className={`t-lead mt-5 max-w-[52ch] text-grey-700 [text-wrap:pretty] [.studio_&]:text-grey-300 ${center ? "mx-auto" : ""}`}>
           {children}
         </div>
       )}
@@ -96,7 +96,7 @@ export function Steps({ steps }: { steps: { title: string; text: ReactNode; meta
     <ol className="grid border-t border-ink md:grid-cols-2 lg:grid-flow-col lg:auto-cols-fr lg:grid-cols-none">
       {steps.map((s, i) => (
         <li key={s.title} className="relative border-b border-line py-6 pr-6 md:border-b-0 md:border-l md:py-8 md:pl-6 md:first:border-l-0 md:first:pl-0">
-          <p className="t-num text-[3.4rem] text-ink [.studio_&]:text-paper">{String(i + 1).padStart(2, "0")}</p>
+          <p className="t-num text-ink [.studio_&]:text-paper">{String(i + 1).padStart(2, "0")}</p>
           <h3 className="t-h4 mt-4">{s.title}</h3>
           <div className="t-small mt-2 text-grey-700 [.studio_&]:text-grey-300">{s.text}</div>
           {s.meta && <p className="t-meta mt-3 text-grey-600 [.studio_&]:text-grey-400">{s.meta}</p>}
@@ -112,8 +112,8 @@ export function FactsTable({ rows, caption }: { rows: { k: string; v: ReactNode 
     <dl className="border-t border-ink">
       {caption && <p className="t-meta py-3 text-grey-600 [.studio_&]:text-grey-400">{caption}</p>}
       {rows.map((r) => (
-        <div key={r.k} className="grid grid-cols-[minmax(7rem,38%)_1fr] gap-3 border-b border-line py-3.5">
-          <dt className="t-meta pt-[0.3em] text-grey-600 [.studio_&]:text-grey-400">{r.k}</dt>
+        <div key={r.k} className="grid grid-cols-[minmax(0,38%)_minmax(0,1fr)] gap-3 border-b border-line py-3.5">
+          <dt className="t-meta min-w-0 hyphens-auto pt-[0.3em] text-grey-600 [overflow-wrap:anywhere] [.studio_&]:text-grey-400">{r.k}</dt>
           <dd className="t-body">{r.v}</dd>
         </div>
       ))}

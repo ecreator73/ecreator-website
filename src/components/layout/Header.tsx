@@ -60,9 +60,13 @@ export function Header() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
+    const main = document.getElementById("inhalt");
+    const mo = main ? new MutationObserver(onScroll) : null;
+    if (main) mo?.observe(main, { childList: true, subtree: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      mo?.disconnect();
     };
   }, [pathname]);
 

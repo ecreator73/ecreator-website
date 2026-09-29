@@ -32,7 +32,7 @@ export function BookingEmbed() {
     <div className="hatch flex min-h-[420px] flex-col justify-between border border-line-strong p-6 md:p-8">
       <div>
         <p className="t-meta text-grey-600">Termin wählen</p>
-        <p className="t-h2 mt-6 max-w-[14ch]">{strategyCall.duration}. Kostenlos. Per Video-Call.</p>
+        <p className="t-h3 mt-6">{strategyCall.duration}. Kostenlos. Per Video-Call.</p>
       </div>
       <div>
         <button type="button" onClick={() => setLoad(true)} className="btn btn-primary w-full sm:w-auto" data-cta="booking-load">

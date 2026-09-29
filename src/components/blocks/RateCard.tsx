@@ -67,7 +67,7 @@ export function RateCard() {
                 ) : (
                   <>
                     <span className="t-meta mr-2 text-grey-600 [.studio_&]:text-grey-400">CHF</span>
-                    <span className="t-num text-[2.4rem] md:text-[3.4rem]">{r.price}</span>
+                    <span className="t-num">{r.price}</span>
                   </>
                 )}
               </td>

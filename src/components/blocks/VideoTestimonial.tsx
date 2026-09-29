@@ -66,7 +66,7 @@ export function VideoTestimonial({ t, headingLevel = "h2", children }: Props) {
               <span className="t-meta self-start bg-ink/70 px-2 py-1 text-paper">Kundenstimme / Video-Interview</span>
               <span className="flex flex-wrap items-end justify-between gap-4">
                 {/* Bauchbinde */}
-                <span className="bg-ink/80 px-3 py-2 text-paper md:px-4 md:py-3">
+                <span className="hidden bg-ink/80 px-3 py-2 text-paper md:block md:px-4 md:py-3">
                   <span className="block text-[0.95rem] font-semibold md:text-lg">{t.person}</span>
                   <span className="t-meta block text-grey-300">
                     {t.role}, {t.company}
