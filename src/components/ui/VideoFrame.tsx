@@ -12,6 +12,8 @@ type VideoFrameProps = {
   /** "ambient": stumm, läuft nur sichtbar, mit Pause-Knopf. "player": Klick startet mit Ton. */
   mode?: "ambient" | "player";
   priority?: boolean;
+  /** false: ohne eigene Rundung, z.B. randlos in einer Karte */
+  rounded?: boolean;
 };
 
 /**
@@ -27,6 +29,7 @@ export function VideoFrame({
   className = "",
   mode = "ambient",
   priority,
+  rounded = true,
 }: VideoFrameProps) {
   const ref = useRef<HTMLVideoElement>(null);
   const [paused, setPaused] = useState(false);
@@ -89,7 +92,10 @@ export function VideoFrame({
   };
 
   return (
-    <div className={`relative overflow-hidden rounded-[var(--radius-media)] bg-ink-2 ${className}`} style={{ aspectRatio: ratio }}>
+    <div
+      className={`relative overflow-hidden bg-ink-2 ${rounded ? "rounded-[var(--radius-media)]" : ""} ${className}`}
+      style={{ aspectRatio: ratio }}
+    >
       <video
         ref={ref}
         className="absolute inset-0 h-full w-full object-cover"

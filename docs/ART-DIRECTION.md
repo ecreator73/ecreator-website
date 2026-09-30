@@ -57,6 +57,23 @@ Muster, keine Inhalte (keine Texte, Bilder, Karten-Grafik, Farben der Vorlage):
 
 Die Schreibschrift-Zeile im Hero bleibt als Wiedererkennung der bisherigen Website.
 
+Ergänzung 30.09.2026 (Kundenwunsch): Logo in Markenfarben wie die Datei «eCreator-01 (2)» (Zeichen und Tagline violett,
+Wortmarke schwarz). Kundenlogos als Laufband ohne Rahmen (mit Pause-Knopf). Im Hero «Erfahrungen» statt «Pakete und
+Preise» und die Partner-Badges statt der Kennzahlen. Arbeiten auf der Startseite als Video-Collage mit Zoom beim Scrollen
+wie auf der bisherigen Website, vorerst ohne Website-Screenshots. Nachtrag gleicher Tag: Zoom umgekehrt (zuerst gross, dann
+herauszoomen, die übrigen Videos ploppen nacheinander herein), Kundenlogos zeigen beim Überfahren ihre Originalfarben
+(weisse Logos werden schwarz). Case Studies auf der Startseite als drei Karten mit Video und Häkchen-Liste, Video
+abwechselnd links und rechts; das Interview mit Costantino Pinelli steckt jetzt in der ersten Karte (keine separate
+Kundenstimme mehr). Pakete-Sektion auf der Startseite entfernt (Pakete bleiben unter /pakete).
+
+Nachtrag 30.09.2026 (zweite Runde): Case-Karten kompakter, Video im Hochformat in Originalgrösse (bleibt scharf). Neu
+nach der Video-Collage zwei Abschnitte nach dem Muster von anfragenfluss.de: **«Wo heute Kunden verloren gehen.»** zeigt
+vier typische Probleme als Karten mit kleiner animierter Grafik und roten ✕-Listen (Videos und Webseite ohne Anfragen,
+liegengebliebene Anfragen, schlechte Lead-Qualität, Content ohne Wirkung und Wiedererkennung). Danach **«Warum unsere
+Partner glücklich sind.»** mit Häkchen-Liste links und einer CRM-Beispielansicht rechts (Kennzahlen, Leads pro Woche nach
+Quelle, Pipeline). Die Grafiken sind illustrativ und ohne Zahlen; die CRM-Ansicht zeigt Demo-Daten und ist sichtbar so
+beschriftet. Warnfarbe `alert` (#C9453A) und Erfolgsfarbe `ok` (#1B7A43) nur in diesen Grafiken.
+
 Die Abschnitte 1 bis 9 unten beschreiben Version 2; wo sie §0c/§0d widersprechen, gilt §0d.
 
 ## 1. Designidee

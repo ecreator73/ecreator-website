@@ -27,6 +27,10 @@
   /* abgeleitet, nur für kleinen violetten Text auf hellem Grund */
   --color-violet-deep: #5a48d8;
 
+  /* Signalfarben für Grafiken: Problem (rot) und Erfolg (grün), beide ≥ 4.5:1 auf Weiss */
+  --color-alert: #c9453a;
+  --color-ok: #1b7a43;
+
   /* Linien */
   --color-line: rgb(29 29 31 / 0.1);
   --color-line-strong: rgb(29 29 31 / 0.2);
@@ -505,6 +509,51 @@ section.studio + section.studio {
     color: #cfc8ff;
   }
 
+  /* Logo-Laufband: zwei gleiche Reihen hintereinander, verschoben um -50 % = nahtlose Schleife */
+  .marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 45s linear infinite;
+  }
+  .marquee-row {
+    display: flex;
+    align-items: center;
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+    padding-right: clamp(2.5rem, 5vw, 4.5rem);
+  }
+  .marquee:hover .marquee-track,
+  .marquee.is-paused .marquee-track {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .marquee-track {
+      animation: none;
+      width: auto;
+      justify-content: center;
+    }
+    .marquee-row {
+      flex-wrap: wrap;
+      justify-content: center;
+      row-gap: 1.5rem;
+      padding-inline: var(--margin);
+    }
+    .marquee-row[aria-hidden] {
+      display: none;
+    }
+    .marquee-toggle {
+      display: none;
+    }
+  }
+
   /* Karte: weiss, abgerundet, weicher Schatten */
   .card {
     background: var(--color-white);
@@ -537,6 +586,13 @@ section.studio + section.studio {
   }
   .studio .check-list > li::before {
     background-color: var(--color-violet);
+  }
+  /* Offene Punkte in einer Häkchen-Liste: ohne Häkchen, damit sie nicht wie ein Ergebnis aussehen */
+  .check-list > li.is-todo {
+    padding-left: 0;
+  }
+  .check-list > li.is-todo::before {
+    content: none;
   }
 
   /* Navigation */
@@ -780,6 +836,19 @@ section.studio + section.studio {
    Inhalte sind ohne JavaScript immer sichtbar.
    ========================================================================== */
 
+@keyframes viz-failsafe {
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
 @keyframes line-up {
   from {
     transform: translate3d(0, 105%, 0);
@@ -914,6 +983,57 @@ section.studio + section.studio {
   .js [data-reveal="cut"].is-in {
     -webkit-mask-position: 0% 0;
     mask-position: 0% 0;
+  }
+
+  /* Hereinploppen: kurz kleiner und unsichtbar, dann mit leichtem Überschwingen auf volle Grösse */
+  .js [data-reveal="pop"] {
+    transition:
+      opacity 0.45s ease,
+      transform 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .js [data-reveal="pop"]:not(.is-in) {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  [data-pop-ready] .pop {
+    transition:
+      opacity 0.35s ease,
+      transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  [data-pop-ready] .pop:not(.is-in) {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+
+  /* Kleine Grafiken (Probleme, CRM-Ansicht): wachsen und ploppen beim Sichtbarwerden */
+  .viz-grow {
+    transform-origin: left center;
+    transition: transform 0.9s var(--ease-cut);
+    transition-delay: var(--d, 0ms);
+  }
+  .viz-grow-y {
+    transform-origin: bottom center;
+    transition: transform 0.8s var(--ease-cut);
+    transition-delay: var(--d, 0ms);
+  }
+  .viz-pop {
+    transition:
+      opacity 0.4s ease,
+      transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition-delay: var(--d, 0ms);
+  }
+  .js [data-reveal="viz"]:not(.is-in) .viz-grow {
+    transform: scaleX(0);
+  }
+  .js [data-reveal="viz"]:not(.is-in) .viz-grow-y {
+    transform: scaleY(0);
+  }
+  .js [data-reveal="viz"]:not(.is-in) .viz-pop {
+    opacity: 0;
+    transform: translateY(6px) scale(0.92);
+  }
+  .js [data-reveal="viz"]:not(.is-in) :is(.viz-grow, .viz-grow-y, .viz-pop) {
+    animation: viz-failsafe 0.01s linear 3s forwards;
   }
 
 }

@@ -127,3 +127,14 @@ export const strategyCall = {
   promises: ["Kostenlos, keine versteckten Kosten", "Keine Vertragspflicht nach dem Gespräch", "Bestätigung und Erinnerung per E-Mail"],
   // TODO: AGB §9 (CHF 150 bei Absage < 24 h) widerspricht «jederzeit kostenfrei verschieben» der Live-Site. Klären.
 };
+
+/**
+ * Partner-Badges (Originaldateien der bisherigen Website, unverändert, aufbereitet mit scripts/logos.py).
+ * Die Badges sagen einen aktiven Partnerstatus aus: nur zeigen, solange eCreator diesen Status bei
+ * Google, Meta und TikTok tatsächlich hat (siehe README, offene Punkte).
+ */
+export const partners = [
+  { name: "Google Partner", src: "/partners/google-partner.png", w: 236, h: 120 },
+  { name: "Meta Business Partner", src: "/partners/meta-business-partner.png", w: 355, h: 120 },
+  { name: "TikTok Marketing Partner", src: "/partners/tiktok-marketing-partner.png", w: 528, h: 120 },
+];

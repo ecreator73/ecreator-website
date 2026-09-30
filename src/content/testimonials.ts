@@ -21,7 +21,16 @@ export type Testimonial = {
   more?: { text: string; at: string }[];
   /** Zeitstempel im Video */
   at?: string;
-  video?: { src: string; poster: string; loop?: string; duration: string; captions?: string };
+  video?: {
+    src: string;
+    poster: string;
+    loop?: string;
+    /** Hochformat-Ausschnitt (9:16) als stumme Vorschau, z.B. für die Case-Karten der Startseite */
+    portraitLoop?: string;
+    portraitPoster?: string;
+    duration: string;
+    captions?: string;
+  };
   source: string;
   todo?: string;
 };
@@ -48,6 +57,9 @@ export const testimonials: Testimonial[] = [
       src: "/work/interview-asset-management.mp4",
       poster: "/work/interview-asset-management-poster.jpg",
       loop: "/work/interview-asset-management-loop.mp4",
+      // Nahaufnahme 2:00 bis 2:09 aus dem Full-HD-Original, auf 9:16 zugeschnitten (ffmpeg, 30.09.2026)
+      portraitLoop: "/work/interview-asset-management-portrait.mp4",
+      portraitPoster: "/work/interview-asset-management-portrait-poster.jpg",
       duration: "02:22",
       captions: "/work/interview-asset-management.de.vtt",
     },

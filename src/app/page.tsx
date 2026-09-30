@@ -1,20 +1,19 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
-import { WorkStrip } from "@/components/home/WorkStrip";
-import { FeaturedCase } from "@/components/home/FeaturedCase";
+import { VideoCollage } from "@/components/home/VideoCollage";
+import { CaseStudies } from "@/components/home/CaseStudies";
+import { ProblemGrid } from "@/components/home/ProblemGrid";
+import { PartnerSystem } from "@/components/home/PartnerSystem";
 import { Manifest } from "@/components/home/Manifest";
 import { ServiceIndex } from "@/components/home/ServiceIndex";
 import { RecruitingBand } from "@/components/home/RecruitingBand";
 import { RingSystem } from "@/components/system/RingSystem";
-import { VideoTestimonial } from "@/components/blocks/VideoTestimonial";
 import { RateCard } from "@/components/blocks/RateCard";
-import { PackagesSheet } from "@/components/blocks/PackagesSheet";
 import { TeamStrip } from "@/components/blocks/TeamStrip";
 import { FinalCta } from "@/components/blocks/FinalCta";
 import { ButtonLink, ArrowLink } from "@/components/ui/ButtonLink";
 import { VideoFrame } from "@/components/ui/VideoFrame";
-import { cta, strategyCall } from "@/content/site";
-import { pinelli } from "@/content/testimonials";
+import { cta } from "@/content/site";
 import { workById } from "@/content/work";
 
 export const metadata: Metadata = {
@@ -31,24 +30,13 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <WorkStrip />
-      <FeaturedCase />
+      <VideoCollage />
 
-      {/* Kundenstimme: der eine Vollbreite-Moment */}
-      <section aria-label="Kundenstimme" className="studio sec-l">
-        <div className="wrap">
-          <VideoTestimonial t={pinelli}>
-            <div className="mt-14 flex flex-col items-start gap-5 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
-              <p className="t-meta text-grey-400">
-                Strategie-Call / {strategyCall.duration} / {strategyCall.price} / per Video-Call
-              </p>
-              <ButtonLink href={cta.primary.href} track="after-testimonial">
-                {cta.primary.label}
-              </ButtonLink>
-            </div>
-          </VideoTestimonial>
-        </div>
-      </section>
+      {/* Probleme der Kunden, dann das System dagegen (CRM-Beispielansicht) */}
+      <ProblemGrid />
+      <PartnerSystem />
+      {/* Case Studies: Video und Ergebnisse, abwechselnd links und rechts (Ziel von «Erfahrungen») */}
+      <CaseStudies />
 
       <Manifest />
 
@@ -125,33 +113,6 @@ export default function HomePage() {
           <ServiceIndex />
           <div className="mt-10 text-center">
             <ArrowLink href="/leistungen">Alle Leistungen im Überblick</ArrowLink>
-          </div>
-        </div>
-      </section>
-
-      {/* Pakete */}
-      <section aria-labelledby="pakete-title" className="sec-l border-t border-line">
-        <div className="wrap">
-          <div className="mx-auto mb-12 max-w-[46rem] text-center md:mb-14">
-            <p className="label-pill">Pakete</p>
-            <h2 id="pakete-title" className="t-h2 mt-4">
-              Ab CHF 3&apos;500 im Monat.
-            </h2>
-            <p className="t-lead mx-auto mt-5 max-w-[50ch] text-grey-700">
-              Zwei Pakete für laufendes Wachstum, mit monatlichem Dreh und 6 Monaten Mindestlaufzeit. Websites, CRM oder SEO
-              gibt es auch als einzelnes Projekt.
-            </p>
-          </div>
-          <PackagesSheet />
-          <p className="t-body mt-8 max-w-[62ch] text-grey-700">
-            Das Werbebudget kommt separat dazu. Als Richtwert für saubere Tests empfehlen wir 3&apos;000 bis 6&apos;000 CHF
-            pro Monat.
-          </p>
-          <div className="mt-10 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-8">
-            <ButtonLink href={cta.primary.href} track="packages">
-              {cta.primary.label}
-            </ButtonLink>
-            <p className="t-small text-grey-600">Welches Paket passt, klären wir im Call.</p>
           </div>
         </div>
       </section>

@@ -14,7 +14,7 @@ export default async function OpengraphImage() {
   const dir = path.join(process.cwd(), "src/app/_og");
   const [bold, logo] = await Promise.all([
     readFile(path.join(dir, "Archivo-800.ttf")),
-    readFile(path.join(process.cwd(), "public/brand/ecreator-black.svg")),
+    readFile(path.join(process.cwd(), "public/brand/ecreator-color.svg")),
   ]);
   const logoSrc = `data:image/svg+xml;base64,${logo.toString("base64")}`;
 
@@ -70,7 +70,7 @@ export default async function OpengraphImage() {
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logoSrc} width={240} height={85} alt="" />
+          <img src={logoSrc} width={300} height={74} alt="" />
           <div style={{ display: "flex", fontSize: 24, color: "#56565b" }}>Content · Ads · Web · CRM</div>
         </div>
       </div>

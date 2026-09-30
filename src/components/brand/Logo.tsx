@@ -4,7 +4,11 @@
  * - variant="lockup": Zeichen + Wortmarke (Wortmarke optisch auf das Zeichen zentriert), für Header
  * - variant="full": Original inkl. Tagline «WE CREATE CUSTOMERS, NOT CLICKS.»
  * - variant="mark": nur das Zeichen (Ringe mit Schnitt)
+ * Farben wie in der Logo-Datei «eCreator-01 (2)» (30.09.2026): Zeichen und Tagline violett, Wortmarke in currentColor.
+ * tone="mono" färbt alles in currentColor (z.B. auf dunklen Flächen).
  */
+const BRAND_MARK = "#6c5aed";
+const BRAND_TAGLINE = "#6454e8";
 const MARK = [
   "M72.2,176.7c0,32.4,19.1,60.4,46.7,73.3l4.2-22.2-3.9-2.7c-15.9-11.1-25.4-29.3-25.4-48.6,0-27.6,18.8-51.3,45.6-57.6l4.6-1.1,4.2-21.9c-42.4,2.6-76,37.8-76,80.8Z",
   "M220.2,222c-14.9,22-40,35.6-67.1,35.6s-11.8-.7-17.4-1.9l4.1-21.4,3.5.6c3.6.6,6.8.9,9.9.9,13.9,0,27.3-4.9,37.9-13.9h29.2Z",
@@ -56,17 +60,22 @@ const TAGLINE = [
 
 type LogoProps = {
   variant?: "lockup" | "full" | "mark";
+  tone?: "brand" | "mono";
   className?: string;
   title?: string;
 };
 
-export function Logo({ variant = "lockup", className, title = "eCreator" }: LogoProps) {
+export function Logo({ variant = "lockup", tone = "brand", className, title = "eCreator" }: LogoProps) {
+  const markFill = tone === "brand" ? BRAND_MARK : undefined;
+  const taglineFill = tone === "brand" ? BRAND_TAGLINE : undefined;
   if (variant === "mark") {
     return (
       <svg viewBox="40 63 227 227" className={className} fill="currentColor" role="img" aria-label={title}>
-        {MARK.map((d) => (
-          <path key={d} d={d} />
-        ))}
+        <g fill={markFill}>
+          {MARK.map((d) => (
+            <path key={d} d={d} />
+          ))}
+        </g>
       </svg>
     );
   }
@@ -79,15 +88,23 @@ export function Logo({ variant = "lockup", className, title = "eCreator" }: Logo
       role="img"
       aria-label={title}
     >
-      {MARK.map((d) => (
-        <path key={d} d={d} />
-      ))}
+      <g fill={markFill}>
+        {MARK.map((d) => (
+          <path key={d} d={d} />
+        ))}
+      </g>
       <g transform={lockup ? "translate(0 22)" : undefined}>
         {WORD.map((d) => (
           <path key={d} d={d} />
         ))}
       </g>
-      {!lockup && TAGLINE.map((d) => <path key={d} d={d} />)}
+      {!lockup && (
+        <g fill={taglineFill}>
+          {TAGLINE.map((d) => (
+            <path key={d} d={d} />
+          ))}
+        </g>
+      )}
     </svg>
   );
 }

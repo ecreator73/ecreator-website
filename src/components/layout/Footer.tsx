@@ -20,7 +20,7 @@ export function Footer() {
       <div className="wrap pt-16 lg:pt-20">
         <div className="grid-12 gap-y-12">
           <div className="col-span-4 md:col-span-12 lg:col-span-4">
-            <Logo variant="lockup" className="h-8 w-auto text-ink" />
+            <Logo variant="full" className="h-12 w-auto text-ink" />
             <p className="t-small mt-6 max-w-[34ch] text-grey-600">
               Content, Werbung, Website und CRM aus einem Team. We create customers, not clicks.
             </p>

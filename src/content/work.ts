@@ -257,15 +257,31 @@ export const workById = (id: string) => workVideos.find((w) => w.id === id)!;
 /** Alle Videos, die gezeigt werden dürfen (ohne needsApproval). */
 export const visibleWorkVideos = workVideos.filter((w) => !w.needsApproval);
 
-/** Kundenlogos von der Live-Site (Nutzungsfreigabe vor Livegang bestätigen). Einträge mit needsApproval werden nicht angezeigt. */
-export const clientLogos = [
-  { name: "Asset Management Switzerland AG", src: "/clients/asset-management.png", w: 627, h: 120 },
-  { name: "Spitex Nächstenpflege", src: "/clients/spitex-naechstenpflege.png", w: 447, h: 120 },
-  { name: "Trapletti Gipser Maler GmbH", src: "/clients/trapletti.png", w: 428, h: 120 },
-  { name: "Novara AG Immobilien", src: "/clients/novara.png", w: 536, h: 120 },
-  { name: "Arana Care", src: "/clients/arana-care.png", w: 456, h: 120 },
-  // Allianz: Kundenbeziehung extern nicht belegt, Weltmarke → nur mit Freigabe (siehe README TODO)
-  { name: "Allianz", src: "/clients/allianz.png", w: 483, h: 120, needsApproval: true },
+/**
+ * Kundenlogos: Auswahl laut eCreator (Ordner _research/assets-live/clients, Stand 30.09.2026),
+ * einfarbig aufbereitet mit scripts/logos.py (Farbversion für den Hover in /clients/color/).
+ * Nutzungsfreigaben der Marken siehe README.
+ * Einträge mit needsApproval werden nicht angezeigt.
+ */
+export const clientLogos: {
+  name: string;
+  src: string;
+  /** Originalfarben für den Hover-Zustand; fehlt bei weissen Logos (die werden beim Hover schwarz) */
+  color?: string;
+  w: number;
+  h: number;
+  needsApproval?: boolean;
+}[] = [
+  { name: "Asset Management Switzerland AG", src: "/clients/asset-management.png", color: "/clients/color/asset-management.png", w: 627, h: 120 },
+  { name: "Swiss Life", src: "/clients/swiss-life.png", color: "/clients/color/swiss-life.png", w: 481, h: 120 },
+  { name: "Spitex Nächstenpflege", src: "/clients/spitex-naechstenpflege.png", color: "/clients/color/spitex-naechstenpflege.png", w: 447, h: 120 },
+  { name: "Allianz", src: "/clients/allianz.png", color: "/clients/color/allianz.png", w: 483, h: 120 },
+  { name: "Arana Care", src: "/clients/arana-care.png", color: "/clients/color/arana-care.png", w: 456, h: 120 },
+  { name: "Novara AG Immobilien", src: "/clients/novara.png", color: "/clients/color/novara.png", w: 537, h: 120 },
+  { name: "ProMaCare", src: "/clients/promacare.png", color: "/clients/color/promacare.png", w: 443, h: 120 },
+  { name: "PKfinder", src: "/clients/pkfinder.png", color: "/clients/color/pkfinder.png", w: 393, h: 120 },
+  { name: "Nobilis Estate", src: "/clients/nobilis-estate.png", color: "/clients/color/nobilis-estate.png", w: 237, h: 120 },
+  { name: "Baba's Döner", src: "/clients/babas-doener.png", w: 174, h: 120 },
 ];
 
 /** Webprojekt, belegt durch Credit «Webseite bei eCreator» im Footer von nt-gipsermaler.ch */
@@ -298,4 +314,4 @@ export const webProjects = [
   },
 ];
 
-export const visibleClientLogos = clientLogos.filter((l) => !("needsApproval" in l && l.needsApproval));
+export const visibleClientLogos = clientLogos.filter((l) => !l.needsApproval);

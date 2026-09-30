@@ -97,12 +97,13 @@ scripts/
 
 ## Entscheidungen, die man kennen sollte
 
-1. **Echte Daten only.** Die bisherigen Testimonials (Initialen, Stockfotos), die Gesamtkennzahlen (800 % ROAS, 12'500+ Leads, 10 Mio.+ Ad Spend), die Partner-Badges, das Allianz-Logo und «5.0 auf Google» sind nicht belegt und erscheinen nicht. Begründung je Punkt in `_research/FACTS.md` Kapitel 11.
+1. **Echte Daten only.** Die bisherigen Testimonials (Initialen, Stockfotos), die Gesamtkennzahlen (800 % ROAS, 12'500+ Leads, 10 Mio.+ Ad Spend) und «5.0 auf Google» sind nicht belegt und erscheinen nicht. Begründung je Punkt in `_research/FACTS.md` Kapitel 11. Partner-Badges und Kundenlogos (u. a. Allianz, Swiss Life) zeigt die Startseite seit 30.09.2026 auf Wunsch von eCreator; Partnerstatus und Freigaben siehe offene Punkte.
 2. **Einziges echtes Testimonial:** Video-Interview mit Costantino Pinelli (Asset Management Switzerland AG), von eCreator auf LinkedIn veröffentlicht. Zitate stammen wörtlich aus der Transkription; deutsche Untertitel liegen in `public/work/interview-asset-management.de.vtt`.
-3. **Der 600-Leads-Case bleibt anonymisiert**, bis der Kunde Name und Zahlen freigibt.
+3. **600-Leads-Case:** Auf der Startseite seit 30.09.2026 auf Wunsch von eCreator mit Namen und Video-Interview (Freigabe siehe offene Punkte). Die Case-Seite bleibt anonymisiert, bis der Kunde Name und Zahlen freigibt.
 4. **Art Direction Version 4: hell und luftig nach dem Vorbild anfragenfluss.de** (Kundenentscheid 29.09.2026): weisser Grund, schwebender Header, Titel in Satzschreibung mit violettem Akzentwort, Label-Pillen, Karten mit weichem Schatten, dunkle Panels eingerückt. Übernommen wurden Muster, keine Inhalte. Vorher: V1 zu nah an Offscript, V2 zu plakativ, V3 dunkel und in Versalien (ART-DIRECTION.md §0 bis §0d).
 5. **Du-Form** wie auf der bisherigen Website, Schweizer Rechtschreibung.
 6. `/produkt-rechner` liefert **410 Gone** (interne Seite, wird nicht migriert).
+7. **Startseite: Probleme und CRM-Ansicht** (`ProblemGrid`, `PartnerSystem`, Texte in `src/content/pages/home.ts`): Die Grafiken der Problem-Karten sind illustrativ und ohne Zahlen. Die CRM-Ansicht ist eine Beispielansicht mit Demo-Daten und sichtbar so beschriftet; sie zeigt keine echten Kundenzahlen und keine Personen.
 
 ## Offene Punkte für eCreator (vor Livegang)
 
@@ -112,6 +113,10 @@ scripts/
 - [ ] Neue Videos (29.09.2026): Freigaben von Arana Care, ProMaCare und Baba's Döner, Model-Releases der Darstellenden, Musikrechte Baba's Döner (Ton nur nach Klärung)
 - [ ] Trading-Video «All Time High University»: ausgeblendet (`needsApproval` in `src/content/work.ts`), weil es Rendite-Aussagen ohne Risikohinweis enthält. Nur nach Kundenfreigabe und Prüfung zeigen
 - [ ] Absender der Videos «Vergessene Vorsorgegelder» und «Call Agents» bestätigen (im Video nicht erkennbar, bisher anonym)
+- [ ] Partner-Badges im Hero (Google Partner, Meta Business Partner, TikTok Marketing Partner): nur zeigen, solange der Partnerstatus bei allen drei aktiv ist, sonst in `src/content/site.ts` (`partners`) entfernen
+- [ ] Kundenlogos im Laufband (Stand 30.09.2026, u. a. Allianz und Swiss Life): schriftliche Freigabe der Marken für die Nutzung als Referenz; Ausblenden über `needsApproval` in `src/content/work.ts`
+- [ ] Case Studies Startseite (`src/content/pages/home.ts`): Zahl Asset Management prüfen (gesetzt: «600+ Leads in 3 Monaten» laut veröffentlichter Case Study; Angabe «in einem Monat» nicht belegt); Resultat für Baba's Döner nachliefern (Platzhalter)
+- [ ] CRM-Ansicht auf der Startseite: optional durch einen echten, anonymisierten Screenshot aus einem Kunden-CRM ersetzen (nur mit Freigabe), sonst bleibt die beschriftete Demo-Ansicht
 
 **Fakten**
 - [ ] Case-Zahlen belegen (Ads-Manager-Export) und Widersprüche der alten Case Study klären (FACTS N17, N18)

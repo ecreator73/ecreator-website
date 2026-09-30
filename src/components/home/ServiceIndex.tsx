@@ -1,15 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { services } from "@/content/services";
 import { tracks } from "@/content/system";
 import { Arrow } from "@/components/ui/ButtonLink";
 
+/** Auf der Startseite vorerst nur Videos als Vorschau, keine Website-Screenshots. */
+const hasVideo = (i: number) => services[i].preview?.type === "video";
 const DEFAULT = Math.max(
   0,
-  services.findIndex((s) => s.preview?.type === "image"),
+  services.findIndex((s) => s.preview?.type === "video"),
 );
 
 /**
@@ -32,7 +33,7 @@ export function ServiceIndex() {
   const track = tracks.find((t) => t.id === current.track);
 
   const hover = (i: number) => {
-    if (services[i].preview) setShown(i);
+    if (hasVideo(i)) setShown(i);
   };
 
   return (
@@ -42,22 +43,18 @@ export function ServiceIndex() {
         <div className="sticky top-[calc(var(--header-h)+2rem)]">
           <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] border border-line bg-paper-2 shadow-card">
             {services.map((s, i) =>
-              s.preview ? (
+              s.preview?.type === "video" ? (
                 <div
                   key={s.slug}
                   aria-hidden
                   className={`absolute inset-0 transition-opacity duration-500 ${shown === i ? "opacity-100" : "opacity-0"}`}
                 >
-                  {s.preview.type === "video" ? (
-                    shown === i && canPreview ? (
-                      <video className="h-full w-full object-cover" src={s.preview.src} poster={s.preview.poster} muted loop autoPlay playsInline preload="none" />
-                    ) : shown === i ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={s.preview.poster} alt="" className="h-full w-full object-cover" loading="lazy" />
-                    ) : null
-                  ) : (
-                    <Image src={s.preview.src} alt="" fill sizes="30vw" className="object-cover object-left-top" />
-                  )}
+                  {shown === i && canPreview ? (
+                    <video className="h-full w-full object-cover" src={s.preview.src} poster={s.preview.poster} muted loop autoPlay playsInline preload="none" />
+                  ) : shown === i ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={s.preview.poster} alt="" className="h-full w-full object-cover" loading="lazy" />
+                  ) : null}
                 </div>
               ) : null,
             )}
