@@ -10,7 +10,7 @@ type MetaProps = {
 /** Kleine Überzeile (Kicker). items werden mit dem Schnitt «/» getrennt. */
 export function Meta({ children, items, className = "", as: Tag = "p" }: MetaProps) {
   return (
-    <Tag className={`t-meta flex flex-wrap items-center gap-x-2 gap-y-1 ${className}`}>
+    <Tag className={`t-meta flex flex-wrap items-center gap-x-2 gap-y-1 [overflow-wrap:anywhere] ${className}`}>
       {items ? <Slashed items={items} /> : children}
     </Tag>
   );
@@ -30,7 +30,7 @@ export function Slashed({ items, className = "" }: { items: string[]; className?
               </span>{" "}
             </>
           )}
-          <span className="whitespace-nowrap">{it}</span>
+          <span className="sm:whitespace-nowrap">{it}</span>
         </span>
       ))}
     </span>

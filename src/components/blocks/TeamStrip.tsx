@@ -10,14 +10,14 @@ export function TeamStrip({ detailed = false }: { detailed?: boolean }) {
     <ul className="grid grid-cols-3 gap-x-[var(--gutter)] gap-y-10">
       {corePeople.map((p) => (
         <li key={p.id}>
-          <div className="group relative aspect-[4/5] overflow-hidden bg-paper-2">
+          <div className="group relative aspect-[4/5] overflow-hidden rounded-[var(--radius-media)] bg-paper-2">
             {p.portrait && (
               <Image
                 src={p.portrait}
                 alt=""
                 fill
                 sizes="(min-width: 768px) 30vw, 32vw"
-                className="object-cover object-top grayscale transition-[filter] duration-700 group-hover:grayscale-0"
+                className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
                 style={p.objectPosition ? { objectPosition: p.objectPosition } : undefined}
               />
             )}

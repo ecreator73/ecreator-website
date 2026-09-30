@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useId, useRef, useState } from "react";
 import { ANLIEGEN, type Anliegen } from "@/content/anliegen";
 import { site } from "@/content/site";
-import { RingArrow } from "@/components/ui/ButtonLink";
+import { BtnArrow } from "@/components/ui/ButtonLink";
 
 type Status = "idle" | "sending" | "success" | "error";
 type Errors = Partial<Record<"anliegen" | "name" | "email" | "telefon" | "nachricht" | "datenschutz", string>>;
@@ -183,7 +183,7 @@ export function InquiryForm({ defaultAnliegen = "strategie-call", source }: { de
       <div className="flex flex-col items-start gap-4 md:col-span-2 sm:flex-row sm:items-center sm:gap-8">
         <button type="submit" className="btn btn-primary" disabled={status === "sending"} data-cta="inquiry-submit">
           <span>{status === "sending" ? "Wird gesendet …" : "Anfrage senden"}</span>
-          <RingArrow />
+          <BtnArrow />
         </button>
         <p className="t-meta text-grey-600" aria-live="polite">
           {status === "error"

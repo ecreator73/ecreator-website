@@ -47,7 +47,7 @@ export const strategieCallPage = {
   meta: {
     title: "Strategie-Call buchen: 30 Minuten, kostenlos",
     description:
-      "Buch deinen kostenlosen Strategie-Call mit eCreator: 30 Minuten per Google Meet. Wir klären dein Ziel, prüfen Funnel und Tracking und legen die nächsten Schritte fest.",
+      "Kostenloser Strategie-Call mit eCreator: 30 Minuten per Google Meet. Wir klären dein Ziel, prüfen Funnel und Tracking und legen die nächsten Schritte fest.",
     path: "/strategie-call",
   },
   crumbs: [{ name: "Strategie-Call", path: "/strategie-call" }],
@@ -61,6 +61,8 @@ export const strategieCallPage = {
   header: {
     meta: ["Strategie-Call", "Google Meet"],
     title: ["Strategie-Call.", "30 Minuten, kostenlos."],
+    /** Akzentwort in der H1 */
+    accent: "kostenlos",
     lead: "Du wählst direkt einen Termin. In 30 Minuten schauen wir auf deinen Funnel, prüfen dein Tracking und zeigen dir konkrete nächste Schritte.",
     jump: { label: "Lieber schreiben", href: "#schreiben" },
   },

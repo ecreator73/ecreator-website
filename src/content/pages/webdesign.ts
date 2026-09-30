@@ -52,6 +52,8 @@ export const webdesignPage = {
   header: {
     meta: ["Leistung", "Infrastruktur"],
     title: ["Websites, die", "Anfragen bringen."],
+    /** Akzentwort im Titel (violett), muss wörtlich in einer Titelzeile stehen */
+    accent: "Anfragen",
     lead: "Wir planen, gestalten und bauen Websites und Landingpages, die sofort verständlich sind und Besucher zur Anfrage führen. Formular, Kalender, CRM und Tracking denken wir von Anfang an mit.",
     factsCaption: "Datenblatt",
     facts: [
@@ -67,6 +69,7 @@ export const webdesignPage = {
   projects: {
     meta: "Arbeiten",
     title: "Zwei Websites. Live, mit unserem Namen im Footer.",
+    accent: "Live",
     intro:
       "Keine Mockups und keine Beispielseiten. Kennzahlen zeigen wir nur mit Beleg. Darum zeigen wir hier, was du selbst prüfen kannst: die Websites.",
     hint: "Maus darauf oder antippen: die ganze Seite läuft durch.",
@@ -86,6 +89,8 @@ export const webdesignPage = {
   },
 
   cro: {
+    /** Label-Pille über dem Satz (reines UI-Label) */
+    meta: "Haltung",
     statement: ["Eine Website ist kein Prospekt.", "Sie ist der Ort, an dem aus Interesse eine Anfrage wird."],
     term: "CRO (Conversion-Rate-Optimierung)",
     definition:

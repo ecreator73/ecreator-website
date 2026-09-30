@@ -20,9 +20,7 @@ export function FeaturedCase() {
     <section id="case" aria-labelledby="case-title" className="sec-l border-t border-line">
       <div className="wrap">
         <div className="mx-auto max-w-[46rem] text-center">
-          <p className="t-meta text-grey-600">
-            Case <span className="text-grey-400">/</span> {c.sector}
-          </p>
+          <p className="label-pill">Case · {c.sector}</p>
           <h2 id="case-title" className="t-h2 mt-4">
             600 qualifizierte Leads in drei Monaten.
           </h2>
@@ -31,7 +29,7 @@ export function FeaturedCase() {
           </p>
         </div>
 
-        <dl className="mx-auto mt-12 grid max-w-[56rem] border-y border-line sm:grid-cols-3">
+        <dl className="card mx-auto mt-12 grid max-w-[56rem] sm:grid-cols-3">
           {stats.map((s, i) => (
             <div
               key={s.label}

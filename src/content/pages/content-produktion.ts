@@ -43,22 +43,30 @@ export const contentProduktionPage = {
   header: {
     meta: ["Studio", "Content-Produktion"],
     title: ["Content, der verkauft.", "Selbst produziert."],
+    /** Akzentwort (violett) in Zeile 1 */
+    accent: "verkauft",
     lead: "Wir schreiben die Skripte, drehen mit eigenem Videografen und Equipment und schneiden die Varianten, die deine Kampagnen brauchen. Für Social Media, Ads, Recruiting und deine Website.",
     priceLink: { label: `Content Day ab CHF ${day.price.amount}`, href: "/content-day" } satisfies LinkRef,
   },
 
   /** Jedes Werk genau einmal. Kunde nur, wenn er im Material selbst sichtbar und freigegeben ist. */
   wall: {
-    title: "Sieben Ads aus unserer Produktion.",
+    title: "Dreizehn Ads aus unserer Produktion.",
     /** Kanäle als Überzeile */
     platforms: ["Meta", "Instagram", "TikTok"],
     lead: { id: "ecreator", caption: ["Eigenes Ad", "Recruiting für Personalvermittlungen"] } satisfies WallItem,
     items: [
       { id: "naechstenpflege", caption: ["Social Ad", "Spitex Nächstenpflege"] },
+      { id: "arana-care", caption: ["Social Ad", "Arana Care"] },
+      { id: "babas-doener", caption: ["Social Ad", "Baba's Döner"] },
+      { id: "promacare", caption: ["Social Ad", "ProMaCare"] },
       { id: "vorsorge", caption: ["Social Ad", "Vorsorge"] },
+      { id: "call-agents", caption: ["Recruiting-Ad", "Call Agents"] },
       { id: "steuern", caption: ["Social Ad", "Steuern"] },
       { id: "pflegezukunft", caption: ["Social Ad", "Pflege"] },
+      { id: "vergessene-vorsorgegelder", caption: ["Social Ad", "Vorsorge"] },
       { id: "krankenkasse", caption: ["Social Ad", "Krankenkasse"] },
+      { id: "ecreator-recruiting", caption: ["Eigenes Ad", "Recruiting"] },
       { id: "fitness", caption: ["Social Ad", "Fitness"] },
     ] satisfies WallItem[],
   },
@@ -66,6 +74,7 @@ export const contentProduktionPage = {
   formats: {
     meta: "Formate",
     title: "Jedes Video hat eine Aufgabe.",
+    accent: "Aufgabe",
     lead: "Aufmerksamkeit holen, ein Angebot erklären, Vertrauen aufbauen oder Leute für dein Team finden. Das Format folgt der Aufgabe, nicht umgekehrt.",
     items: [
       { name: "Social-Media-Videos", text: "Kurze Videos für Instagram, TikTok, Facebook und LinkedIn, gedreht für den Feed, nicht für den Fernseher." },
@@ -147,10 +156,13 @@ export const contentProduktionPage = {
     priceLabel: `${day.name} / ${day.duration}`,
     price: day.price.amount,
     title: "Der einfachste Weg zu neuem Material.",
+    accent: "Material",
     text: `${day.duration} Dreh mit Videograf und Equipment, fertig geschnitten in ${deliveryOf(day.delivery)}. Mit Model von eCreator CHF ${dayModel.price.amount}.`,
+    /** «Im Preis» als Häkchen-Liste in der Preiskarte */
+    includedLabel: "Im Preis",
+    included: contentDay.includes,
     facts: [
       { k: "Dauer", v: `${day.duration} oder ${dayFull.duration}` },
-      { k: "Im Preis", v: contentDay.includes.join(" / ") },
       { k: "Fertig nach", v: `${deliveryDays(day.delivery)} (${day.duration}) / ${deliveryDays(dayFull.delivery)} (${dayFull.duration})` },
     ],
     primary: { label: "Content Day ansehen", href: "/content-day" } satisfies LinkRef,

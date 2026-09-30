@@ -41,7 +41,7 @@ function initialValues(fields: CalcField[]): Values {
 }
 
 /**
- * Potenzialrechner als Datenblatt: links die Annahmen (.field), rechts die Rechnung mit t-num-Ergebnissen.
+ * Potenzialrechner als zwei Karten: links die Annahmen (.field), rechts die Rechnung als Kacheln wie ein Cockpit.
  * Ergebnis sofort sichtbar, kein Absenden, kein Lead-Gate. Alles pro Monat (FACTS N24).
  * Die Rechnung steht bei jedem Ergebnis dabei, damit niemand einer Blackbox glauben muss.
  */
@@ -108,175 +108,189 @@ export function Rechner({ copy }: { copy: Copy }) {
   const n = plain;
 
   return (
-    <div className="grid-12 gap-y-14">
+    <div className="grid-12 items-start gap-y-5 md:gap-y-6">
       {/* Annahmen */}
-      <fieldset className="col-span-4 min-w-0 md:col-span-12 lg:col-span-5">
-        <legend className="t-meta text-grey-600">{copy.inputsLabel}</legend>
-        <p className="t-small mt-3 max-w-[46ch] text-grey-700">{copy.examplesNote}</p>
+      <div className="card col-span-4 min-w-0 p-6 md:col-span-12 md:p-8 lg:col-span-5">
+        <fieldset className="min-w-0">
+          <legend className="t-h4">{copy.inputsLabel}</legend>
+          <p className="t-small mt-2 max-w-[46ch] text-grey-600">{copy.examplesNote}</p>
 
-        <div className="mt-6 border-t border-ink">
-          {fields.map((f) => {
-            const err = errors[f.id];
-            const showErr = !!err && (touched[f.id] || parsed[f.id] !== null);
-            const isExample = f.example !== null && parsed[f.id] === f.example;
-            const badge = f.optional ? null : isExample ? copy.exampleBadge : copy.ownBadge;
-            return (
-              <div key={f.id} className="border-b border-line py-5">
-                <div className="flex items-baseline justify-between gap-4">
-                  <label htmlFor={fid(f.id)} className="t-meta text-grey-600">
-                    {f.label}
-                    <span className="sr-only">{f.unit === "%" ? " in Prozent" : " in Franken"}</span>
-                  </label>
-                  {badge && (
-                    <span
-                      className={`t-meta rounded-full border px-2 py-0.5 ${isExample ? "border-line text-grey-600" : "border-ink text-ink"}`}
-                    >
-                      {badge}
-                    </span>
-                  )}
-                </div>
-                <div className="mt-1 flex items-baseline gap-3">
-                  {f.unitPosition === "before" && (
-                    <span aria-hidden className="t-meta flex-none text-grey-600">
-                      {f.unit}
-                    </span>
-                  )}
-                  <input
-                    id={fid(f.id)}
-                    name={f.id}
-                    type="text"
-                    inputMode="decimal"
-                    autoComplete="off"
-                    spellCheck={false}
-                    value={values[f.id]}
-                    placeholder={f.optional ? "–" : undefined}
-                    onChange={(e) => set(f.id, e.target.value)}
-                    onBlur={() => tidy(f.id)}
-                    aria-invalid={showErr || undefined}
-                    aria-describedby={`${fid(f.id)}-hint${showErr ? ` ${fid(f.id)}-err` : ""}`}
-                    className="field t-num min-w-0 flex-1 leading-[1.1]"
-                  />
-                  {f.unitPosition === "after" && (
-                    <span aria-hidden className="t-meta flex-none text-grey-600">
-                      {f.unit}
-                    </span>
-                  )}
-                </div>
-                <p id={`${fid(f.id)}-hint`} className="t-small mt-2 max-w-[48ch] text-grey-600">
-                  {f.hint}
-                </p>
-                {showErr && (
-                  <p id={`${fid(f.id)}-err`} className="t-small mt-1 text-[#c2352b]">
-                    {err}
+          <div className="mt-5">
+            {fields.map((f) => {
+              const err = errors[f.id];
+              const showErr = !!err && (touched[f.id] || parsed[f.id] !== null);
+              const isExample = f.example !== null && parsed[f.id] === f.example;
+              const badge = f.optional ? null : isExample ? copy.exampleBadge : copy.ownBadge;
+              return (
+                <div key={f.id} className="border-t border-line py-5">
+                  <div className="flex items-center justify-between gap-4">
+                    <label htmlFor={fid(f.id)} className="t-small font-semibold">
+                      {f.label}
+                      <span className="sr-only">{f.unit === "%" ? " in Prozent" : " in Franken"}</span>
+                    </label>
+                    {badge && (
+                      <span
+                        className={`flex-none rounded-full px-2.5 py-0.5 text-[0.75rem] font-medium ${isExample ? "bg-paper-2 text-grey-600" : "bg-[rgb(120_102_244/0.1)] text-violet-deep"}`}
+                      >
+                        {badge}
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-2.5 flex items-center gap-3">
+                    {f.unitPosition === "before" && (
+                      <span aria-hidden className="t-meta flex-none text-grey-600">
+                        {f.unit}
+                      </span>
+                    )}
+                    <input
+                      id={fid(f.id)}
+                      name={f.id}
+                      type="text"
+                      inputMode="decimal"
+                      autoComplete="off"
+                      spellCheck={false}
+                      value={values[f.id]}
+                      placeholder={f.optional ? "–" : undefined}
+                      onChange={(e) => set(f.id, e.target.value)}
+                      onBlur={() => tidy(f.id)}
+                      aria-invalid={showErr || undefined}
+                      aria-describedby={`${fid(f.id)}-hint${showErr ? ` ${fid(f.id)}-err` : ""}`}
+                      className="field t-num min-w-0 flex-1 leading-[1.1]"
+                    />
+                    {f.unitPosition === "after" && (
+                      <span aria-hidden className="t-meta flex-none text-grey-600">
+                        {f.unit}
+                      </span>
+                    )}
+                  </div>
+                  <p id={`${fid(f.id)}-hint`} className="t-small mt-2.5 max-w-[48ch] text-grey-600">
+                    {f.hint}
                   </p>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                  {showErr && (
+                    <p id={`${fid(f.id)}-err`} className="t-small mt-1 text-[#c2352b]">
+                      {err}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
 
-        <button type="button" onClick={reset} className="link t-small mt-3 inline-flex min-h-11 items-center">
-          {copy.reset}
-        </button>
-      </fieldset>
-
-      {/* Mobile: Ergebnis klebt unten, solange man die Annahmen bearbeitet (Duplikat, darum aria-hidden) */}
-      <div
-        aria-hidden
-        className="sticky bottom-0 z-10 col-span-4 -mx-[var(--margin)] -my-7 border-t border-ink bg-paper px-[var(--margin)] py-3 md:col-span-12 lg:hidden"
-      >
-        <div className="flex items-baseline justify-between gap-4">
-          <span className="t-meta text-grey-600">
-            {copy.results.revenue} <span className="text-grey-400">/</span> Monat
-          </span>
-          <span className="flex min-w-0 items-baseline gap-2">
-            <span className="t-meta text-grey-600">CHF</span>
-            <span className="t-num leading-none">{show(revenue, true)}</span>
-          </span>
-        </div>
-        <p className="t-meta mt-1 text-grey-600">
-          {show(leads)} {copy.results.leads} <span className="text-grey-400">/</span> {show(customers)} {copy.results.customers}
-        </p>
+          <div className="border-t border-line pt-2">
+            <button type="button" onClick={reset} className="link t-small inline-flex min-h-11 items-center">
+              {copy.reset}
+            </button>
+          </div>
+        </fieldset>
       </div>
 
-      {/* Rechnung */}
+      {/* Mobile: Ergebnis schwebt unten, solange man die Annahmen bearbeitet (Duplikat, darum aria-hidden) */}
+      <div aria-hidden className="sticky bottom-3 z-10 col-span-4 md:col-span-12 lg:hidden">
+        <div className="card rounded-2xl px-5 py-3 shadow-[var(--shadow-float)]">
+          <div className="flex items-baseline justify-between gap-4">
+            <span className="t-small font-semibold text-violet-deep">
+              {copy.results.revenue} <span className="text-grey-400">/</span> Monat
+            </span>
+            <span className="flex min-w-0 items-baseline gap-2">
+              <span className="t-meta text-grey-600">CHF</span>
+              <span className="t-num leading-none">{show(revenue, true)}</span>
+            </span>
+          </div>
+          <p className="t-meta mt-1 text-grey-600">
+            {show(leads)} {copy.results.leads} <span className="text-grey-400">/</span> {show(customers)}{" "}
+            {copy.results.customers}
+          </p>
+        </div>
+      </div>
+
+      {/* Rechnung: Kacheln wie ein kleines Cockpit, Umsatz hervorgehoben */}
       <section
         aria-labelledby={fid("result")}
-        className="col-span-4 min-w-0 bg-paper-2 px-5 py-7 md:col-span-12 md:px-10 md:py-10 lg:col-span-7 lg:col-start-6 lg:self-start"
+        className="card col-span-4 min-w-0 p-6 md:col-span-12 md:p-8 lg:sticky lg:top-[calc(var(--header-h)+1.5rem)] lg:col-span-7 lg:col-start-6"
       >
-        <h3 id={fid("result")} className="t-meta text-grey-600">
+        <h3 id={fid("result")} className="t-h4">
           {copy.resultsLabel}
         </h3>
 
-        <dl className="mt-6 border-t border-ink">
-          <ResultRow
+        <dl className="mt-6 grid grid-cols-2 gap-3">
+          <ResultTile
             label={copy.results.leads}
             calc={valid ? `${n(budget)} ÷ ${n(cpl)}` : "–"}
             value={show(leads)}
           />
-          <ResultRow
+          <ResultTile
             label={copy.results.customers}
             calc={valid && leads !== null ? `${show(leads)} × ${n(quote)} %` : "–"}
             value={show(customers)}
           />
-          {/* Umsatz: gleiche Zeile wie Leads und Kunden, nur mit kräftiger Linie darunter */}
-          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-x-4 border-b border-ink py-5">
-            <dt className="min-w-0">
-              <span className="t-h3 block">{copy.results.revenue}</span>
-              <span className="t-meta mt-2 block text-grey-600">
-                {valid && customers !== null ? `${show(customers)} × ${n(perCustomer)}` : "–"}
-              </span>
-            </dt>
-            <dd className="t-num text-right [overflow-wrap:anywhere]">
-              <span className="t-meta mr-2 align-middle text-grey-600">CHF</span>
-              {show(revenue, true)}
-            </dd>
-          </div>
-          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 border-b border-line py-4">
-            <dt>
-              <span className="t-small block font-semibold">{hasFee ? copy.results.costPerCustomerFee : copy.results.costPerCustomer}</span>
-              <span className="t-meta mt-1 block text-grey-600">
-                {valid && customers !== null
-                  ? hasFee
-                    ? `(${n(budget)} + ${n(fee)}) ÷ ${show(customers)}`
-                    : `${n(budget)} ÷ ${show(customers)}`
-                  : "–"}
-              </span>
-            </dt>
-            <dd className="t-num text-right [overflow-wrap:anywhere]">
-              <span className="t-meta mr-2 align-middle text-grey-600">CHF</span>
-              {show(cost, true)}
-            </dd>
-          </div>
+          <ResultTile
+            wide
+            highlight
+            label={copy.results.revenue}
+            calc={valid && customers !== null ? `${show(customers)} × ${n(perCustomer)}` : "–"}
+            value={show(revenue, true)}
+            unit="CHF"
+          />
+          <ResultTile
+            wide
+            label={hasFee ? copy.results.costPerCustomerFee : copy.results.costPerCustomer}
+            calc={
+              valid && customers !== null
+                ? hasFee
+                  ? `(${n(budget)} + ${n(fee)}) ÷ ${show(customers)}`
+                  : `${n(budget)} ÷ ${show(customers)}`
+                : "–"
+            }
+            value={show(cost, true)}
+            unit="CHF"
+          />
         </dl>
 
         <p className="sr-only" aria-live="polite" aria-atomic="true">
           {summary}
         </p>
 
-        <p className="t-small mt-6 max-w-[56ch] text-grey-700">
+        <p className="t-small mt-6 max-w-[56ch] text-grey-600">
           {copy.disclaimer} {copy.rounding}
         </p>
 
-        <div className="mt-8 border-t border-line pt-6">
+        <div className="mt-7 border-t border-line pt-7">
           <ButtonLink href={cta.primary.href} track="rechner-result">
             {cta.primary.label}
           </ButtonLink>
-          <p className="t-small mt-4 max-w-[46ch] text-grey-700">{copy.ctaNote}</p>
+          <p className="t-small mt-4 max-w-[46ch] text-grey-600">{copy.ctaNote}</p>
         </div>
       </section>
     </div>
   );
 }
 
-function ResultRow({ label, calc, value }: { label: string; calc: string; value: string }) {
+/** Ergebnis-Kachel: Bezeichnung, Zahl, darunter die Rechnung. highlight = Umsatz (violett getönt). */
+function ResultTile({
+  label,
+  calc,
+  value,
+  unit,
+  wide = false,
+  highlight = false,
+}: {
+  label: string;
+  calc: string;
+  value: string;
+  unit?: string;
+  wide?: boolean;
+  highlight?: boolean;
+}) {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-x-4 border-b border-line py-5">
-      <dt className="min-w-0">
-        <span className="t-h3 block">{label}</span>
-        <span className="t-meta mt-2 block text-grey-600">{calc}</span>
-      </dt>
-      <dd className="t-num text-right [overflow-wrap:anywhere]">{value}</dd>
+    <div
+      className={`min-w-0 rounded-2xl p-4 md:p-5 ${wide ? "col-span-2" : ""} ${highlight ? "bg-[rgb(120_102_244/0.08)]" : "bg-paper-2"}`}
+    >
+      <dt className={`t-small font-semibold ${highlight ? "text-violet-deep" : "text-grey-700"}`}>{label}</dt>
+      <dd className="mt-2 flex min-w-0 items-baseline gap-2">
+        {unit && <span className="t-meta flex-none text-grey-600">{unit}</span>}
+        <span className="t-num min-w-0 [overflow-wrap:anywhere]">{value}</span>
+      </dd>
+      <dd className="t-meta mt-2 text-grey-600">{calc}</dd>
     </div>
   );
 }

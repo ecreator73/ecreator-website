@@ -43,7 +43,7 @@ export function VideoTestimonial({ t, headingLevel = "h2", children }: Props) {
   return (
     <div>
       <div className="relative">
-        <div className="relative aspect-video overflow-hidden bg-ink-2" data-reveal="cut">
+        <div className="relative aspect-video overflow-hidden rounded-[var(--radius-card)] bg-ink-2" data-reveal="cut">
           <video
             ref={ref}
             className="absolute inset-0 h-full w-full object-cover"
@@ -66,13 +66,13 @@ export function VideoTestimonial({ t, headingLevel = "h2", children }: Props) {
               <span className="t-meta self-start bg-ink/70 px-2 py-1 text-paper">Kundenstimme / Video-Interview</span>
               <span className="flex flex-wrap items-end justify-between gap-4">
                 {/* Bauchbinde */}
-                <span className="hidden bg-ink/80 px-3 py-2 text-paper md:block md:px-4 md:py-3">
+                <span className="hidden rounded-xl bg-ink/75 px-3 py-2 text-paper backdrop-blur-sm md:block md:px-4 md:py-3">
                   <span className="block text-[0.95rem] font-semibold md:text-lg">{t.person}</span>
                   <span className="t-meta block text-grey-300">
                     {t.role}, {t.company}
                   </span>
                 </span>
-                <span className="flex items-center gap-3 bg-paper py-2.5 pl-3 pr-4 text-ink transition-colors group-hover:bg-violet">
+                <span className="flex items-center gap-3 rounded-full bg-paper py-2 pl-2 pr-4 text-ink shadow-float transition-colors group-hover:bg-violet group-hover:text-white">
                   <span className="flex h-9 w-9 items-center justify-center rounded-full border-[1.5px] border-current">
                     <svg aria-hidden viewBox="0 0 12 14" className="ml-0.5 h-3.5 w-3">
                       <path d="M0 0l12 7-12 7z" fill="currentColor" />

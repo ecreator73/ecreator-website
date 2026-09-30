@@ -1,9 +1,9 @@
 import { Suspense } from "react";
+import type { ReactNode } from "react";
 import { PageHeader } from "@/components/page/PageHeader";
-import { Section, FactsTable, RelatedLinks, Todo } from "@/components/page/Blocks";
+import { NumberChip, Section, RelatedLinks, Todo } from "@/components/page/Blocks";
 import { InquiryForm } from "@/components/forms/InquiryForm";
 import { ButtonLink, ArrowLink } from "@/components/ui/ButtonLink";
-import { Meta } from "@/components/ui/Meta";
 import { VideoFrame } from "@/components/ui/VideoFrame";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { pageMeta } from "@/lib/metadata";
@@ -14,6 +14,24 @@ import { kontaktPage as p } from "@/content/pages/kontakt";
 
 export const metadata = pageMeta(p.meta);
 
+/** Schlüssel / Wert in einer Karte: feine Linien statt schwarzer Regel. */
+function Rows({ rows }: { rows: { k: string; v: ReactNode }[] }) {
+  return (
+    <dl className="divide-y divide-line">
+      {rows.map((r) => (
+        <div key={r.k} className="grid grid-cols-[minmax(0,36%)_minmax(0,1fr)] gap-3 py-3.5 first:pt-0 last:pb-0">
+          <dt className="t-small min-w-0 hyphens-auto pt-[0.1em] text-grey-600">{r.k}</dt>
+          <dd className="t-body">{r.v}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/**
+ * Kontakt: hell und direkt. Telefon und E-Mail als Karte im Kopf, Formular als Karte auf grauem Band,
+ * Adresse mit Datenblatt-Karte, Team im dunklen Panel.
+ */
 export default function KontaktPage() {
   const ad = workById(p.people.videoId);
 
@@ -35,23 +53,23 @@ export default function KontaktPage() {
           </>
         }
         aside={
-          /* Telefon und E-Mail nebeneinander, mittig */
-          <div className="grid gap-8 text-center sm:grid-cols-2">
-            <div>
-              <p className="t-meta text-grey-600">{p.header.phoneLabel}</p>
+          /* Telefon und E-Mail nebeneinander, mittig, feine Trennlinie */
+          <div className="grid divide-y divide-line text-center sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+            <div className="pb-6 sm:pb-0 sm:pr-6">
+              <p className="t-small text-grey-600">{p.header.phoneLabel}</p>
               <a
                 href={site.phoneHref}
-                className="t-h3 tnum mt-2 inline-flex min-h-11 items-center hover:underline"
+                className="t-h3 tnum mt-1 inline-flex min-h-11 items-center hover:underline"
                 data-cta="kontakt-phone"
               >
                 {site.phone.replace("+41 ", "0")}
               </a>
             </div>
-            <div>
-              <p className="t-meta text-grey-600">{p.header.mailLabel}</p>
+            <div className="pt-6 sm:pl-6 sm:pt-0">
+              <p className="t-small text-grey-600">{p.header.mailLabel}</p>
               <a
                 href={`mailto:${site.email}`}
-                className="link t-h3 mt-2 inline-flex min-h-11 items-center"
+                className="link t-h3 mt-1 inline-flex min-h-11 items-center"
                 data-cta="kontakt-mail"
               >
                 {site.email}
@@ -61,23 +79,25 @@ export default function KontaktPage() {
         }
       />
 
-      {/* Formular: der Hauptinhalt, Anliegen per ?anliegen= vorgewählt */}
-      <Section id={p.form.id} space="m" rule="none" labelledBy="anfrage-title" className="scroll-mt-20">
+      {/* Formular: der Hauptinhalt, als Karte auf grauem Band. Anliegen per ?anliegen= vorgewählt */}
+      <Section id={p.form.id} mode="band" space="l" rule="none" labelledBy="anfrage-title" className="scroll-mt-20">
         <div className="grid-12 gap-y-12">
           <div className="col-span-4 md:col-span-12 lg:col-span-4">
-            <Meta className="text-grey-600" items={p.form.meta} />
-            <h2 id="anfrage-title" className="t-h2 mt-4" data-reveal>
+            <p className="label-pill">{p.form.meta.join(" · ")}</p>
+            <h2 id="anfrage-title" className="t-h2 mt-5" data-reveal>
               {p.form.title}
             </h2>
             <p className="t-lead mt-5 max-w-[34ch] text-grey-700">{p.form.text}</p>
 
-            <p className="t-meta mt-10 text-grey-600">{p.form.stepsLabel}</p>
-            <ol className="mt-3 border-t border-ink">
+            <h3 className="t-h4 mt-10">{p.form.stepsLabel}</h3>
+            <ol className="mt-5 space-y-5">
               {p.form.steps.map((s, i) => (
-                <li key={s.title} className="grid grid-cols-[2.5rem_1fr] gap-3 border-b border-line py-4">
-                  <span className="t-h3 tnum">{i + 1}</span>
-                  <div>
-                    <h3 className="t-h4">{s.title}</h3>
+                <li key={s.title} className="flex gap-4">
+                  <span aria-hidden className="flex flex-none">
+                    <NumberChip n={i + 1} />
+                  </span>
+                  <div className="pt-1.5">
+                    <h4 className="font-semibold leading-snug">{s.title}</h4>
                     <p className="t-small mt-1 text-grey-700">{s.text}</p>
                   </div>
                 </li>
@@ -85,19 +105,21 @@ export default function KontaktPage() {
             </ol>
           </div>
           <div className="col-span-4 md:col-span-12 lg:col-span-7 lg:col-start-6">
-            <Suspense fallback={<FormFallback text={p.form.fallback} />}>
-              <InquiryForm source="/kontakt" />
-            </Suspense>
+            <div className="card p-6 md:p-10">
+              <Suspense fallback={<FormFallback text={p.form.fallback} />}>
+                <InquiryForm source="/kontakt" />
+              </Suspense>
+            </div>
           </div>
         </div>
       </Section>
 
-      {/* Adresse links, Datenblatt rechts, Karte nur als Link (Datenschutz) */}
-      <Section space="l" rule="line" labelledBy="adresse-title">
-        <div className="grid-12 gap-y-12">
+      {/* Adresse links, Datenblatt als Karte rechts, Karte nur als Link (Datenschutz) */}
+      <Section space="l" rule="none" labelledBy="adresse-title">
+        <div className="grid-12 gap-y-12 lg:items-center">
           <div className="col-span-4 md:col-span-12 lg:col-span-5">
-            <Meta className="text-grey-600" items={p.address.meta} />
-            <h2 id="adresse-title" className="t-h2 mt-4">
+            <p className="label-pill">{p.address.meta.join(" · ")}</p>
+            <h2 id="adresse-title" className="t-h2 mt-5">
               {p.address.lines.map((l) => (
                 <span key={l} className="block">
                   {l}
@@ -106,38 +128,40 @@ export default function KontaktPage() {
             </h2>
             <p className="t-lead mt-5 max-w-[36ch] text-grey-700">{p.address.region}.</p>
             <div className="mt-8">
-              <ButtonLink href={site.address.mapsUrl} variant="ink" track="kontakt-maps">
+              <ButtonLink href={site.address.mapsUrl} variant="line" track="kontakt-maps">
                 {p.address.mapLabel}
               </ButtonLink>
               <p className="t-small mt-4 max-w-[46ch] text-grey-600">{p.address.mapNote}</p>
             </div>
           </div>
           <div className="col-span-4 md:col-span-12 lg:col-span-6 lg:col-start-7">
-            <FactsTable
-              rows={[
-                ...p.address.rows,
-                { k: p.address.visitLabel, v: <Todo>{p.address.visitTodo}</Todo> },
-                {
-                  k: p.address.socialsLabel,
-                  v: (
-                    <span className="flex flex-col items-start">
-                      {site.socials.map((s) => (
-                        <a
-                          key={s.href}
-                          href={s.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="link inline-flex min-h-11 items-center"
-                        >
-                          {s.label}
-                          <span className="sr-only"> (öffnet in neuem Tab)</span>
-                        </a>
-                      ))}
-                    </span>
-                  ),
-                },
-              ]}
-            />
+            <div className="card p-6 md:p-8">
+              <Rows
+                rows={[
+                  ...p.address.rows,
+                  { k: p.address.visitLabel, v: <Todo>{p.address.visitTodo}</Todo> },
+                  {
+                    k: p.address.socialsLabel,
+                    v: (
+                      <span className="-my-2 flex flex-col items-start">
+                        {site.socials.map((s) => (
+                          <a
+                            key={s.href}
+                            href={s.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="link inline-flex min-h-11 items-center"
+                          >
+                            {s.label}
+                            <span className="sr-only"> (öffnet in neuem Tab)</span>
+                          </a>
+                        ))}
+                      </span>
+                    ),
+                  },
+                ]}
+              />
+            </div>
           </div>
         </div>
       </Section>
@@ -155,19 +179,19 @@ export default function KontaktPage() {
               </figcaption>
             </figure>
             <div>
-              <Meta className="text-grey-400" items={p.people.meta} />
-              <h2 id="team-title" className="t-h2 mt-4" data-reveal>
+              <p className="label-pill">{p.people.meta.join(" · ")}</p>
+              <h2 id="team-title" className="t-h2 mt-5" data-reveal>
                 {p.people.title}
               </h2>
               <p className="t-lead mt-5 max-w-[46ch] text-grey-300">{p.people.text}</p>
-              <ul className="mt-10 border-t border-line-strong">
+              <ul className="card mt-10 divide-y divide-line px-5 md:px-6">
                 {corePeople.map((person) => (
                   <li
                     key={person.id}
-                    className="flex flex-col gap-1 border-b border-line py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+                    className="flex flex-col gap-1 py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
                   >
                     <span className="t-h4">{person.name}</span>
-                    <span className="t-meta text-grey-400 sm:text-right">{person.roleShort}</span>
+                    <span className="t-small text-grey-400 sm:text-right">{person.roleShort}</span>
                   </li>
                 ))}
               </ul>
@@ -181,8 +205,10 @@ export default function KontaktPage() {
         </div>
       </section>
 
-      <Section space="s" rule="none">
-        <RelatedLinks title={p.related.title} links={p.related.links} />
+      <Section space="m" rule="none">
+        <div className="mx-auto max-w-[52rem]">
+          <RelatedLinks title={p.related.title} links={p.related.links} />
+        </div>
       </Section>
     </>
   );
@@ -190,7 +216,7 @@ export default function KontaktPage() {
 
 function FormFallback({ text }: { text: string }) {
   return (
-    <div className="hatch flex min-h-[520px] items-end border border-line-strong p-6">
+    <div className="hatch flex min-h-[520px] items-end rounded-[var(--radius-media)] p-6">
       <p className="t-small max-w-[40ch] text-grey-700">
         {text}{" "}
         <a href={`mailto:${site.email}`} className="link">

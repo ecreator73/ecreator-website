@@ -77,7 +77,7 @@ export type SeoPage = {
     caption: string;
     link: Link;
   };
-  guarantee: { number: string; label: string; title: string; text: string; source: Link };
+  guarantee: { meta: string[]; number: string; label: string; title: string; text: string; source: Link };
   proof: {
     meta: string[];
     title: string;
@@ -245,6 +245,7 @@ export const seoPage: SeoPage = {
   },
 
   guarantee: {
+    meta: ["Erwartungen"],
     number: "0",
     label: "Ranking-Garantien",
     title: "Wir versprechen, was wir in der Hand haben.",

@@ -6,7 +6,7 @@ type Item =
   | { kind: "video"; id: string; caption: [string, string]; src: string; poster: string; label: string }
   | { kind: "web"; id: string; caption: [string, string]; src: string; alt: string };
 
-const ads = ["vorsorge", "krankenkasse"].map(workById);
+const ads = ["babas-doener", "arana-care"].map(workById);
 const sites = webProjects;
 
 const items: Item[] = [
@@ -36,11 +36,11 @@ export function WorkStrip() {
   return (
     <section id="arbeit" aria-labelledby="arbeit-title" className="sec-s">
       <div className="wrap">
-        <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-          <h2 id="arbeit-title" className="t-h3 max-w-[28ch]">
+        <div className="mx-auto mb-10 max-w-[46rem] text-center md:mb-12">
+          <p className="label-pill">Echte Arbeiten, keine Mockups</p>
+          <h2 id="arbeit-title" className="t-h2 mt-5">
             Ads, die wir gedreht haben. Websites, die wir gebaut haben.
           </h2>
-          <p className="t-meta text-grey-600">Echte Arbeiten, keine Mockups</p>
         </div>
       </div>
       <div
@@ -55,7 +55,7 @@ export function WorkStrip() {
               {it.kind === "video" ? (
                 <VideoFrame src={it.src} poster={it.poster} label={it.label} />
               ) : (
-                <div className="relative aspect-[9/16] overflow-hidden bg-paper-2">
+                <div className="relative aspect-[9/16] overflow-hidden rounded-[var(--radius-media)] border border-line bg-paper-2">
                   <Image src={it.src} alt={it.alt} fill sizes="(min-width: 768px) 24vw, 44vw" className="object-cover object-top" />
                 </div>
               )}

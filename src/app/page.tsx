@@ -18,9 +18,9 @@ import { pinelli } from "@/content/testimonials";
 import { workById } from "@/content/work";
 
 export const metadata: Metadata = {
-  title: { absolute: "eCreator · Marketingagentur Schweiz für Content, Ads, Web & CRM" },
+  title: { absolute: "eCreator · Marketingagentur Schweiz: Content, Ads, Web, CRM" },
   description:
-    "Marketingagentur aus dem Kanton Zürich: Content-Produktion, Performance Marketing, Websites und CRM aus einem Team. Content Day ab CHF 1'990, Pakete ab CHF 3'500 pro Monat.",
+    "Marketingagentur aus dem Kanton Zürich: Content, Performance Marketing, Websites und CRM aus einem Team. Content Day ab CHF 1'990, Pakete ab CHF 3'500.",
   alternates: { canonical: "/" },
 };
 
@@ -57,7 +57,7 @@ export default function HomePage() {
         <div className="wrap relative">
           <div className="grid-12 items-end gap-y-12">
             <div className="col-span-4 md:col-span-7 lg:col-span-6">
-              <p className="t-meta text-grey-400">Studio / Produktion</p>
+              <p className="label-pill">Studio und Produktion</p>
               <h2 id="studio-title" className="t-h2 mt-5">
                 Wir drehen selbst.
               </h2>
@@ -100,7 +100,7 @@ export default function HomePage() {
       <section aria-labelledby="system-title" className="sec-l">
         <div className="wrap">
           <div className="mx-auto mb-14 max-w-[46rem] text-center md:mb-16">
-            <p className="t-meta text-grey-600">Systems over campaigns</p>
+            <p className="label-pill">Systems over campaigns</p>
             <h2 id="system-title" className="t-h2 mt-4">
               Kampagnen sind Linien. Systeme sind Kreisläufe.
             </h2>
@@ -117,7 +117,7 @@ export default function HomePage() {
       <section aria-labelledby="services-title" className="sec-l border-t border-line">
         <div className="wrap">
           <div className="mx-auto mb-12 max-w-[46rem] text-center md:mb-14">
-            <p className="t-meta text-grey-600">Leistungen</p>
+            <p className="label-pill">Leistungen</p>
             <h2 id="services-title" className="t-h2 mt-4">
               Acht Leistungen. Einzeln buchbar, am stärksten zusammen.
             </h2>
@@ -133,7 +133,7 @@ export default function HomePage() {
       <section aria-labelledby="pakete-title" className="sec-l border-t border-line">
         <div className="wrap">
           <div className="mx-auto mb-12 max-w-[46rem] text-center md:mb-14">
-            <p className="t-meta text-grey-600">Pakete</p>
+            <p className="label-pill">Pakete</p>
             <h2 id="pakete-title" className="t-h2 mt-4">
               Ab CHF 3&apos;500 im Monat.
             </h2>
@@ -151,7 +151,7 @@ export default function HomePage() {
             <ButtonLink href={cta.primary.href} track="packages">
               {cta.primary.label}
             </ButtonLink>
-            <p className="t-meta text-grey-600">Welches Paket passt, klären wir im Call.</p>
+            <p className="t-small text-grey-600">Welches Paket passt, klären wir im Call.</p>
           </div>
         </div>
       </section>
@@ -162,7 +162,7 @@ export default function HomePage() {
       <section aria-labelledby="team-title" className="sec-l border-t border-line">
         <div className="wrap">
           <div className="mx-auto mb-12 max-w-[46rem] text-center md:mb-14">
-            <p className="t-meta text-grey-600">Team</p>
+            <p className="label-pill">Team</p>
             <h2 id="team-title" className="t-h2 mt-4">
               Claudio, Fabian, Ricardo.
             </h2>

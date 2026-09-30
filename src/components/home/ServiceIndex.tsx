@@ -40,7 +40,7 @@ export function ServiceIndex() {
       {/* Vorschau (Desktop) */}
       <div className="hidden lg:col-span-4 lg:block">
         <div className="sticky top-[calc(var(--header-h)+2rem)]">
-          <div className="relative aspect-[4/5] overflow-hidden bg-paper-2">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] border border-line bg-paper-2 shadow-card">
             {services.map((s, i) =>
               s.preview ? (
                 <div

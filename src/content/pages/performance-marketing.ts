@@ -40,6 +40,8 @@ export const performanceMarketingPage = {
   header: {
     meta: ["Leistung", "Performance Marketing"],
     title: ["Performance Marketing,", "das auf Kunden", "optimiert."],
+    /** Akzentwort im Titel (violett) */
+    accent: "Kunden",
     lead: "Wir schalten Kampagnen auf Meta, Google, TikTok und LinkedIn und messen, was nach dem Klick passiert: Anfrage, Termin, Kunde. Mit Videos aus eigener Produktion und Tracking, das bis zur Anfrage reicht.",
     calc: { label: "Potenzial berechnen", href: "/rechner" } satisfies LinkRef,
     facts: [
@@ -54,6 +56,7 @@ export const performanceMarketingPage = {
   channels: {
     meta: "Kanal-Fahrplan",
     title: "Jeder Kanal hat eine Aufgabe.",
+    accent: "Aufgabe",
     lead: "Nicht jedes Angebot gehört auf jeden Kanal. Wir wählen nach einer Frage: Sucht deine Kundschaft schon, oder muss sie erst auf dich aufmerksam werden?",
     columns: ["Kanal", "Wofür", "Typische Formate"],
     rows: [
@@ -169,6 +172,7 @@ export const performanceMarketingPage = {
     brand: "Kunden statt Klicks.",
     meta: "Tracking",
     title: "Messen, was nach dem Klick passiert.",
+    accent: "nach dem Klick",
     lead: "Wenn eine Werbeplattform nicht erfährt, wer angefragt hat, sucht sie nach Leuten, die klicken. Deshalb richten wir die Messung ein, bevor wir das Budget erhöhen.",
     layers: [
       {

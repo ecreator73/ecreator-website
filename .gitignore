@@ -54,3 +54,6 @@ next-env.d.ts
 /.claude/
 __pycache__/
 *.wav
+
+# Videos ohne Freigabe (needsApproval in src/content/work.ts): nicht veröffentlichen
+/public/work/all-time-high*

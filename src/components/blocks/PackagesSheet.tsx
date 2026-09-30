@@ -21,19 +21,19 @@ const rows: { k: string; pro: string; adv: string }[] = [
   { k: "Hinweis", pro: "Google Ads nicht regulär enthalten", adv: NA },
 ];
 
-const cell = (v: string) => (v === NA ? "text-grey-500" : "");
+const cell = (v: string) => `min-w-0 hyphens-auto [hyphenate-limit-chars:15_6_6] ${v === NA ? "text-grey-500" : ""}`;
 
 export function PackagesSheet() {
   return (
-    <div role="table" aria-label="Vergleich der Pakete Pro und Advanced" className="text-[0.95rem] md:text-base">
+    <div role="table" aria-label="Vergleich der Pakete Pro und Advanced" className="card px-5 py-4 text-[0.95rem] md:px-8 md:py-6 md:text-base">
       <div role="rowgroup">
-        <div role="row" className="grid grid-cols-2 gap-x-[var(--gutter)] border-b border-ink pb-5 md:grid-cols-[26%_1fr_1fr]">
+        <div role="row" className="grid grid-cols-2 gap-x-[var(--gutter)] border-b border-line-strong pb-5 md:grid-cols-[26%_1fr_1fr]">
           <span role="columnheader" className="t-meta hidden self-end text-grey-600 md:block">
             Paket
           </span>
           {[pro, adv].map((p) => (
             <div key={p.id} role="columnheader">
-              <span className="t-brand block">{p.name}</span>
+              <span className="t-h3 block">{p.name}</span>
               <span className="mt-2 flex items-end gap-1.5">
                 <span className="t-meta mb-1 text-grey-600">CHF</span>
                 <span className="t-num">{p.price.amount}</span>

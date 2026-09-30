@@ -75,6 +75,8 @@ export const contentDayPage = keepTogether({
   header: {
     meta: ["Studio", "Content Day"],
     title: ["Content Day.", "Vier Stunden Dreh,", "fertig geschnitten."],
+    /** Akzentwort (violett) in der letzten Zeile */
+    accent: "fertig geschnitten",
     lead: `Ein Videograf mit Equipment dreht mit dir, deinem Team oder einem Model von eCreator. Danach schneiden wir das Material für deine Kanäle, fertig in ${deliveryIn(noModel.delivery)}.`,
     poster: {
       label: `Content Day / ${noModel.duration} / ohne Model`,
@@ -89,7 +91,10 @@ export const contentDayPage = keepTogether({
   rates: {
     meta: "Preise",
     title: "Was ein Content Day kostet.",
-    always: `Immer im Preis: ${contentDay.includes.join(" / ")}`,
+    accent: "kostet",
+    /** «Immer im Preis» als Häkchen-Reihe unter der Preisliste */
+    alwaysLabel: "Immer im Preis",
+    always: contentDay.includes,
     rows: [
       {
         id: noModel.id,
@@ -180,9 +185,9 @@ export const contentDayPage = keepTogether({
     title: "Material aus unserer Produktion.",
     text: "Social Ads für Meta, Instagram und TikTok, gedreht und geschnitten für den Feed.",
     items: [
-      { id: "ecreator", caption: ["Eigenes Ad", "Recruiting für Personalvermittlungen"] as [string, string] },
-      { id: "naechstenpflege", caption: ["Social Ad", "Spitex Nächstenpflege"] as [string, string] },
-      { id: "pflegezukunft", caption: ["Social Ad", "Pflege"] as [string, string] },
+      { id: "babas-doener", caption: ["Social Ad", "Baba's Döner"] as [string, string] },
+      { id: "arana-care", caption: ["Social Ad", "Arana Care"] as [string, string] },
+      { id: "creator-casting", caption: ["Eigenes Ad", "Creator-Netzwerk"] as [string, string] },
     ],
     links: [
       { label: "Mehr zur Content-Produktion", href: "/content-produktion" },

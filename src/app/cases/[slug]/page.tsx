@@ -4,13 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/page/PageHeader";
-import { FactsTable, RelatedLinks, Section, SectionIntro, Steps, Todo } from "@/components/page/Blocks";
+import { FactsTable, NumberChip, RelatedLinks, Section, SectionIntro, Steps, Todo } from "@/components/page/Blocks";
 import { FinalCta } from "@/components/blocks/FinalCta";
 import { VideoTestimonial } from "@/components/blocks/VideoTestimonial";
 import { Arrow, ArrowLink } from "@/components/ui/ButtonLink";
 import { Meta } from "@/components/ui/Meta";
 import { VideoFrame } from "@/components/ui/VideoFrame";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { withAccent } from "@/lib/accent";
 import { pageMeta } from "@/lib/metadata";
 import { articleSchema } from "@/lib/schema";
 import { caseBySlug, cases, displayClient, type CaseStudy } from "@/content/cases";
@@ -53,9 +54,9 @@ function ExternalLink({ href, children }: { href: string; children: ReactNode })
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group -my-2.5 inline-flex min-h-11 items-center gap-2 py-2.5 font-semibold"
+      className="group -my-2.5 inline-flex min-h-11 max-w-full items-center gap-2 py-2.5 font-semibold"
     >
-      <span className="link">{children}</span>
+      <span className="link min-w-0 [overflow-wrap:anywhere]">{children}</span>
       <Arrow className="-rotate-45 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
       <span className="sr-only"> (öffnet in neuem Tab)</span>
     </a>
@@ -66,6 +67,24 @@ function Shot({ src, alt, ratio, sizes, priority, className = "" }: { src: strin
   return (
     <div className={`relative overflow-hidden bg-paper-2 ${className}`} style={{ aspectRatio: ratio }}>
       <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover object-top" />
+    </div>
+  );
+}
+
+/** Screenshot im Browserfenster: Leiste mit drei Punkten und Domain, darunter das Bild. */
+function BrowserFrame({ url, children }: { url: string; children: ReactNode }) {
+  return (
+    <div className="overflow-hidden rounded-[var(--radius-media)] border border-line bg-white shadow-card">
+      <div aria-hidden className="flex items-center gap-3 border-b border-line bg-paper-2 px-4 py-2.5">
+        <span className="flex flex-none gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-grey-300" />
+          <span className="h-2.5 w-2.5 rounded-full bg-grey-300" />
+          <span className="h-2.5 w-2.5 rounded-full bg-grey-300" />
+        </span>
+        <span className="mx-auto min-w-0 truncate rounded-full bg-white px-3 py-0.5 text-[0.75rem] text-grey-600">{url}</span>
+        <span className="hidden w-[2.625rem] flex-none sm:block" />
+      </div>
+      {children}
     </div>
   );
 }
@@ -91,19 +110,20 @@ export default async function CasePage(props: PageProps<"/cases/[slug]">) {
 
   const site = d.kind === "pair" ? webProjects.find((p) => p.id === "naechstenpflege")! : webProjects.find((p) => p.id === "trapletti")!;
 
-  // Screenshot unter dem Datenblatt: mittig und begrenzt, damit der Kopf ruhig bleibt
+  // Screenshot unter dem Datenblatt: im Browserfenster, mittig und begrenzt
   const headerMedia: ReactNode =
     d.kind === "finance" ? undefined : (
       <figure className="mx-auto max-w-[64rem]">
-        <Shot
-          src={site.desktop}
-          alt={`Startseite von ${domain(site.url)} am Desktop`}
-          ratio="16 / 10"
-          sizes="(min-width: 1100px) 64rem, 94vw"
-          priority
-          className="border border-line"
-        />
-        <figcaption className="mt-3">
+        <BrowserFrame url={domain(site.url)}>
+          <Shot
+            src={site.desktop}
+            alt={`Startseite von ${domain(site.url)} am Desktop`}
+            ratio="16 / 10"
+            sizes="(min-width: 1100px) 64rem, 94vw"
+            priority
+          />
+        </BrowserFrame>
+        <figcaption className="mt-4">
           <Meta className="text-grey-700" items={d.headerCaption} />
         </figcaption>
       </figure>
@@ -129,19 +149,22 @@ export default async function CasePage(props: PageProps<"/cases/[slug]">) {
           { name: d.crumb, path },
         ]}
         meta={["Case", c.sector]}
-        title={d.titleLines}
+        title={d.titleLines.map((l) => withAccent(l, d.titleAccent))}
         lead={c.teaser}
         aside={
           <>
-            <FactsTable rows={facts} />
-            {/* Belege direkt unter dem Datenblatt, im selben Stil */}
-            <section aria-labelledby="beleg-title" className="mt-10">
+            {/* Datenblatt bündig oben in der Karte, die Karte rahmt schon */}
+            <div className="[&_dl>div:first-child]:pt-0">
+              <FactsTable rows={facts} />
+            </div>
+            {/* Belege direkt unter dem Datenblatt, als Häkchen-Liste */}
+            <section aria-labelledby="beleg-title" className="mt-4 border-t border-line pt-6">
               <h2 id="beleg-title" className="t-meta text-grey-600">
                 {L.evidence}
               </h2>
-              <ul className="mt-3 border-t border-ink">
+              <ul className="check-list mt-4 space-y-3">
                 {evidence.map((e) => (
-                  <li key={e} className="t-body border-b border-line py-3.5 text-grey-700">
+                  <li key={e} className="t-body text-grey-700">
                     {e}
                   </li>
                 ))}
@@ -157,8 +180,8 @@ export default async function CasePage(props: PageProps<"/cases/[slug]">) {
         media={headerMedia}
       />
 
-      {/* Ausgangslage: ein Satz als Titel, die Details darunter */}
-      <Section space="l" rule="none" labelledBy="ausgangslage-title">
+      {/* Ausgangslage: ein Satz als Titel, die Details als Karten auf grauem Band */}
+      <Section mode="band" space="l" rule="none" labelledBy="ausgangslage-title">
         <SectionIntro
           meta={[L.challenge]}
           title={d.challenge.statement}
@@ -168,20 +191,25 @@ export default async function CasePage(props: PageProps<"/cases/[slug]">) {
           {c.challenge.length > 1 ? undefined : c.challenge[0]}
         </SectionIntro>
         {c.challenge.length > 1 && (
-          <ul className="grid gap-x-[var(--gutter)] gap-y-6 hyphens-auto md:grid-cols-3">
-            {c.challenge.map((p) => (
-              <li key={p} className="t-body border-t border-ink pt-4 text-grey-700">
-                {p}
+          <ul className="mx-auto grid max-w-[72rem] gap-[var(--gutter)] hyphens-auto [hyphenate-limit-chars:15_6_6] md:grid-cols-3">
+            {c.challenge.map((p, i) => (
+              <li key={p} className="card p-6 md:p-8">
+                <span aria-hidden>
+                  <NumberChip n={i + 1} />
+                </span>
+                <p className="t-body mt-5 text-grey-700">{p}</p>
               </li>
             ))}
           </ul>
         )}
       </Section>
 
-      {/* Ansatz als Schrittfolge */}
-      <Section mode="band" space="l" rule="none" labelledBy="ansatz-title">
+      {/* Ansatz: die Schritte als Karten (gemeinsamer Baustein Steps) */}
+      <Section space="l" rule="none" labelledBy="ansatz-title">
         <SectionIntro meta={[L.approach]} title={d.approach.title} id="ansatz-title" />
-        <Steps steps={c.approach} />
+        <div className={`mx-auto ${c.approach.length > 2 ? "max-w-[72rem]" : "max-w-[56rem]"}`}>
+          <Steps steps={c.approach} />
+        </div>
       </Section>
 
       {d.kind === "finance" && <FinanceBody d={d} />}
@@ -190,12 +218,13 @@ export default async function CasePage(props: PageProps<"/cases/[slug]">) {
 
       {d.kind !== "finance" && <Outcome c={c} d={d} siteUrl={site.url} />}
 
-      {/* Nächster Case: eine ruhige Karte, darunter der Weg zurück zur Übersicht */}
-      <nav aria-label={L.next} className="border-t border-line">
-        <div className="wrap sec-m">
+      {/* Nächster Case und verwandte Seiten: zwei Karten in einer Spalte, gleich breit.
+          Nach dem weissen Resultat ohne zusätzlichen Abstand oben, nach dem dunklen Panel mit. */}
+      <div className={`wrap sec-m ${d.kind === "finance" ? "" : "pt-0!"}`}>
+        <nav aria-label={L.next} className="mx-auto max-w-[56rem]">
           <Link
             href={`/cases/${next}`}
-            className="group mx-auto flex max-w-[56rem] items-center justify-between gap-6 border border-line p-6 transition-colors duration-300 hover:border-ink md:p-8"
+            className="card group flex items-center justify-between gap-6 p-6 transition-transform duration-300 hover:-translate-y-0.5 md:p-8"
           >
             <span>
               <span className="t-meta block text-grey-600">{L.next}</span>
@@ -204,19 +233,18 @@ export default async function CasePage(props: PageProps<"/cases/[slug]">) {
               </span>
               <span className="t-h3 mt-1 block">{caseDetails[next].hubTitle}</span>
             </span>
-            <span className="flex h-12 w-12 flex-none items-center justify-center rounded-full border border-ink transition-transform duration-300 group-hover:translate-x-1">
+            <span className="flex h-12 w-12 flex-none items-center justify-center rounded-full bg-ink text-white shadow-cta transition-transform duration-300 group-hover:translate-x-1">
               <Arrow />
             </span>
           </Link>
           <div className="mt-8 text-center">
             <ArrowLink href="/cases">{L.allCases}</ArrowLink>
           </div>
+        </nav>
+        <div className="mx-auto mt-12 max-w-[56rem] md:mt-16">
+          <RelatedLinks links={d.related} />
         </div>
-      </nav>
-
-      <Section space="m" rule="line">
-        <RelatedLinks links={d.related} />
-      </Section>
+      </div>
 
       <FinalCta secondary={d.secondary} />
     </>
@@ -231,16 +259,20 @@ function FinanceBody({ d }: { d: FinanceDetail }) {
   const max = Math.max(...d.result.funnel.rows.map((r) => r.leads));
   return (
     <>
-      {/* Umsetzung: drei Phasen als einfache Liste */}
-      <Section space="l" rule="none" labelledBy="phasen-title">
-        <SectionIntro title={d.phases.title} id="phasen-title" />
-        <ol className="mx-auto max-w-[56rem] border-t border-ink">
+      {/* Umsetzung: drei Phasen in einer Karte, feine Trennlinien */}
+      <Section mode="band" space="l" rule="none" labelledBy="phasen-title">
+        <SectionIntro meta={[d.phases.label]} title={d.phases.title} id="phasen-title" />
+        <ol className="card mx-auto max-w-[56rem] divide-y divide-line px-6 md:px-10">
           {d.phases.rows.map((r) => (
             <li
               key={r.k}
-              className="grid gap-x-[var(--gutter)] gap-y-2 border-b border-line py-6 md:grid-cols-[9rem_minmax(0,1fr)] md:py-8"
+              className="grid gap-x-[var(--gutter)] gap-y-3 py-6 md:grid-cols-[9rem_minmax(0,1fr)] md:py-8"
             >
-              <p className="t-meta pt-1.5 text-grey-600">{r.k}</p>
+              <p>
+                <span className="t-small inline-flex whitespace-nowrap rounded-full bg-paper-2 px-3 py-1 font-semibold text-grey-700">
+                  {r.k}
+                </span>
+              </p>
               <div>
                 <h3 className="t-h4">{r.title}</h3>
                 <p className="t-body mt-2 text-grey-700">{r.text}</p>
@@ -248,19 +280,21 @@ function FinanceBody({ d }: { d: FinanceDetail }) {
             </li>
           ))}
         </ol>
-        <p className="t-small mx-auto mt-5 max-w-[56rem] text-grey-600">{d.phases.note}</p>
+        <p className="t-small mx-auto mt-5 max-w-[56rem] text-center text-grey-600">{d.phases.note}</p>
       </Section>
 
-      {/* Die Formel hinter den Creatives: vier kurze Punkte nebeneinander */}
-      <Section space="l" rule="line" labelledBy="formel-title">
-        <SectionIntro title={d.formula.meta} id="formel-title">
+      {/* Die Formel hinter den Creatives: vier kurze Karten nebeneinander */}
+      <Section space="l" rule="none" labelledBy="formel-title">
+        <SectionIntro meta={[d.formula.label]} title={d.formula.meta} id="formel-title">
           {d.formula.text}
         </SectionIntro>
-        <ol className="mx-auto grid max-w-[64rem] gap-x-[var(--gutter)] gap-y-6 grid-cols-2 lg:grid-cols-4">
+        <ol className="mx-auto grid max-w-[64rem] grid-cols-2 gap-[var(--gutter)] lg:grid-cols-4">
           {d.formula.lines.map((l, i) => (
-            <li key={l} className="border-t border-ink pt-4">
-              <span className="t-meta text-grey-600">{String(i + 1).padStart(2, "0")}</span>
-              <p className="t-h4 mt-2">{l}</p>
+            <li key={l} className="card p-5 md:p-6">
+              <span aria-hidden>
+                <NumberChip n={i + 1} />
+              </span>
+              <p className="t-h4 mt-4">{l}</p>
             </li>
           ))}
         </ol>
@@ -269,12 +303,13 @@ function FinanceBody({ d }: { d: FinanceDetail }) {
         </p>
       </Section>
 
-      {/* Resultat: Kosten pro Lead als Karte, Funnel-Split als Tabelle, Quelle sichtbar */}
-      <Section space="l" rule="line" labelledBy="resultat-title">
-        <SectionIntro meta={[L.outcome]} title={d.outcome.title} id="resultat-title" />
+      {/* Resultat: Kosten pro Lead und Funnel-Split als Karten auf grauem Band, Quelle sichtbar */}
+      <Section mode="band" space="l" rule="none" labelledBy="resultat-title">
+        <SectionIntro meta={[L.outcome]} title={withAccent(d.outcome.title, d.outcome.titleAccent)} id="resultat-title" />
 
-        <div className="mx-auto grid max-w-[64rem] items-start gap-x-[var(--gutter)] gap-y-10 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-          <div className="border border-line bg-paper-2 p-6 md:p-8">
+        {/* Kennzahl links und Funnel-Split rechts, beide Karten gleich hoch */}
+        <div className="mx-auto grid max-w-[64rem] gap-[var(--gutter)] md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+          <div className="card flex flex-col items-center justify-center p-6 text-center md:p-8">
             <p className="t-meta text-grey-600">{d.result.cpl.label}</p>
             <p className="t-num mt-4 flex items-baseline gap-3">
               <span className="text-grey-500">
@@ -292,11 +327,11 @@ function FinanceBody({ d }: { d: FinanceDetail }) {
             <p className="t-small mt-3 text-grey-600">{d.result.cpl.note}</p>
           </div>
 
-          <div>
+          <div className="card p-6 md:p-8">
             <table className="w-full border-collapse">
               <caption className="t-meta pb-3 text-left text-grey-600 [caption-side:top]">{d.result.funnel.caption}</caption>
               <thead>
-                <tr className="border-y border-ink">
+                <tr className="border-b border-line">
                   <th scope="col" className="t-meta py-3 pr-3 text-left font-normal text-grey-600">
                     {d.result.funnel.head[0]}
                   </th>
@@ -313,7 +348,7 @@ function FinanceBody({ d }: { d: FinanceDetail }) {
                   <tr key={r.theme} className="border-b border-line">
                     <th scope="row" className="py-4 pr-3 text-left align-top font-normal">
                       <span className="t-h4 block">{r.theme}</span>
-                      <span aria-hidden className="mt-2.5 block h-1 bg-ink" style={{ width: `${(r.leads / max) * 100}%` }} />
+                      <span aria-hidden className="mt-2.5 block h-1.5 rounded-full bg-violet" style={{ width: `${(r.leads / max) * 100}%` }} />
                     </th>
                     <td className="t-h3 tnum py-4 pr-3 text-right align-top">{r.leads}</td>
                     <td className="t-h3 tnum py-4 text-right align-top text-grey-600">{r.cpl}</td>
@@ -321,23 +356,28 @@ function FinanceBody({ d }: { d: FinanceDetail }) {
                 ))}
               </tbody>
               <tfoot>
-                <tr className="border-b border-ink">
-                  <th scope="row" className="t-meta py-4 pr-3 text-left font-normal">
+                <tr>
+                  <th scope="row" className="t-meta pb-0 pr-3 pt-4 text-left font-normal">
                     {d.result.funnel.total.label}
                   </th>
-                  <td className="t-h3 tnum py-4 pr-3 text-right">{d.result.funnel.total.leads}</td>
-                  <td className="t-meta py-4 text-right text-grey-600">{d.result.funnel.total.cpl}</td>
+                  <td className="t-h3 tnum pb-0 pr-3 pt-4 text-right">{d.result.funnel.total.leads}</td>
+                  <td className="t-meta pb-0 pt-4 text-right text-grey-600">{d.result.funnel.total.cpl}</td>
                 </tr>
               </tfoot>
             </table>
-            <p className="t-small mt-6 text-grey-700">{d.result.leadNote}</p>
-            <p className="t-small mt-3 text-grey-600">{d.outcome.source}</p>
           </div>
+        </div>
+
+        {/* Begriff und Quelle mittig unter den Karten */}
+        <div className="mx-auto mt-8 max-w-[60ch] text-center">
+          <p className="t-small text-grey-700">{d.result.leadNote}</p>
+          <p className="t-small mt-3 text-grey-600">{d.outcome.source}</p>
         </div>
       </Section>
 
       {/* Kundenstimme: Sprecher aus dem öffentlichen Video, ohne ihn diesem Case zuzuordnen */}
-      <section aria-labelledby="stimme-title" className="studio">
+      {/* mt-3: schmaler weisser Abstand zwischen grauem Band und dunklem Panel */}
+      <section aria-labelledby="stimme-title" className="studio mt-3">
         <div className="wrap sec-l">
           <SectionIntro meta={[d.voice.meta]} title={d.voice.title} id="stimme-title">
             {d.voice.note}
@@ -361,8 +401,8 @@ function SpitexBody({ d, c }: { d: SpitexDetail; c: CaseStudy }) {
       <div className="wrap grid-12 sec-l items-center gap-y-12">
         {/* Text links, das Paar rechts: beide gleich hoch, ohne Versatz */}
         <div className="col-span-4 md:col-span-5">
-          <p className="t-meta text-grey-400">{d.pair.meta}</p>
-          <h2 id="paar-title" className="t-h2 mt-4" data-reveal>
+          <p className="label-pill">{d.pair.meta}</p>
+          <h2 id="paar-title" className="t-h2 mt-5" data-reveal>
             {d.pair.title}
           </h2>
           {d.pair.text.map((p) => (
@@ -384,7 +424,7 @@ function SpitexBody({ d, c }: { d: SpitexDetail; c: CaseStudy }) {
               alt={`Startseite von ${domain(site.url)} auf dem Handy`}
               ratio="9 / 16"
               sizes="(min-width: 1024px) 22vw, (min-width: 768px) 28vw, 45vw"
-              className="bg-ink-2"
+              className="rounded-[var(--radius-media)] bg-ink-2"
             />
             <figcaption className="mt-3">
               <Meta className="text-grey-400 [&_span]:whitespace-normal" items={d.pair.siteCaption} />
@@ -397,37 +437,39 @@ function SpitexBody({ d, c }: { d: SpitexDetail; c: CaseStudy }) {
 }
 
 /* ==========================================================================
-   Trapletti: die ganze Startseite im Rahmen, dazu mobil
+   Trapletti: die ganze Startseite im Browserfenster, dazu mobil
    ========================================================================== */
 
 function TraplettiBody({ d }: { d: TraplettiDetail }) {
   const site = webProjects.find((p) => p.id === "trapletti")!;
   return (
-    <Section space="l" rule="none" labelledBy="seite-title">
+    <Section mode="band" space="l" rule="none" labelledBy="seite-title">
       <SectionIntro meta={[d.fullPage.meta]} title={d.fullPage.title} id="seite-title">
         {d.fullPage.lead}
       </SectionIntro>
 
       <div className="grid-12 items-start gap-y-12">
         <figure className="col-span-4 md:col-span-8">
-          {/* Der erste Bildschirm steht schon im Seitenkopf: der Rahmen beginnt darunter (-62.3 % der Bildbreite). */}
-          <div
-            role="region"
-            aria-label={`Startseite von ${domain(site.url)} ab dem zweiten Bildschirm, im Rahmen scrollbar`}
-            tabIndex={0}
-            className="h-[min(62svh,34rem)] overflow-y-auto border border-line bg-paper-2 [scrollbar-width:thin] md:h-[clamp(28rem,72vh,46rem)]"
-          >
-            <Image
-              src={site.desktopFull}
-              alt={`Startseite von ${domain(site.url)} am Desktop: Leistungen, Über uns, Referenzen, Arbeitsablauf und Kontaktformular`}
-              width={1000}
-              height={4521}
-              sizes="(min-width: 768px) 62vw, 94vw"
-              className="block h-auto w-full"
-              style={{ marginTop: "-62.3%" }}
-            />
-          </div>
-          <figcaption className="mt-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
+          <BrowserFrame url={domain(site.url)}>
+            {/* Der erste Bildschirm steht schon im Seitenkopf: der Rahmen beginnt darunter (-62.3 % der Bildbreite). */}
+            <div
+              role="region"
+              aria-label={`Startseite von ${domain(site.url)} ab dem zweiten Bildschirm, im Rahmen scrollbar`}
+              tabIndex={0}
+              className="h-[min(62svh,34rem)] overflow-y-auto bg-paper-2 [scrollbar-width:thin] md:h-[clamp(28rem,72vh,46rem)]"
+            >
+              <Image
+                src={site.desktopFull}
+                alt={`Startseite von ${domain(site.url)} am Desktop: Leistungen, Über uns, Referenzen, Arbeitsablauf und Kontaktformular`}
+                width={1000}
+                height={4521}
+                sizes="(min-width: 768px) 62vw, 94vw"
+                className="block h-auto w-full"
+                style={{ marginTop: "-62.3%" }}
+              />
+            </div>
+          </BrowserFrame>
+          <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
             <Meta className="text-grey-700" items={d.fullPage.desktopCaption} />
             <span className="t-meta flex items-center gap-2 text-grey-600">
               {d.fullPage.hint}
@@ -442,9 +484,9 @@ function TraplettiBody({ d }: { d: TraplettiDetail }) {
             alt={`Startseite von ${domain(site.url)} auf dem Handy`}
             ratio="585 / 1266"
             sizes="(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 18rem"
-            className="border border-line"
+            className="rounded-[var(--radius-media)] border border-line shadow-card"
           />
-          <figcaption className="mt-3">
+          <figcaption className="mt-4">
             <Meta className="text-grey-700" items={d.fullPage.mobileCaption} />
           </figcaption>
         </figure>
@@ -459,18 +501,21 @@ function TraplettiBody({ d }: { d: TraplettiDetail }) {
 
 function Outcome({ c, d, siteUrl }: { c: CaseStudy; d: SpitexDetail | TraplettiDetail; siteUrl: string }) {
   return (
-    <Section space="l" rule="line" labelledBy="resultat-title">
-      <SectionIntro meta={[L.outcome]} title={d.outcome.title} id="resultat-title" className="mb-0! md:mb-0!">
-        {c.outcome.map((p) => (
-          <p key={p} className="mt-4 first:mt-0">
-            {p}
-          </p>
-        ))}
-      </SectionIntro>
-      <div className="mt-8 flex flex-col items-center gap-4 text-center">
-        <ExternalLink href={siteUrl}>{domain(siteUrl)}</ExternalLink>
-        <p className="t-small max-w-[60ch] text-grey-600">{d.outcome.source}</p>
-        {d.outcome.todo && <Todo>{d.outcome.todo}</Todo>}
+    <Section space="l" rule="none" labelledBy="resultat-title">
+      {/* Resultat als ruhige Karte: Aussage oben, Link und Beleg darunter, abgesetzt durch eine feine Linie */}
+      <div className="card mx-auto max-w-[56rem] px-6 py-10 md:px-12 md:py-14">
+        <SectionIntro meta={[L.outcome]} title={d.outcome.title} id="resultat-title" className="mb-0! md:mb-0!">
+          {c.outcome.map((p) => (
+            <p key={p} className="mt-4 first:mt-0">
+              {p}
+            </p>
+          ))}
+        </SectionIntro>
+        <div className="mt-8 flex flex-col items-center gap-4 border-t border-line pt-8 text-center">
+          <ExternalLink href={siteUrl}>{domain(siteUrl)}</ExternalLink>
+          <p className="t-small max-w-[60ch] text-grey-600">{d.outcome.source}</p>
+          {d.outcome.todo && <Todo>{d.outcome.todo}</Todo>}
+        </div>
       </div>
     </Section>
   );

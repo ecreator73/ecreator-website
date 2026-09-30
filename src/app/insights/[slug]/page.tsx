@@ -98,12 +98,12 @@ export default async function InsightArticlePage(props: PageProps<"/insights/[sl
           title={titleLines(meta.title)}
           lead={meta.description}
           aside={
-            /* Eckdaten als ruhige Zeile statt Tabelle */
-            <dl className="flex flex-wrap justify-center gap-x-8 gap-y-5 text-center md:gap-x-10">
+            /* Eckdaten als ruhige Zeile in der Karte, ab Tablet einzeilig */
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-5 text-center sm:grid-cols-3 md:flex md:justify-between md:gap-x-6">
               {facts.map((f) => (
                 <div key={f.k}>
                   <dt className="t-meta text-grey-600">{f.k}</dt>
-                  <dd className="t-small mt-1 text-ink">{f.v}</dd>
+                  <dd className="t-small mt-1 whitespace-nowrap font-medium text-ink">{f.v}</dd>
                 </div>
               ))}
             </dl>
@@ -117,11 +117,11 @@ export default async function InsightArticlePage(props: PageProps<"/insights/[sl
           {content.summary && (
             <section aria-labelledby="kurzantwort" className="bg-paper-2">
               <div className="wrap sec-s">
-                <div className="mx-auto max-w-[46rem]">
-                  <h2 id="kurzantwort" className="t-meta text-grey-600">
+                <div className="card mx-auto max-w-[48rem] p-6 md:p-10">
+                  <h2 id="kurzantwort" className="label-pill">
                     {p.labels.summary}
                   </h2>
-                  <p className="t-lead mt-3 text-ink">{content.summary}</p>
+                  <p className="t-lead mt-5 text-ink">{content.summary}</p>
                 </div>
               </div>
             </section>
@@ -132,19 +132,21 @@ export default async function InsightArticlePage(props: PageProps<"/insights/[sl
             <div className="grid-12 gap-y-12">
               {toc.length > 0 && (
                 <nav aria-labelledby="toc-title" className="col-span-4 md:col-span-8 lg:col-span-3">
-                  <div className="lg:sticky lg:top-[calc(var(--header-h)+2rem)]">
-                    <p id="toc-title" className="t-meta text-grey-600">
+                  <div className="card p-5 md:p-6 lg:sticky lg:top-[calc(var(--header-h)+2rem)]">
+                    <p id="toc-title" className="t-h4">
                       {p.labels.toc}
                     </p>
-                    <ol className="mt-3 border-t border-ink">
+                    <ol className="mt-3">
                       {toc.map((h, i) => (
-                        <li key={h.id} className="border-b border-line">
+                        <li key={h.id} className="border-b border-line last:border-b-0">
                           <a
                             href={`#${h.id}`}
                             className="group grid min-h-11 grid-cols-[2rem_1fr] items-baseline gap-2 py-2.5"
                           >
-                            <span className="t-meta text-grey-600">{String(i + 1).padStart(2, "0")}</span>
-                            <span className="t-small transition-colors group-hover:text-grey-600">{h.text}</span>
+                            <span className="t-meta text-grey-500 transition-colors group-hover:text-violet-deep">
+                              {String(i + 1).padStart(2, "0")}
+                            </span>
+                            <span className="t-small text-grey-700 transition-colors group-hover:text-ink">{h.text}</span>
                           </a>
                         </li>
                       ))}
@@ -157,14 +159,14 @@ export default async function InsightArticlePage(props: PageProps<"/insights/[sl
                 <ArticleBody blocks={content.blocks} />
 
                 {content.sources && content.sources.length > 0 && (
-                  <footer className="mt-20 max-w-[44rem] border-t border-ink pt-5">
+                  <footer className="card mt-16 max-w-[44rem] p-6 md:mt-20 md:p-8">
                     <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-                      <h2 className="t-meta text-ink">{p.labels.sources}</h2>
-                      <p className="t-meta text-grey-600">{p.labels.sourcesNote}</p>
+                      <h2 className="t-h4">{p.labels.sources}</h2>
+                      <p className="t-small text-grey-600">{p.labels.sourcesNote}</p>
                     </div>
                     <ol className="mt-3">
                       {content.sources.map((s, i) => (
-                        <li key={s.url} className="border-b border-line">
+                        <li key={s.url} className="border-b border-line last:border-b-0">
                           <a
                             href={s.url}
                             target="_blank"
@@ -176,7 +178,7 @@ export default async function InsightArticlePage(props: PageProps<"/insights/[sl
                               <span className="t-small block text-ink underline decoration-line-strong underline-offset-4 transition-colors group-hover:decoration-ink">
                                 {s.label}
                               </span>
-                              <span className="t-meta mt-1 block text-grey-600">
+                              <span className="mt-1 block text-[0.8125rem] text-grey-600">
                                 {hostOf(s.url)}
                                 <span className="sr-only"> (öffnet in neuem Tab)</span>
                               </span>
@@ -193,22 +195,23 @@ export default async function InsightArticlePage(props: PageProps<"/insights/[sl
 
           {/* Das Wichtigste in Kürze: mittiger Kopf, schlichte nummerierte Liste */}
           {content.takeaways.length > 0 && (
-            <Section space="m" rule="line" labelledBy="takeaways-title">
-              <SectionIntro id="takeaways-title" title={p.labels.takeaways} />
-              <ol className="mx-auto max-w-[46rem] border-t border-ink">
-                {content.takeaways.map((t, i) => (
-                  <li key={t} className="grid grid-cols-[2.5rem_1fr] gap-3 border-b border-line py-5">
-                    <span className="t-meta pt-[0.4em] text-grey-600">{String(i + 1).padStart(2, "0")}</span>
-                    <p className="t-body text-ink">{t}</p>
-                  </li>
-                ))}
-              </ol>
+            <Section mode="band" space="l" rule="none" labelledBy="takeaways-title">
+              <SectionIntro id="takeaways-title" meta={[p.labels.takeawaysMeta]} title={p.labels.takeaways} />
+              <div className="card mx-auto max-w-[48rem] p-6 md:p-10">
+                <ul className="check-list space-y-5">
+                  {content.takeaways.map((t) => (
+                    <li key={t} className="t-body text-ink">
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </Section>
           )}
         </>
       ) : (
         /* Artikel noch leer: Seite bleibt vollständig, Platzhalter sichtbar */
-        <Section space="l" rule="line" labelledBy="pending-title">
+        <Section mode="band" space="l" rule="none" labelledBy="pending-title">
           <SectionIntro id="pending-title" meta={[p.pending.meta]} title={p.pending.title} />
           <div className="flex flex-col items-center gap-8 text-center">
             <p>
@@ -220,7 +223,7 @@ export default async function InsightArticlePage(props: PageProps<"/insights/[sl
       )}
 
       {/* Proof: belegtes Material passend zur Kategorie */}
-      <Section space="l" rule="line" labelledBy="proof-title">
+      <Section space="l" rule="none" labelledBy="proof-title">
         <ProofBlock
           proof={p.proofByCategory[meta.category]}
           label={p.labels.proof}
@@ -229,22 +232,18 @@ export default async function InsightArticlePage(props: PageProps<"/insights/[sl
         />
       </Section>
 
-      {/* Verwandte Leistungen + weiterlesen */}
-      <Section space="m" rule="line">
-        <div className="grid-12 gap-y-14">
-          <div className="col-span-4 md:col-span-6">
-            <RelatedLinks title={p.labels.services} links={meta.related.map(linkFor)} />
-          </div>
-          <div className="col-span-4 md:col-span-6">
-            <RelatedLinks
-              title={p.labels.more}
-              links={more.map((m) => ({
-                label: m.title,
-                href: `/insights/${m.slug}`,
-                text: `${categoryInfo[m.category].title} / ${p.labels.minutes(readingMinutes(m))}`,
-              }))}
-            />
-          </div>
+      {/* Verwandte Leistungen + weiterlesen: zwei Listen-Karten nebeneinander */}
+      <Section mode="band" space="l" rule="none">
+        <div className="grid gap-x-[var(--gutter)] gap-y-6 md:grid-cols-2">
+          <RelatedLinks title={p.labels.services} links={meta.related.map(linkFor)} />
+          <RelatedLinks
+            title={p.labels.more}
+            links={more.map((m) => ({
+              label: m.title,
+              href: `/insights/${m.slug}`,
+              text: `${categoryInfo[m.category].title} · ${p.labels.minutes(readingMinutes(m))}`,
+            }))}
+          />
         </div>
       </Section>
 

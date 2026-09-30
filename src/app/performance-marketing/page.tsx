@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/page/PageHeader";
-import { FactsTable, IndexList, RelatedLinks, Section, SectionIntro } from "@/components/page/Blocks";
+import { FactsTable, NumberChip, RelatedLinks, Section, SectionIntro } from "@/components/page/Blocks";
 import { Faq } from "@/components/page/Faq";
 import { FinalCta } from "@/components/blocks/FinalCta";
 import { Arrow, ArrowLink, ButtonLink } from "@/components/ui/ButtonLink";
-import { Meta } from "@/components/ui/Meta";
 import { VideoFrame } from "@/components/ui/VideoFrame";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { withAccent } from "@/lib/accent";
 import { pageMeta } from "@/lib/metadata";
 import { serviceSchema } from "@/lib/schema";
 import { cta } from "@/content/site";
@@ -14,6 +14,9 @@ import { workById } from "@/content/work";
 import { performanceMarketingPage as page } from "@/content/pages/performance-marketing";
 
 export const metadata = pageMeta(page.meta);
+
+/** Datenblatt in einer Karte: erste und letzte Zeile ohne zusätzlichen Innenabstand */
+const factsInCard = "[&_dl>div:first-child]:pt-0 [&_dl>div:last-child]:pb-0";
 
 export default function PerformanceMarketingPage() {
   const { channels, proof, loop, film, tracking, scope, calculator } = page;
@@ -25,7 +28,7 @@ export default function PerformanceMarketingPage() {
       <PageHeader
         crumbs={page.crumbs}
         meta={page.header.meta}
-        title={page.header.title}
+        title={page.header.title.map((l) => withAccent(l, page.header.accent))}
         lead={page.header.lead}
         actions={
           <>
@@ -35,65 +38,53 @@ export default function PerformanceMarketingPage() {
             <ArrowLink href={page.header.calc.href}>{page.header.calc.label}</ArrowLink>
           </>
         }
-        aside={<FactsTable rows={page.header.facts} />}
+        aside={
+          <div className={factsInCard}>
+            <FactsTable rows={page.header.facts} />
+          </div>
+        }
       />
 
-      {/* Kanal-Fahrplan: Tabelle statt Kacheln */}
-      <Section space="m" rule="ink" labelledBy="kanaele-title">
-        <SectionIntro meta={[channels.meta]} title={channels.title} id="kanaele-title">
+      {/* Kanal-Fahrplan: vier Karten, je Kanal Aufgabe und typische Formate */}
+      <Section mode="band" space="m" rule="none" labelledBy="kanaele-title">
+        <SectionIntro
+          meta={[channels.meta]}
+          title={withAccent(channels.title, channels.accent)}
+          id="kanaele-title"
+        >
           {channels.lead}
         </SectionIntro>
-        <div role="table" aria-label="Kanal-Fahrplan: Kanal, wofür, typische Formate">
-          <div role="rowgroup">
-            <div
-              role="row"
-              className="hidden border-b border-ink pb-3 md:grid md:grid-cols-[minmax(0,4fr)_minmax(0,5fr)_minmax(0,3fr)] md:gap-x-[var(--gutter)]"
-            >
-              {channels.columns.map((c) => (
-                <span key={c} role="columnheader" className="t-meta text-grey-600">
-                  {c}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div role="rowgroup" className="border-t border-ink md:border-t-0">
-            {channels.rows.map((r) => (
-              <div
-                key={r.name}
-                role="row"
-                className="grid gap-y-4 border-b border-line py-7 md:grid-cols-[minmax(0,4fr)_minmax(0,5fr)_minmax(0,3fr)] md:gap-x-[var(--gutter)] md:py-9"
-              >
-                <div role="rowheader">
-                  <p className="t-h3">
-                    {r.name}
-                  </p>
-                  <p className="t-meta mt-3 text-grey-600">{r.sub}</p>
-                </div>
-                <div role="cell" className="md:pt-2">
-                  <p className="t-h4">{r.task}</p>
-                  <p className="t-body mt-1.5 max-w-[40ch] text-grey-700">{r.text}</p>
-                </div>
-                <div role="cell" className="md:pt-2">
-                  <p className="t-meta text-grey-600 md:hidden">{channels.columns[2]}</p>
-                  <p className="t-small mt-1 text-grey-700 md:mt-0">{r.formats}</p>
+        <ul aria-label="Kanal-Fahrplan: Kanal, wofür, typische Formate" className="grid gap-4 md:grid-cols-2 md:gap-5">
+          {channels.rows.map((r) => (
+            <li key={r.name} className="card flex flex-col p-6 md:p-8">
+              <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                <h3 className="t-h3">{r.name}</h3>
+                <span className="t-small rounded-full bg-paper-2 px-3 py-1 text-grey-600">{r.sub}</span>
+              </div>
+              <p className="t-h4 mt-5">{r.task}</p>
+              <p className="t-body mt-1.5 max-w-[46ch] text-grey-700">{r.text}</p>
+              <div className="mt-auto pt-6">
+                <div className="border-t border-line pt-5">
+                  <p className="t-meta text-grey-600">{channels.columns[2]}</p>
+                  <p className="t-small mt-1.5 text-grey-700">{r.formats}</p>
                   {"link" in r && r.link && (
-                    <ArrowLink href={r.link.href} className="mt-2 text-[0.9375rem]">
+                    <ArrowLink href={r.link.href} className="mt-3 text-[0.9375rem]">
                       {r.link.label}
                     </ArrowLink>
                   )}
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
+            </li>
+          ))}
+        </ul>
       </Section>
 
-      {/* Case: Titel und Text links, rechts die Kosten pro Lead als schlichte Reihe und das Datenblatt */}
-      <Section space="m" rule="ink" labelledBy="case-title">
-        <div className="grid-12 gap-y-10">
-          <div className="col-span-4 md:col-span-6 lg:col-span-5">
-            <Meta items={proof.meta} className="text-grey-600" />
-            <p className="t-h4 mt-5 text-grey-600">{proof.client}</p>
+      {/* Case: Text links, rechts eine Karte mit den Kosten pro Lead und dem Datenblatt */}
+      <Section space="m" rule="none" labelledBy="case-title">
+        <div className="grid-12 gap-y-10 lg:items-center">
+          <div className="col-span-4 md:col-span-12 lg:col-span-5">
+            <p className="label-pill">{proof.meta.join(" · ")}</p>
+            <p className="t-h4 mt-6 text-grey-600">{proof.client}</p>
             <h2 id="case-title" className="t-h2 mt-2" data-reveal>
               {proof.title}
             </h2>
@@ -102,51 +93,55 @@ export default function PerformanceMarketingPage() {
               <ArrowLink href={proof.link.href}>{proof.link.label}</ArrowLink>
             </div>
           </div>
-          <div className="col-span-4 md:col-span-6 lg:col-span-6 lg:col-start-7">
-            <p className="sr-only">{proof.srText}</p>
-            <div aria-hidden className="grid grid-cols-2 border-t border-ink">
-              <div className="border-r border-line py-5 pr-4">
-                <p className="t-meta text-grey-600">{proof.beforeLabel}</p>
-                <p className="t-num mt-2 text-grey-500 line-through decoration-2">{proof.before}</p>
-                <p className="t-small mt-1 text-grey-600">{proof.unit}</p>
+          <div className="col-span-4 md:col-span-12 lg:col-span-6 lg:col-start-7">
+            <div className="card p-5 md:p-8">
+              <p className="sr-only">{proof.srText}</p>
+              <div aria-hidden className="grid grid-cols-2 gap-3">
+                <div className="rounded-2xl bg-paper-2 p-4 md:p-5">
+                  <p className="t-meta text-grey-600">{proof.beforeLabel}</p>
+                  <p className="t-num mt-2 text-grey-500 line-through decoration-2">{proof.before}</p>
+                  <p className="t-small mt-1 text-grey-600">{proof.unit}</p>
+                </div>
+                <div className="rounded-2xl bg-[rgb(120_102_244/0.09)] p-4 md:p-5">
+                  <p className="t-meta text-violet-deep">{proof.afterLabel}</p>
+                  <p className="t-num mt-2">{proof.after}</p>
+                  <p className="t-small mt-1 text-grey-600">{proof.unit}</p>
+                </div>
               </div>
-              <div className="py-5 pl-5 md:pl-6">
-                <p className="t-meta text-grey-600">{proof.afterLabel}</p>
-                <p className="t-num mt-2">{proof.after}</p>
-                <p className="t-small mt-1 text-grey-600">{proof.unit}</p>
+              <div className={`mt-6 ${factsInCard}`}>
+                <FactsTable rows={proof.facts} />
               </div>
             </div>
-            <FactsTable rows={proof.facts} />
             <p className="t-meta mt-4 text-grey-600">{proof.source}</p>
           </div>
         </div>
       </Section>
 
-      {/* Arbeitsweise als Kreislauf: fünf Stationen, danach zurück zur Botschaft */}
+      {/* Arbeitsweise als Kreislauf: fünf Stationen als Karten, danach zurück zur Botschaft */}
       <Section mode="band" space="m" rule="none" labelledBy="kreislauf-title">
         <SectionIntro meta={[loop.meta]} title={loop.title} id="kreislauf-title">
           {loop.lead}
         </SectionIntro>
-        <ol className="grid border-t border-ink lg:grid-cols-5">
+        <ol className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
           {loop.stations.map((s, i) => (
-            <li
-              key={s.name}
-              className="border-b border-line py-6 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:gap-x-[var(--gutter)] lg:block lg:border-l lg:px-5 lg:py-7 lg:first:border-l-0 lg:first:pl-0"
-            >
-              <div>
-                <p className="t-meta text-grey-600">{s.label}</p>
-                <h3 className="t-h4 mt-3 flex items-center gap-3">
-                  {s.name}
-                  {i < loop.stations.length - 1 && <Arrow className="hidden h-3 w-5 text-grey-500 lg:block" />}
-                </h3>
+            <li key={s.name} className="card flex flex-col p-5 md:p-6 md:last:col-span-2 lg:last:col-span-1">
+              {/* Mobil und Tablet: Nummer und Label in einer Zeile. Desktop: Nummer mit Pfeil, Label darunter */}
+              <div className="flex items-center gap-3">
+                <span aria-hidden className="flex flex-none">
+                  <NumberChip n={i + 1} />
+                </span>
+                <p className="t-meta text-grey-600 lg:hidden">{s.label}</p>
+                {i < loop.stations.length - 1 && <Arrow className="ml-auto hidden h-3 w-5 text-grey-400 lg:block" />}
               </div>
-              <p className="t-small mt-3 max-w-[46ch] text-grey-700 md:mt-0 lg:mt-3">{s.text}</p>
+              <p className="t-meta mt-5 hidden text-grey-600 lg:block">{s.label}</p>
+              <h3 className="t-h4 mt-3 lg:mt-2">{s.name}</h3>
+              <p className="t-small mt-2 max-w-[46ch] text-grey-700">{s.text}</p>
             </li>
           ))}
         </ol>
-        <div className="mt-8 flex flex-col items-center gap-2 text-center">
-          <p className="t-meta text-ink">
-            <Arrow className="mr-2 inline-block h-3 w-5 rotate-180 align-middle text-grey-500" />
+        <div className="mt-8 flex flex-col items-center gap-3 text-center">
+          <p className="t-small inline-flex items-center gap-2.5 rounded-2xl bg-paper px-4 py-2.5 text-left font-semibold text-ink shadow-[var(--shadow-card)] sm:rounded-full sm:py-2">
+            <Arrow className="h-3 w-5 rotate-180 text-violet" />
             {loop.back}
           </p>
           <p className="t-small text-grey-600">{loop.note}</p>
@@ -187,21 +182,21 @@ export default function PerformanceMarketingPage() {
         </div>
       </section>
 
-      {/* Tracking: Titel links, die Begriffe rechts, darunter die Messkette in einfachen Worten */}
-      <section id="tracking" aria-labelledby="tracking-title" className="sec-m">
+      {/* Tracking: Titel links, die Begriffe rechts in einer Karte, darunter die Messkette */}
+      <section id="tracking" aria-labelledby="tracking-title" className="sec-l">
         <div className="wrap">
           <div className="grid-12 gap-y-10">
             <div className="col-span-4 md:col-span-5">
               <div className="md:sticky md:top-[calc(var(--header-h)+2rem)]">
-                <p className="t-meta text-grey-600">{tracking.meta}</p>
-                <h2 id="tracking-title" className="t-h2 mt-4" data-reveal>
-                  {tracking.title}
+                <p className="label-pill">{tracking.meta}</p>
+                <h2 id="tracking-title" className="t-h2 mt-5" data-reveal>
+                  {withAccent(tracking.title, tracking.accent)}
                 </h2>
                 <p className="t-lead mt-5 max-w-[40ch] text-grey-700">{tracking.lead}</p>
-                <div className="mt-8 border-t border-ink pt-4">
+                <div className="mt-8 rounded-[var(--radius-card)] bg-paper-2 p-6">
                   <p className="t-meta text-grey-600">{tracking.caseNote.label}</p>
                   <p className="t-small mt-2 max-w-[44ch] text-grey-700">{tracking.caseNote.text}</p>
-                  <p className="t-small mt-3 text-grey-700">{tracking.packageNote}</p>
+                  <p className="t-small mt-3 font-semibold text-ink">{tracking.packageNote}</p>
                 </div>
                 <div className="mt-6">
                   <ArrowLink href={tracking.link.href}>{tracking.link.label}</ArrowLink>
@@ -209,9 +204,9 @@ export default function PerformanceMarketingPage() {
               </div>
             </div>
 
-            <dl className="col-span-4 border-t border-ink md:col-span-7 lg:col-span-6 lg:col-start-7">
+            <dl className="card col-span-4 divide-y divide-line p-6 md:col-span-7 md:p-8 lg:col-span-6 lg:col-start-7 [&>div]:py-6 [&>div:first-child]:pt-0 [&>div:last-child]:pb-0">
               {tracking.layers.map((l) => (
-                <div key={l.term} className="border-b border-line py-6">
+                <div key={l.term}>
                   <dt className="t-h4">
                     {l.term}
                     {"short" in l && l.short && <span className="text-grey-500"> ({l.short})</span>}
@@ -223,24 +218,26 @@ export default function PerformanceMarketingPage() {
           </div>
 
           {/* Messkette: das hervorgehobene Glied ist das Qualitätssignal */}
-          <div className="mt-14 md:mt-20">
-            <div className="mb-6 text-center">
-              <p className="t-meta text-grey-600">{tracking.chain.label}</p>
-              <p className="t-h3 mt-3">{tracking.brand}</p>
+          <div className="mt-16 md:mt-24">
+            <div className="mb-8 text-center">
+              <p className="label-pill">{tracking.chain.label}</p>
+              <p className="t-h3 mt-4">{tracking.brand}</p>
             </div>
-            <ol className="grid grid-cols-2 border-t border-ink md:grid-cols-4">
+            <ol className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
               {tracking.chain.steps.map((s, i) => (
                 <li
                   key={s.name}
                   aria-current={s.active ? "step" : undefined}
-                  className={`border-b border-line p-4 md:py-6 ${
-                    i % 2 === 1 ? "border-l" : ""
-                  } md:border-l md:first:border-l-0 ${s.active ? "bg-ink text-paper" : ""}`}
+                  className={
+                    s.active
+                      ? "rounded-[var(--radius-card)] bg-ink p-5 text-paper shadow-[var(--shadow-cta)] md:p-6"
+                      : "card p-5 md:p-6"
+                  }
                 >
-                  <p className="t-h4 flex items-center gap-2">
+                  <p className="t-h4 flex items-center justify-between gap-2">
                     {s.name}
                     {i < tracking.chain.steps.length - 1 && (
-                      <Arrow className={`hidden h-3 w-5 md:block ${s.active ? "text-paper" : "text-grey-500"}`} />
+                      <Arrow className={`hidden h-3 w-5 md:block ${s.active ? "text-paper" : "text-grey-400"}`} />
                     )}
                   </p>
                   <p className={`t-meta mt-2 ${s.active ? "text-grey-300" : "text-grey-600"}`}>{s.note}</p>
@@ -251,66 +248,72 @@ export default function PerformanceMarketingPage() {
         </div>
       </section>
 
-      {/* Leistungsumfang als Index in zwei Spalten */}
-      <Section space="m" rule="ink" labelledBy="umfang-title">
+      {/* Leistungsumfang: Häkchen-Liste in zwei Spalten, in einer Karte */}
+      <Section mode="band" space="m" rule="none" labelledBy="umfang-title">
         <SectionIntro meta={[scope.meta]} title={scope.title} id="umfang-title" />
-        <IndexList
-          columns={2}
-          numbered={false}
-          items={scope.items.map((it) => ({
-            title: it.title,
-            text:
-              "link" in it && it.link ? (
-                <>
-                  {it.text}{" "}
-                  <Link href={it.link.href} className="link whitespace-nowrap">
-                    {it.link.label}
-                  </Link>
-                </>
-              ) : (
-                it.text
-              ),
-          }))}
-        />
+        <ul className="card check-list mx-auto grid max-w-[64rem] gap-x-12 gap-y-7 p-6 md:grid-cols-2 md:p-10">
+          {scope.items.map((it) => (
+            <li key={it.title}>
+              <h3 className="t-h4">{it.title}</h3>
+              <p className="t-small mt-1.5 max-w-[52ch] text-grey-700">
+                {it.text}
+                {"link" in it && it.link && (
+                  <>
+                    {" "}
+                    <Link href={it.link.href} className="link whitespace-nowrap font-semibold text-ink">
+                      {it.link.label}
+                    </Link>
+                  </>
+                )}
+              </p>
+            </li>
+          ))}
+        </ul>
       </Section>
 
-      {/* Rechner-Teaser: Text und Handlung links, die Formel schlicht in zwei Zeilen rechts */}
-      <Section mode="band" space="m" rule="none" labelledBy="rechner-title">
+      {/* Rechner-Teaser: Text und Handlung links, die Formel rechts in einer Karte */}
+      <Section space="m" rule="none" labelledBy="rechner-title">
         <div className="grid-12 gap-y-10 md:items-center">
           <div className="col-span-4 md:col-span-6">
-            <p className="t-meta text-grey-600">{calculator.meta}</p>
-            <h2 id="rechner-title" className="t-h2 mt-4" data-reveal>
+            <p className="label-pill">{calculator.meta}</p>
+            <h2 id="rechner-title" className="t-h2 mt-5" data-reveal>
               {calculator.title}
             </h2>
             <p className="t-body mt-5 max-w-[48ch] text-grey-700">{calculator.text}</p>
             <p className="t-body mt-4 max-w-[48ch] text-grey-700">{calculator.budget}</p>
             <div className="mt-8">
-              <ButtonLink href={calculator.cta.href} variant="ink" track="performance-rechner">
+              <ButtonLink href={calculator.cta.href} variant="line" track="performance-rechner">
                 {calculator.cta.label}
               </ButtonLink>
             </div>
           </div>
-          <ul className="col-span-4 border-t border-ink md:col-span-6 lg:col-span-5 lg:col-start-8">
+          <ul className="card col-span-4 divide-y divide-line p-6 md:col-span-6 md:p-8 lg:col-span-5 lg:col-start-8">
             {calculator.formula.map((f) => (
-              <li key={f.result} className="t-h4 flex flex-wrap items-baseline gap-x-2 border-b border-line py-5">
+              <li
+                key={f.result}
+                className="t-h4 flex flex-wrap items-baseline gap-x-2 gap-y-2 py-5 first:pt-0 last:pb-0"
+              >
                 <span>{f.left}</span>
                 <span className="text-grey-500">{f.op}</span>
                 <span className="whitespace-nowrap">{f.right}</span>
                 <span className="text-grey-500">=</span>
-                <span className="underline underline-offset-4">{f.result}</span>
+                <span className="rounded-full bg-[rgb(120_102_244/0.09)] px-3 py-0.5 text-violet-deep">{f.result}</span>
               </li>
             ))}
           </ul>
         </div>
       </Section>
 
-      <Section space="m" rule="ink" labelledBy="faq-title">
+      <Section mode="band" space="m" rule="none" labelledBy="faq-title">
         <SectionIntro meta={[page.faq.meta]} title={page.faq.title} id="faq-title" />
-        <Faq items={page.faq.items} />
+        <div className="mx-auto max-w-[56rem]">
+          <Faq items={page.faq.items} />
+        </div>
       </Section>
 
-      <Section space="s" rule="line">
-        <RelatedLinks links={page.related} />
+      {/* Verwandte Seiten als Karten (geteilter Baustein) */}
+      <Section space="m" rule="none">
+        <RelatedLinks layout="grid" links={page.related} />
       </Section>
 
       <FinalCta title={page.finalCta.title} text={page.finalCta.text} secondary={page.finalCta.secondary} />

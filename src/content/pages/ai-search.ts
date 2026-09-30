@@ -39,6 +39,7 @@ export type AiSearchPage = {
   definition: { term: string; text: string; also: string; link: Link };
   question: {
     id: string;
+    meta: string[];
     label: string;
     parts: QuestionPart[];
     title: string;
@@ -55,7 +56,7 @@ export type AiSearchPage = {
     link: Link;
   };
   approach: { meta: string[]; title: string; lead: string; steps: { title: string; text: string }[] };
-  refusals: { intro: string; items: string[]; text: string };
+  refusals: { meta: string[]; intro: string; items: string[]; text: string };
   proof: {
     meta: string[];
     title: [string, string];
@@ -114,6 +115,7 @@ export const aiSearchPage: AiSearchPage = {
 
   question: {
     id: "bausteine",
+    meta: ["Bausteine"],
     label: "Beispiel einer Frage an ChatGPT, Perplexity oder Google",
     parts: [
       { t: "Welche " },
@@ -206,6 +208,7 @@ export const aiSearchPage: AiSearchPage = {
   },
 
   refusals: {
+    meta: ["Abgrenzung"],
     intro: "Was du von uns nicht bekommst:",
     items: ["Garantierte Nennungen.", "Versteckte Anweisungen an KI.", "Texte für Maschinen."],
     text: "Ob und wie eine Antwortmaschine dein Unternehmen nennt, entscheidet der Anbieter, und Antworten können sich von Anfrage zu Anfrage unterscheiden. Das gilt für uns wie für jede andere Agentur. Wir verbessern die Voraussetzungen und zeigen dir, was sich messbar verändert.",

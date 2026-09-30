@@ -1,4 +1,4 @@
-# Art Direction · eCreator (Phase 3, Version 3)
+# Art Direction · eCreator (Phase 3, Version 4)
 
 > Leitmotiv: **«Der Kreislauf»**. Abgeleitet aus dem eCreator-Zeichen: zwei konzentrische Ringe,
 > durchtrennt von einem schrägen Schlitz. Kampagnen sind Linien. Systeme sind Kreisläufe.
@@ -35,7 +35,29 @@ keine «Portfolio-Schrift»; alles ganz einfach wie auf der heutigen Website. Um
 - **Buttons als Pill** mit rundem Pfeil-Knopf (wie live). Violett bleibt das Signal für den Strategie-Call.
 - Entfernt: 9°-Schlitz durch Bilder, Logo-Ringe als Dekor in Seitenköpfen, Plakat-Layouts. Der Kreislauf bleibt als Inhalt (Diagramm der 9 Stationen).
 
-Die Abschnitte 1 bis 9 unten beschreiben Version 2; wo sie §0c widersprechen, gilt §0c.
+## 0d. Kundenentscheid 29.09.2026 (dritte Runde): Look and Feel wie anfragenfluss.de
+
+Rückmeldung von eCreator: Der Look von anfragenfluss.de gefällt, «die besten Sachen rauspicken». Übernommen wurden
+Muster, keine Inhalte (keine Texte, Bilder, Karten-Grafik, Farben der Vorlage):
+
+- **Hell und luftig:** weisser Grund, hellgraue Bänder (`#F5F5F7`), Text `#1D1D1F`. Violettes Netz mit weichem Leuchten
+  hinter Hero und Seitenköpfen (`hero-grid`).
+- **Schwebender Header:** weisse Pille mit feinem Rand und weichem Schatten, Mega-Menüs als Karten darunter, Handy-Menü hell.
+- **Titel in Satzschreibung**, fett und eng gesetzt (Plus Jakarta Sans 700, −0.03em). Ein Akzentwort pro wichtigem Titel in
+  Violett (`text-accent`), z.B. «**Kunden** statt Klicks.».
+- **Label-Pillen** statt Versal-Kicker (`label-pill`: violett getönt, Punkt, Satzschreibung).
+- **Karten** (`card`: 24 px Radius, weicher Schatten) für Preise, Kennzahlen, Vorteile, Fakten, Kontakt. **Häkchen-Listen**
+  (`check-list`). Bilder und Videos mit 18 px Radius.
+- **Buttons:** abgerundet (14 px) mit Pfeil. Primär dunkel mit violettem Leuchten (Strategie-Call), sekundär Kontur.
+  Header-CTA als kleine Pille.
+- **Vertrauensleiste** unter dem Hero: nur belegte Zahlen (Case 600 Leads / CHF 10 pro Lead, Content Day ab CHF 1'990) und
+  Kundenlogos als Kacheln.
+- **Dunkle Abschnitte** als eingerückte, abgerundete Panels mit violettem Schimmer (Kundenstimme, Studio, Abschluss-CTA mit
+  Team-Gesichtern). **Footer hell.**
+
+Die Schreibschrift-Zeile im Hero bleibt als Wiedererkennung der bisherigen Website.
+
+Die Abschnitte 1 bis 9 unten beschreiben Version 2; wo sie §0c/§0d widersprechen, gilt §0d.
 
 ## 1. Designidee
 

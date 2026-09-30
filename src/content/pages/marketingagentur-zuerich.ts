@@ -32,6 +32,8 @@ export const standortPage = {
     meta: ["Standort", "Kanton Zürich"],
     // weiches Trennzeichen: bricht nur auf schmalen Screens als «Marketing-/agentur», sonst ein Wort
     title: ["Marketing­agentur", "im Kanton Zürich."],
+    /** Akzentwort in der H1 */
+    accent: "Kanton Zürich",
     lead: "Unser Sitz ist in Neerach im Zürcher Unterland, rund 16 Kilometer nördlich von Zürich. Wir arbeiten für Unternehmen in der ganzen Deutschschweiz: Beratung per Video-Call, Dreh bei dir vor Ort.",
     addressLink: { label: "Adresse und Karte", href: "#adresse" },
     coords: {
@@ -46,6 +48,7 @@ export const standortPage = {
   scale: {
     meta: "Einsatzgebiet",
     title: "Vom Zürcher Unterland in die Deutschschweiz.",
+    accent: "Deutschschweiz",
     rows: [
       {
         label: "Sitz",

@@ -10,7 +10,7 @@ Lokale Neuentwicklung von www.ecreator.ch. **Nicht deployt.** Keine Änderungen 
 
 | Datei | Inhalt |
 |---|---|
-| `docs/ART-DIRECTION.md` | Designidee, Kundenentscheide (§0b Hero, §0c schlicht wie die bisherige Website), Violett-Budget, Bildsprache |
+| `docs/ART-DIRECTION.md` | Designidee, Kundenentscheide (§0b bis §0d, aktuell: hell und luftig nach dem Vorbild anfragenfluss.de), Violett-Regel, Bildsprache |
 | `design-system.md` | Tokens, Typo-Skala, Raster, Abstände, Buttons, Bewegung, Formulare, Komponenten |
 | `docs/POSITIONING-IA.md` | Positionierung, Zielgruppen, CTA-Hierarchie, Sitemap, Navigation, Homepage-Dramaturgie |
 | `docs/PAGES.md` | Verträge je Unterseite (Keyword, Inhalt, Art Direction, Schema) und harte Regeln |
@@ -100,7 +100,7 @@ scripts/
 1. **Echte Daten only.** Die bisherigen Testimonials (Initialen, Stockfotos), die Gesamtkennzahlen (800 % ROAS, 12'500+ Leads, 10 Mio.+ Ad Spend), die Partner-Badges, das Allianz-Logo und «5.0 auf Google» sind nicht belegt und erscheinen nicht. Begründung je Punkt in `_research/FACTS.md` Kapitel 11.
 2. **Einziges echtes Testimonial:** Video-Interview mit Costantino Pinelli (Asset Management Switzerland AG), von eCreator auf LinkedIn veröffentlicht. Zitate stammen wörtlich aus der Transkription; deutsche Untertitel liegen in `public/work/interview-asset-management.de.vtt`.
 3. **Der 600-Leads-Case bleibt anonymisiert**, bis der Kunde Name und Zahlen freigibt.
-4. **Art Direction Version 3: schlicht wie die bisherige Website** (Kundenentscheid 29.09.2026): Plus Jakarta Sans + Inter, ruhige Grössen, dunkle mittige Seitenköpfe mit Netz, Pill-Buttons. Version 1 war dem Konkurrenten Offscript zu ähnlich, Version 2 zu plakativ (ART-DIRECTION.md §0 bis §0c).
+4. **Art Direction Version 4: hell und luftig nach dem Vorbild anfragenfluss.de** (Kundenentscheid 29.09.2026): weisser Grund, schwebender Header, Titel in Satzschreibung mit violettem Akzentwort, Label-Pillen, Karten mit weichem Schatten, dunkle Panels eingerückt. Übernommen wurden Muster, keine Inhalte. Vorher: V1 zu nah an Offscript, V2 zu plakativ, V3 dunkel und in Versalien (ART-DIRECTION.md §0 bis §0d).
 5. **Du-Form** wie auf der bisherigen Website, Schweizer Rechtschreibung.
 6. `/produkt-rechner` liefert **410 Gone** (interne Seite, wird nicht migriert).
 
@@ -109,6 +109,9 @@ scripts/
 **Freigaben**
 - [ ] Asset Management Switzerland AG: Logo, namentliche Nennung mit den Case-Zahlen, Video-Interview auf der Website
 - [ ] Spitex Nächstenpflege, Trapletti Gipser Maler GmbH, Novara AG Immobilien, Arana Care, Pflegezukunft Schweiz: Logo und Arbeiten
+- [ ] Neue Videos (29.09.2026): Freigaben von Arana Care, ProMaCare und Baba's Döner, Model-Releases der Darstellenden, Musikrechte Baba's Döner (Ton nur nach Klärung)
+- [ ] Trading-Video «All Time High University»: ausgeblendet (`needsApproval` in `src/content/work.ts`), weil es Rendite-Aussagen ohne Risikohinweis enthält. Nur nach Kundenfreigabe und Prüfung zeigen
+- [ ] Absender der Videos «Vergessene Vorsorgegelder» und «Call Agents» bestätigen (im Video nicht erkennbar, bisher anonym)
 
 **Fakten**
 - [ ] Case-Zahlen belegen (Ads-Manager-Export) und Widersprüche der alten Case Study klären (FACTS N17, N18)
@@ -131,6 +134,6 @@ scripts/
 **Technik / Recht**
 - [ ] Datenschutzerklärung juristisch aktualisieren (Formular, Google Kalender, Tracking)
 - [ ] Tracking + Consent-Banner
-- [ ] Open-Graph-Bild (`src/app/opengraph-image.tsx`) noch mit Archivo gesetzt: auf Plus Jakarta Sans umstellen (TTF-Datei in `src/app/_og` ablegen)
+- [ ] Open-Graph-Bild ist im hellen Look, aber noch in Archivo gesetzt: für Plus Jakarta Sans die TTF-Datei in `src/app/_og` ablegen und in `src/app/opengraph-image.tsx` einbinden
 - [ ] Hosting, Host-Weiterleitung auf `https://www.ecreator.ch` mit einem 301
 - [ ] Live-Site: LinkedIn-Link und Bewertungslink auf /kontakt/ korrigieren

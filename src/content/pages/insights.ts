@@ -154,6 +154,8 @@ export const insightsHub = {
   header: {
     meta: ["Insights", "Ratgeber", "Cases"],
     title: ["Was wir wissen."],
+    /** Wort im Titel, das violett hervorgehoben wird (text-accent) */
+    accent: "wissen",
     lead: "Anleitungen und Einordnungen aus unserer Arbeit mit Werbung, Tracking, Content, Recruiting und KI-Suche. Kurz, konkret und so geschrieben, dass du danach etwas tun kannst.",
     principlesTitle: "So schreiben wir",
     principles: [
@@ -258,6 +260,8 @@ export const articlePage = {
     author: "Autor",
     summary: "Kurzantwort",
     toc: "Inhalt",
+    /** Label-Pille über «Das Wichtigste in Kürze.» (reines UI-Label) */
+    takeawaysMeta: "Zusammenfassung",
     takeaways: "Das Wichtigste in Kürze.",
     sources: "Quellen",
     sourcesNote: "Abgerufen am 29.09.2026",

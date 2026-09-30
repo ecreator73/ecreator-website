@@ -16,13 +16,13 @@ type Props = {
 const isExternal = (href: string) =>
   href.startsWith("http") || href.startsWith("tel:") || href.startsWith("mailto:");
 
-/** Eckige Fläche + Ring mit Pfeil. Violett (primary) nur für die primäre Handlung. */
+/** Abgerundeter Button mit Pfeil. primary = Strategie-Call (dunkel mit violettem Leuchten). */
 export function ButtonLink({ href, children, variant = "primary", size = "md", className = "", track }: Props) {
   const cls = `btn btn-${variant} ${size === "sm" ? "btn-sm" : ""} ${className}`;
   const inner = (
     <>
       <span>{children}</span>
-      <RingArrow />
+      <BtnArrow />
     </>
   );
   if (isExternal(href)) {
@@ -41,12 +41,8 @@ export function ButtonLink({ href, children, variant = "primary", size = "md", c
   );
 }
 
-export function RingArrow() {
-  return (
-    <span className="btn-ring" aria-hidden>
-      <Arrow className="btn-arrow h-[9px] w-[13px]" />
-    </span>
-  );
+export function BtnArrow() {
+  return <Arrow className="btn-arrow h-[10px] w-[15px]" />;
 }
 
 /** Textlink mit Pfeil (tertiäre Handlung). */
@@ -60,7 +56,7 @@ export function ArrowLink({
   className?: string;
 }) {
   return (
-    <Link href={href} className={`group -my-2.5 inline-flex min-h-11 items-center gap-2 whitespace-nowrap py-2.5 font-semibold ${className}`}>
+    <Link href={href} className={`group -my-2.5 inline-flex min-h-11 max-w-full items-center gap-2 py-2.5 font-semibold sm:whitespace-nowrap ${className}`}>
       <span className="link">{children}</span>
       <Arrow className="transition-transform duration-300 group-hover:translate-x-1" />
     </Link>

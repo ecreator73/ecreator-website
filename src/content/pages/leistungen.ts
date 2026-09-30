@@ -120,6 +120,8 @@ export const leistungenPage = {
   header: {
     meta: ["Leistungen", "Studio", "Pakete"],
     title: ["Alles, was ein", "System braucht."],
+    /** Akzentwort im Titel (violett) */
+    accent: "System",
     lead: "Content, Werbung, Website, SEO und CRM aus einem Team. Du kannst mit einer einzelnen Leistung starten oder alles verbinden. Hier siehst du jede Leistung und wo sie im Kreislauf ansetzt.",
     secondary: { label: "Pakete ansehen", href: "/pakete" },
     jumpTitle: "Auf dieser Seite",
@@ -158,6 +160,7 @@ export const leistungenPage = {
     jumpLabel: "Kreislauf",
     meta: ["Orientierung", "Systems over campaigns"],
     title: "Wo jede Leistung im Kreislauf ansetzt.",
+    accent: "Kreislauf",
     lead: "Fünf Ringe stehen für Content, Werbung, Website, CRM und Daten. Neun Stationen zeigen den Weg vom ersten Kontakt bis zum Kunden. Nach Station 09 beginnt die nächste Runde, mit dem, was funktioniert hat.",
   },
   packages: {

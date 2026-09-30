@@ -2,17 +2,18 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-export const alt = "eCreator · Marketingagentur Schweiz: Wir machen aus Aufmerksamkeit Kunden.";
+export const alt = "eCreator · Marketingagentur Schweiz: Kunden statt Klicks.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-/** Social-Sharing-Bild im Stil der Website: Papier, Tinte, ein violettes Signal. */
+/**
+ * Social-Sharing-Bild im Stil der Website (Version 4): weiss, violettes Leuchten, Label-Pille,
+ * Headline in Satzschreibung mit violettem Akzentwort. Schrift: Archivo (TTF lokal in src/app/_og).
+ */
 export default async function OpengraphImage() {
   const dir = path.join(process.cwd(), "src/app/_og");
-  const [bold, expanded, mono, logo] = await Promise.all([
+  const [bold, logo] = await Promise.all([
     readFile(path.join(dir, "Archivo-800.ttf")),
-    readFile(path.join(dir, "Archivo-Expanded-600.ttf")),
-    readFile(path.join(dir, "FragmentMono-Regular.ttf")),
     readFile(path.join(process.cwd(), "public/brand/ecreator-black.svg")),
   ]);
   const logoSrc = `data:image/svg+xml;base64,${logo.toString("base64")}`;
@@ -25,57 +26,58 @@ export default async function OpengraphImage() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          background: "#f4f3ef",
-          color: "#0b0b0c",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#ffffff",
+          backgroundImage: "radial-gradient(60% 60% at 50% 45%, rgba(120,102,244,0.18), rgba(255,255,255,0) 75%)",
+          color: "#1d1d1f",
+          fontFamily: "Archivo",
           padding: "56px 64px",
         }}
       >
         <div
           style={{
             display: "flex",
-            justifyContent: "space-between",
             alignItems: "center",
-            fontFamily: "Mono",
-            fontSize: 20,
-            letterSpacing: 1,
-            color: "#55555a",
-            borderBottom: "1px solid rgba(11,11,12,0.2)",
-            paddingBottom: 18,
+            gap: 12,
+            padding: "10px 22px",
+            borderRadius: 999,
+            background: "rgba(120,102,244,0.1)",
+            color: "#5a48d8",
+            fontSize: 24,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ width: 12, height: 12, borderRadius: 12, background: "#7866f4" }} />
-            MARKETINGAGENTUR SCHWEIZ
-          </div>
-          <div style={{ display: "flex" }}>CONTENT / ADS / WEB / CRM</div>
+          <div style={{ width: 10, height: 10, borderRadius: 10, background: "#7866f4" }} />
+          Marketingagentur für KMU in der Schweiz
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", fontFamily: "Archivo", fontSize: 104, lineHeight: 0.9, letterSpacing: -4 }}>
-          <div style={{ display: "flex" }}>Wir machen aus</div>
-          <div style={{ display: "flex" }}>Aufmerksamkeit</div>
-          <div style={{ display: "flex" }}>
-            Kunden<span style={{ color: "#7866f4" }}>.</span>
-          </div>
+        <div style={{ display: "flex", marginTop: 36, fontSize: 88, letterSpacing: -3.5, lineHeight: 1 }}>
+          <span style={{ color: "#7866f4" }}>Kunden</span>
+          <span style={{ marginLeft: 22 }}>statt Klicks.</span>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-          <div style={{ display: "flex", fontFamily: "Expanded", fontSize: 26, letterSpacing: 2 }}>
-            SYSTEMS<span style={{ color: "#7866f4", margin: "0 12px" }}>/</span>OVER
-            <span style={{ color: "#7866f4", margin: "0 12px" }}>/</span>CAMPAIGNS.
-          </div>
+        <div style={{ display: "flex", marginTop: 30, fontSize: 30, color: "#56565b", letterSpacing: -0.5 }}>
+          Videos, Werbung, Website und CRM aus einem Team.
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            marginTop: 70,
+          }}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logoSrc} width={300} height={106} alt="" />
+          <img src={logoSrc} width={240} height={85} alt="" />
+          <div style={{ display: "flex", fontSize: 24, color: "#56565b" }}>Content · Ads · Web · CRM</div>
         </div>
       </div>
     ),
     {
       ...size,
-      fonts: [
-        { name: "Archivo", data: bold, weight: 800, style: "normal" },
-        { name: "Expanded", data: expanded, weight: 600, style: "normal" },
-        { name: "Mono", data: mono, weight: 400, style: "normal" },
-      ],
+      fonts: [{ name: "Archivo", data: bold, weight: 800, style: "normal" }],
     },
   );
 }

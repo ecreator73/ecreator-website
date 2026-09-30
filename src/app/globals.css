@@ -6,21 +6,20 @@
    ========================================================================== */
 
 @theme {
-  /* Flächen */
-  /* eCreator-Creme aus dem Elementor-Kit (#FEFBF6) als Grundfläche */
-  --color-paper: #fefbf6;
-  --color-paper-2: #f3eee4;
+  /* Flächen: hell und ruhig (Version 4) */
+  --color-paper: #ffffff;
+  --color-paper-2: #f5f5f7;
   --color-white: #ffffff;
-  --color-ink: #0b0b0c;
+  --color-ink: #1d1d1f;
   --color-ink-2: #151517;
   --color-ink-3: #222225;
 
   /* Grau (Kontrast siehe design-system.md) */
-  --color-grey-700: #3d3d40;
-  --color-grey-600: #55555a;
-  --color-grey-500: #6b6b70;
-  --color-grey-400: #8e8e93;
-  --color-grey-300: #bdbcb7;
+  --color-grey-700: #3a3a3c;
+  --color-grey-600: #56565b;
+  --color-grey-500: #6e6e73;
+  --color-grey-400: #98989d;
+  --color-grey-300: #c7c7cc;
 
   /* eCreator Violett (Live-Site Elementor Kit) */
   --color-violet: #7866f4;
@@ -29,18 +28,26 @@
   --color-violet-deep: #5a48d8;
 
   /* Linien */
-  --color-line: rgb(11 11 12 / 0.14);
-  --color-line-strong: rgb(11 11 12 / 0.3);
-  --color-line-inv: rgb(244 243 239 / 0.16);
-  --color-line-inv-strong: rgb(244 243 239 / 0.32);
+  --color-line: rgb(29 29 31 / 0.1);
+  --color-line-strong: rgb(29 29 31 / 0.2);
+  --color-line-inv: rgb(245 245 247 / 0.14);
+  --color-line-inv-strong: rgb(245 245 247 / 0.3);
+
+  /* Radien und Schatten: weiche Karten, schwebender Header */
+  --radius-card: 24px;
+  --radius-media: 18px;
+  --radius-btn: 14px;
+  --shadow-card: 0 22px 44px -22px rgb(11 29 63 / 0.14), 0 6px 14px -8px rgb(11 29 63 / 0.06);
+  --shadow-float: 0 12px 36px -10px rgb(11 29 63 / 0.18), 0 1px 4px 0 rgb(11 29 63 / 0.04);
+  --shadow-cta: 0 12px 28px -8px rgb(120 102 244 / 0.55);
 
   /* Wie die bisherige Website: Plus Jakarta Sans für Titel, Inter für Text */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-jakarta), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
   --font-script: var(--font-pinyon), cursive;
-  /* Hero-Nacht (wie der dunkle Hero der bisherigen Website) */
-  --color-night: #111112;
+  /* dunkle Panels */
+  --color-night: #111114;
 
   --ease-cut: cubic-bezier(0.2, 0.7, 0, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
@@ -51,7 +58,8 @@
 :root {
   --gutter: clamp(16px, 1.7vw, 24px);
   --margin: clamp(20px, 3.4vw, 48px);
-  --header-h: 64px;
+  /* Höhe des schwebenden Headers inkl. Abstand oben */
+  --header-h: 68px;
   /* Der Schnitt: Winkel aus dem Logo (ca. 9° aus der Senkrechten) */
   --cut-angle: 81deg;
   --hatch: repeating-linear-gradient(
@@ -68,7 +76,7 @@
 
 @media (min-width: 1024px) {
   :root {
-    --header-h: 76px;
+    --header-h: 78px;
   }
 }
 
@@ -143,40 +151,38 @@
    Typografie · Plus Jakarta Sans (Titel) + Inter (Text), ruhige Grössen wie auf der bisherigen Website
    ========================================================================== */
 
-/* H1: Versalien, fett, ca. 32 px mobil bis 64 px Desktop */
+/* H1: fett, eng gesetzt, Satzschreibung. ca. 36 px mobil bis 60 px Desktop */
 @utility t-h1 {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 1.2rem + 3.4vw, 4rem);
-  line-height: 1.08;
-  letter-spacing: -0.015em;
+  font-size: clamp(2.25rem, 1.3rem + 3.6vw, 3.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
   font-weight: 700;
-  text-transform: uppercase;
 }
 
-/* H2: Versalien, Sektionstitel */
+/* H2: Sektionstitel, ca. 30 px bis 48 px */
 @utility t-h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.625rem, 1.1rem + 2.2vw, 2.75rem);
-  line-height: 1.12;
-  letter-spacing: -0.01em;
+  font-size: clamp(1.875rem, 1.2rem + 2.4vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
   font-weight: 700;
-  text-transform: uppercase;
 }
 
 @utility t-h3 {
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.625rem);
+  font-size: clamp(1.25rem, 1.05rem + 0.6vw, 1.5rem);
   line-height: 1.2;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   font-weight: 700;
 }
 
 @utility t-h4 {
   font-family: var(--font-display);
-  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.25rem);
+  font-size: clamp(1.0625rem, 1rem + 0.2vw, 1.1875rem);
   line-height: 1.3;
-  letter-spacing: -0.005em;
-  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-weight: 650;
 }
 
 /* Namen und kurze Labels (Paketnamen, Branchen) */
@@ -194,14 +200,15 @@
   font-family: var(--font-display);
   font-size: clamp(1.75rem, 1.3rem + 1.5vw, 2.5rem);
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   font-weight: 700;
   font-variant-numeric: tabular-nums lining-nums;
 }
 
 @utility t-lead {
-  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
   line-height: 1.55;
+  letter-spacing: -0.005em;
   font-weight: 400;
 }
 
@@ -216,12 +223,12 @@
   line-height: 1.5;
 }
 
-/* Kleine Überzeile (Kicker) wie auf der bisherigen Website */
+/* Kleine Labels und Captions in Versalien (z.B. unter Kennzahlen) */
 @utility t-meta {
   font-family: var(--font-display);
   font-size: 0.75rem;
   line-height: 1.4;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 600;
 }
@@ -273,23 +280,32 @@
   padding-block: clamp(5.5rem, 10vw, 8.5rem);
 }
 
-/* Das Netz im dunklen Hero (DNA der bisherigen Website), zur Mitte hin sichtbar, am Rand ausgeblendet */
-@utility hero-net {
+/* Violettes Netz mit weichem Leuchten hinter Hero und Seitenköpfen, zum Rand hin ausgeblendet */
+@utility hero-grid {
   background-image:
-    linear-gradient(to right, rgb(244 243 239 / 0.075) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(244 243 239 / 0.075) 1px, transparent 1px);
-  background-size: 56px 56px;
-  background-position: -1px -1px;
-  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 35%, transparent 100%);
-  mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 35%, transparent 100%);
-  @media (min-width: 1024px) {
-    background-size: 72px 72px;
-  }
+    radial-gradient(55% 50% at 50% 40%, rgb(120 102 244 / 0.16), transparent 72%),
+    linear-gradient(rgb(120 102 244 / 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(120 102 244 / 0.13) 1px, transparent 1px);
+  background-size:
+    auto,
+    44px 44px,
+    44px 44px;
+  background-position: center, -1px -1px, -1px -1px;
+  -webkit-mask-image: radial-gradient(78% 70% at 50% 45%, #000 0%, rgb(0 0 0 / 0.85) 30%, rgb(0 0 0 / 0.35) 60%, transparent 84%);
+  mask-image: radial-gradient(78% 70% at 50% 45%, #000 0%, rgb(0 0 0 / 0.85) 30%, rgb(0 0 0 / 0.35) 60%, transparent 84%);
 }
 
-/* Grauverlauf in der Headline wie auf der bisherigen Website */
-@utility text-fade {
-  background-image: linear-gradient(90deg, #6f6f75 0%, #c9c8c3 100%);
+/* feines graues Raster als Flächenhintergrund */
+@utility bg-grid {
+  background-image:
+    linear-gradient(rgb(29 29 31 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(29 29 31 / 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+/* Akzentwort in Titeln: eCreator-Violett als Verlauf */
+@utility text-accent {
+  background-image: linear-gradient(90deg, var(--color-violet-deep) 0%, var(--color-violet) 60%, #9d8cff 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -313,15 +329,26 @@
 
 /* Studio-Modus: dunkle Flächen */
 @utility studio {
-  background: var(--color-ink);
+  background-color: var(--color-night);
   color: var(--color-paper);
-  --color-line: rgb(244 243 239 / 0.16);
-  --color-line-strong: rgb(244 243 239 / 0.32);
+  --color-line: rgb(245 245 247 / 0.14);
+  --color-line-strong: rgb(245 245 247 / 0.3);
   --hatch: repeating-linear-gradient(
     -81deg,
     transparent 0 11px,
-    rgb(244 243 239 / 0.14) 11px 12px
+    rgb(245 245 247 / 0.12) 11px 12px
   );
+}
+
+/* Dunkle Abschnitte als eingerückte, abgerundete Panels mit violettem Schimmer */
+section.studio {
+  margin-inline: clamp(8px, 1.4vw, 20px);
+  border-radius: clamp(20px, 2.4vw, 32px);
+  overflow: hidden;
+  background-image: radial-gradient(60% 55% at 85% 0%, rgb(120 102 244 / 0.2), transparent 70%);
+}
+section.studio + section.studio {
+  margin-top: 12px;
 }
 
 /* ==========================================================================
@@ -346,76 +373,68 @@
     }
   }
 
-  /* Buttons wie auf der bisherigen Website: Pill mit rundem Pfeil-Knopf.
-     Violett ausschliesslich für die primäre Handlung. */
+  /* Buttons: abgerundetes Rechteck, Text + Pfeil. Primär dunkel mit violettem Leuchten (Strategie-Call). */
   .btn {
-    --ring-bg: var(--color-ink);
-    --ring-fg: var(--color-paper);
     position: relative;
     display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.9rem;
+    justify-content: center;
+    gap: 0.55rem;
     min-height: 3.25rem;
-    padding: 0 0.4rem 0 1.5rem;
-    border-radius: 999px;
-    font-size: 0.9375rem;
+    padding: 0 1.5rem;
+    border-radius: var(--radius-btn);
+    font-size: 1rem;
     font-weight: 600;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
+    letter-spacing: -0.01em;
     line-height: 1.1;
     border: 1px solid transparent;
     transition:
       background-color 0.25s var(--ease-out-quart),
       color 0.25s var(--ease-out-quart),
-      border-color 0.25s var(--ease-out-quart);
+      border-color 0.25s var(--ease-out-quart),
+      box-shadow 0.25s var(--ease-out-quart),
+      transform 0.25s var(--ease-out-quart);
     -webkit-tap-highlight-color: transparent;
-  }
-  .btn .btn-ring {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 999px;
-    background: var(--ring-bg);
-    color: var(--ring-fg);
-    transition:
-      background-color 0.25s,
-      color 0.25s;
   }
   .btn .btn-arrow {
     transition: transform 0.35s var(--ease-cut);
   }
   @media (hover: hover) {
     .btn:hover .btn-arrow {
-      transform: translateX(2px);
+      transform: translateX(3px);
     }
   }
 
-  .btn-primary {
-    background: var(--color-violet);
-    color: var(--color-ink);
-  }
-  @media (hover: hover) {
-    .btn-primary:hover {
-      background: var(--color-ink);
-      color: var(--color-paper);
-      --ring-bg: var(--color-violet);
-      --ring-fg: var(--color-ink);
-    }
-  }
-
+  .btn-primary,
   .btn-ink {
     background: var(--color-ink);
-    color: var(--color-paper);
-    --ring-bg: var(--color-paper);
-    --ring-fg: var(--color-ink);
+    color: var(--color-white);
+    box-shadow:
+      var(--shadow-cta),
+      inset 0 1px 0 rgb(255 255 255 / 0.14);
   }
   @media (hover: hover) {
+    .btn-primary:hover,
     .btn-ink:hover {
-      background: var(--color-ink-3);
+      background: #000;
+      transform: translateY(-1px);
+      box-shadow:
+        0 16px 32px -8px rgb(120 102 244 / 0.65),
+        inset 0 1px 0 rgb(255 255 255 / 0.14);
+    }
+  }
+
+  /* Auf dunklen Panels: primärer Button hell, Leuchten bleibt violett */
+  .studio .btn-primary,
+  .studio .btn-ink {
+    background: var(--color-white);
+    color: var(--color-ink);
+    box-shadow: 0 12px 28px -8px rgb(120 102 244 / 0.6);
+  }
+  @media (hover: hover) {
+    .studio .btn-primary:hover,
+    .studio .btn-ink:hover {
+      background: var(--color-paper-2);
     }
   }
 
@@ -423,11 +442,6 @@
     background: transparent;
     color: currentColor;
     border-color: var(--color-line-strong);
-  }
-  .btn-line .btn-ring {
-    background: transparent;
-    color: currentColor;
-    border: 1px solid var(--color-line-strong);
   }
   @media (hover: hover) {
     .btn-line:hover {
@@ -438,14 +452,12 @@
   .btn-paper {
     background: var(--color-white);
     color: var(--color-ink);
+    box-shadow: 0 12px 28px -10px rgb(0 0 0 / 0.5);
   }
   @media (hover: hover) {
     .btn-paper:hover {
-      background: var(--color-ink);
-      color: var(--color-paper);
-      border-color: rgb(244 243 239 / 0.6);
-      --ring-bg: var(--color-paper);
-      --ring-fg: var(--color-ink);
+      background: var(--color-paper-2);
+      transform: translateY(-1px);
     }
   }
 
@@ -456,27 +468,75 @@
     outline-color: var(--color-ink);
   }
 
+  /* klein, als Pille (Header) */
   .btn-sm {
     white-space: nowrap;
-    min-height: 2.75rem;
-    padding: 0 0.3rem 0 1.1rem;
-    font-size: 0.8125rem;
-    gap: 0.6rem;
-  }
-  .btn-sm .btn-ring {
-    width: 2.1rem;
-    height: 2.1rem;
+    min-height: 2.5rem;
+    padding: 0 1.1rem;
+    font-size: 0.875rem;
+    gap: 0.45rem;
+    border-radius: 999px;
   }
 
-  /* Header über dem dunklen Hero */
-  .header-dark {
-    --color-line: rgb(244 243 239 / 0.16);
-    --color-line-strong: rgb(244 243 239 / 0.4);
+  /* Label-Pille über Titeln: «• Leistungen» */
+  .label-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: rgb(120 102 244 / 0.09);
+    color: var(--color-violet-deep);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: 0;
   }
-  @media (hover: hover) {
-    .header-dark .nav-item:hover {
-      color: rgb(244 243 239 / 0.7);
-    }
+  .label-pill::before {
+    content: "";
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--color-violet);
+  }
+  .studio .label-pill {
+    background: rgb(137 120 255 / 0.16);
+    color: #cfc8ff;
+  }
+
+  /* Karte: weiss, abgerundet, weicher Schatten */
+  .card {
+    background: var(--color-white);
+    border: 1px solid rgb(11 29 63 / 0.07);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+  .studio .card {
+    background: rgb(255 255 255 / 0.04);
+    border-color: rgb(255 255 255 / 0.1);
+    box-shadow: none;
+  }
+
+  /* Häkchen-Liste: dunkles Quadrat mit weissem Haken */
+  .check-list > li {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .check-list > li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.18em;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 6px;
+    background: var(--color-ink)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath d='M1 5.2l3.2 3L11 1.3' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      center / 11px no-repeat;
+  }
+  .studio .check-list > li::before {
+    background-color: var(--color-violet);
   }
 
   /* Navigation */
@@ -484,60 +544,55 @@
     position: relative;
     display: inline-flex;
     align-items: center;
-    height: 2.75rem;
-    padding: 0 0.85rem;
+    height: 2.5rem;
+    padding: 0 0.8rem;
+    border-radius: 999px;
     font-size: 0.875rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    transition: color 0.2s;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    transition:
+      color 0.2s,
+      background-color 0.2s;
   }
   @media (hover: hover) {
     .nav-item:hover {
-      color: var(--color-violet-deep);
+      background: var(--color-paper-2);
     }
   }
-  .nav-item[data-active]::before {
-    content: "";
-    position: absolute;
-    left: 0.15rem;
-    top: 50%;
-    width: 0.4rem;
-    height: 0.4rem;
-    margin-top: -0.2rem;
-    border-radius: 999px;
-    background: var(--color-violet);
+  .nav-item[data-active] {
+    color: var(--color-violet-deep);
   }
 
-  /* Formularfelder */
+  /* Formularfelder: abgerundete Boxen */
   .field {
     display: block;
     width: 100%;
     min-height: 3.25rem;
-    padding: 0.85rem 0 0.7rem;
-    background: transparent;
-    border: 0;
-    border-bottom: 1px solid var(--color-line-strong);
-    border-radius: 0;
-    font-size: 1.125rem;
+    padding: 0.8rem 1rem;
+    background: var(--color-white);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 12px;
+    font-size: 1.0625rem;
     line-height: 1.4;
-    color: inherit;
-    transition: border-color 0.2s;
+    color: var(--color-ink);
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
     appearance: none;
   }
   .field::placeholder {
     color: var(--color-grey-500);
   }
   .field:hover {
-    border-bottom-color: currentColor;
+    border-color: var(--color-grey-400);
   }
   .field:focus {
     outline: none;
-    border-bottom: 2px solid var(--color-violet);
-    padding-bottom: calc(0.7rem - 1px);
+    border-color: var(--color-violet);
+    box-shadow: 0 0 0 4px rgb(120 102 244 / 0.18);
   }
   .field[aria-invalid="true"] {
-    border-bottom-color: #c2352b;
+    border-color: #c2352b;
   }
   textarea.field {
     min-height: 8rem;
@@ -547,13 +602,13 @@
     background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
       linear-gradient(135deg, currentColor 50%, transparent 50%);
     background-position:
-      calc(100% - 12px) 55%,
-      calc(100% - 7px) 55%;
+      calc(100% - 20px) 55%,
+      calc(100% - 15px) 55%;
     background-size:
       5px 5px,
       5px 5px;
     background-repeat: no-repeat;
-    padding-right: 2rem;
+    padding-right: 2.5rem;
   }
 }
 
@@ -571,9 +626,7 @@
   margin-top: 1.1em;
 }
 .article h2 {
-  margin-top: 2.6em;
-  padding-top: 1.1em;
-  border-top: 1px solid var(--color-ink);
+  margin-top: 2.4em;
   color: var(--color-ink);
   font-family: var(--font-display);
   font-size: clamp(1.4rem, 1.1rem + 1vw, 1.875rem);
@@ -632,18 +685,27 @@
   font-size: 0.75rem;
   color: var(--color-grey-600);
 }
+.article .checklist > li {
+  padding-left: 2rem;
+}
 .article .checklist > li::before {
   content: "";
-  top: 0.45em;
-  left: 0.1em;
-  width: 0.8em;
-  height: 0.8em;
-  border: 1px solid var(--color-ink);
+  top: 0.22em;
+  left: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 6px;
+  background: var(--color-ink)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath d='M1 5.2l3.2 3L11 1.3' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    center / 11px no-repeat;
 }
 .article .table-wrap {
   overflow-x: auto;
   margin-top: 1.6em;
-  border-top: 1px solid var(--color-ink);
+  padding: 0.25rem 1.25rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-white);
 }
 .article table {
   width: 100%;
@@ -683,17 +745,15 @@
 }
 .article .callout {
   margin-top: 1.8em;
-  padding: 1.2em 0 1.2em 1.2em;
-  border-left: 3px solid var(--color-violet);
+  padding: 1.2em 1.4em;
+  border-radius: 16px;
+  background: rgb(120 102 244 / 0.07);
   color: var(--color-ink);
 }
 .article .callout-title {
-  font-family: var(--font-display);
+  font-size: 0.875rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  color: var(--color-grey-600);
+  color: var(--color-violet-deep);
   margin-bottom: 0.4em;
 }
 .article blockquote {

@@ -32,7 +32,7 @@ const script = Pinyon_Script({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "eCreator · Marketingagentur Schweiz für Content, Ads, Web & CRM",
+    default: "eCreator · Marketingagentur Schweiz: Content, Ads, Web, CRM",
     template: "%s · eCreator",
   },
   description: site.description,
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f4f3ef",
+  themeColor: "#ffffff",
   width: "device-width",
   initialScale: 1,
 };

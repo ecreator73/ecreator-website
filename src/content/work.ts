@@ -1,6 +1,8 @@
 /**
  * Arbeiten: echte Video-Creatives und Projekte von eCreator.
- * Quelle Videos: Mediathek ecreator.ch (Startseite, Kampagnen-Karten, Galerie) + eigenes eCreator-Ad.
+ * Quelle Videos: Mediathek ecreator.ch (Startseite, Kampagnen-Karten, Galerie) + eigenes eCreator-Ad,
+ * dazu Originale von eCreator (29.09.2026, _research/assets-live/Kundenvideos + eCreator Videos,
+ * Analyse je Video in _research/new-videos/analysis.json).
  * Beschriftung nur mit belegbaren Angaben:
  *  - "client" nur, wenn der Kunde im Material selbst sichtbar ist (z.B. Logo im Abspann)
  *    oder die Live-Site es eindeutig so zeigt.
@@ -19,8 +21,12 @@ export type WorkVideo = {
   /** 8-Sekunden-Vorschau, klein, für Streifen */
   short: string;
   poster: string;
+  /** deutsche Untertitel (WebVTT) für die Vollversion mit Ton */
+  captions?: string;
   note?: string;
   todo?: string;
+  /** true = wird nirgends angezeigt, bis eCreator das Video freigibt */
+  needsApproval?: boolean;
 };
 
 export const workVideos: WorkVideo[] = [
@@ -114,9 +120,142 @@ export const workVideos: WorkVideo[] = [
     poster: "/work/fitness-poster.jpg",
     todo: "Kunde und Kontext bestätigen.",
   },
+  {
+    id: "arana-care",
+    title: "Bezahlte Angehörigenpflege",
+    theme: "Pflege",
+    client: "Arana Care",
+    platform: [],
+    duration: "00:22",
+    src: "/work/arana-care.mp4",
+    loop: "/work/arana-care-loop.mp4",
+    short: "/work/arana-care-short.mp4",
+    poster: "/work/arana-care-poster.jpg",
+    captions: "/work/arana-care.de.vtt",
+    note: "Kundenlogo auf dem Polo der Sprecherin, fast durchgehend im Bild. Hook: «bis zu 3'500 Franken im Monat» (Aussage des Kunden).",
+    todo: "Freigabe von Kunde und Sprecherin für die Nutzung als Referenz einholen.",
+  },
+  {
+    id: "promacare",
+    title: "Pflegende Angehörige",
+    theme: "Pflege",
+    client: "ProMaCare",
+    platform: [],
+    duration: "00:26",
+    src: "/work/promacare.mp4",
+    loop: "/work/promacare-loop.mp4",
+    short: "/work/promacare-short.mp4",
+    poster: "/work/promacare-poster.jpg",
+    captions: "/work/promacare.de.vtt",
+    note: "Kundenlogo auf dem Polo und an der Wand. Hook: «im Schnitt 2'600 Franken im Monat» (Aussage des Kunden).",
+    todo: "Freigabe von Kunde und Darstellerin für die Nutzung als Referenz einholen.",
+  },
+  {
+    id: "babas-doener",
+    title: "Die Liebe kann warten",
+    theme: "Gastronomie",
+    client: "Baba's Döner",
+    platform: [],
+    duration: "00:27",
+    src: "/work/babas-doener.mp4",
+    loop: "/work/babas-doener-loop.mp4",
+    short: "/work/babas-doener-short.mp4",
+    poster: "/work/babas-doener-poster.jpg",
+    note: "Marke auf Shirt, Flasche und Verpackung sichtbar. Ohne Sprache, nur Musik.",
+    todo: "Kundenfreigabe, Model-Release und Musikrechte für die Website klären (Vollversion mit Ton erst danach zeigen).",
+  },
+  {
+    id: "vergessene-vorsorgegelder",
+    title: "Vergessene Vorsorgegelder",
+    theme: "Vorsorge",
+    platform: [],
+    duration: "00:16",
+    src: "/work/vergessene-vorsorgegelder.mp4",
+    loop: "/work/vergessene-vorsorgegelder-loop.mp4",
+    short: "/work/vergessene-vorsorgegelder-short.mp4",
+    poster: "/work/vergessene-vorsorgegelder-poster.jpg",
+    captions: "/work/vergessene-vorsorgegelder.de.vtt",
+    todo: "Kunde im Video nicht erkennbar: Absender bestätigen, bevor er genannt wird.",
+  },
+  {
+    id: "call-agents",
+    title: "Call Agents gesucht",
+    theme: "Recruiting",
+    platform: [],
+    duration: "00:21",
+    src: "/work/call-agents.mp4",
+    loop: "/work/call-agents-loop.mp4",
+    short: "/work/call-agents-short.mp4",
+    poster: "/work/call-agents-poster.jpg",
+    captions: "/work/call-agents.de.vtt",
+    todo: "Arbeitgeber im Video nicht erkennbar: nur anonym zeigen. Eingebrannter Untertitelfehler «Dann bewirb sich» (ca. 17 s).",
+  },
+  {
+    id: "ecreator-recruiting",
+    title: "Recruiting mit Social Ads",
+    theme: "Eigenes Ad",
+    client: "eCreator",
+    platform: [],
+    duration: "00:33",
+    src: "/work/ecreator-recruiting.mp4",
+    loop: "/work/ecreator-recruiting-loop.mp4",
+    short: "/work/ecreator-recruiting-short.mp4",
+    poster: "/work/ecreator-recruiting-poster.jpg",
+    captions: "/work/ecreator-recruiting.de.vtt",
+    note: "Eigenwerbung von eCreator für Social Recruiting, Absender im Bild und im Ton.",
+    todo: "Einverständnis der Moderatorin für die dauerhafte Nutzung auf der Website bestätigen.",
+  },
+  {
+    id: "creator-casting",
+    title: "Creator-Netzwerk: Gesichter gesucht",
+    theme: "Eigenes Ad",
+    client: "eCreator",
+    platform: [],
+    duration: "00:29",
+    src: "/work/creator-casting.mp4",
+    loop: "/work/creator-casting-loop.mp4",
+    short: "/work/creator-casting-short.mp4",
+    poster: "/work/creator-casting-poster.jpg",
+    captions: "/work/creator-casting.de.vtt",
+    note: "Eigenes Casting-Video von eCreator für das Creator-Netzwerk (Models, UGC-Creator).",
+    todo: "Model-Releases der vier Personen für die Website bestätigen.",
+  },
+  {
+    id: "modelsuche",
+    title: "Models und UGC-Creator gesucht",
+    theme: "Eigenes Ad",
+    client: "eCreator",
+    platform: [],
+    duration: "00:22",
+    src: "/work/modelsuche.mp4",
+    loop: "/work/modelsuche-loop.mp4",
+    short: "/work/modelsuche-short.mp4",
+    poster: "/work/modelsuche-poster.jpg",
+    captions: "/work/modelsuche.de.vtt",
+    note: "Eigenes Video von eCreator. «Wir suchen aktuell» ist zeitgebunden: nur zeigen, solange die Suche läuft.",
+  },
+  {
+    id: "all-time-high",
+    title: "Gründer-Story einer Trading-Akademie",
+    theme: "Bildung",
+    client: "All Time High University",
+    platform: [],
+    duration: "00:33",
+    src: "/work/all-time-high.mp4",
+    loop: "/work/all-time-high-loop.mp4",
+    short: "/work/all-time-high-short.mp4",
+    poster: "/work/all-time-high-poster.jpg",
+    captions: "/work/all-time-high.de.vtt",
+    note: "Marke im Ton und im Bild. Enthält Rendite- und Einkommensaussagen des Kunden («+340 Avg pips / month») ohne Risikohinweis.",
+    todo: "Erst nach Kundenfreigabe und Prüfung der Finanz-Aussagen zeigen.",
+    needsApproval: true,
+  },
 ];
 
 export const workById = (id: string) => workVideos.find((w) => w.id === id)!;
+
+/** Alle Videos, die gezeigt werden dürfen (ohne needsApproval). */
+export const visibleWorkVideos = workVideos.filter((w) => !w.needsApproval);
 
 /** Kundenlogos von der Live-Site (Nutzungsfreigabe vor Livegang bestätigen). Einträge mit needsApproval werden nicht angezeigt. */
 export const clientLogos = [

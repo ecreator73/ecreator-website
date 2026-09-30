@@ -131,9 +131,12 @@ export const metaAdsPage = {
 
   /** Testing-Rhythmus als vier Schritte (FACTS M11 «Wöchentliche Tests», «Creative-Pipeline statt 1 Ad»). */
   testing: {
-    words: ["Drehen.", "Ausspielen.", "Auswerten.", "Umschichten."],
+    meta: "Testing",
+    words:["Drehen.", "Ausspielen.", "Auswerten.", "Umschichten."],
     again: ["Und wieder", "von vorn."],
     title: "Creative-Testing im Wochenrhythmus",
+    /** Akzentwort im Titel (violett) */
+    accent: "Wochenrhythmus",
     text: "Auch gute Videos nutzen sich ab, wenn dieselben Leute sie immer wieder sehen. Deshalb planen wir von Anfang an mehrere Varianten pro Botschaft und testen jede Woche, statt ein Video monatelang laufen zu lassen.",
     note: "Das ist unsere Arbeitsweise, keine Garantie für ein Ergebnis.",
     link: { label: "Content-Produktion ansehen", href: "/content-produktion" } satisfies LinkRef,
@@ -145,6 +148,7 @@ export const metaAdsPage = {
     videoId: "steuern",
     caption: ["Social Ad", "Thema Steuern"] as [string, string],
     title: "Drei Themen, drei Kampagnen, 600 Leads.",
+    accent: "600 Leads",
     text: financeCase.teaser,
     facts: [
       { k: "Kunde", v: displayClient(financeCase) },

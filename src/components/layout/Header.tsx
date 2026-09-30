@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/brand/Logo";
 import { cta, nav, site } from "@/content/site";
-import { RingArrow } from "@/components/ui/ButtonLink";
+import { BtnArrow } from "@/components/ui/ButtonLink";
 
 type Panel = "leistungen" | "studio" | null;
 
@@ -13,9 +13,6 @@ export function Header() {
   const pathname = usePathname();
   const [panel, setPanel] = useState<Panel>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  // Über dem dunklen Hero der Startseite ist der Header dunkel (wie auf der bisherigen Website)
-  const [overDark, setOverDark] = useState(false);
   // Header-CTA nur violett, wenn kein anderer primärer CTA sichtbar ist (max. eine primäre Handlung pro Viewport)
   const [pageCtaVisible, setPageCtaVisible] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
@@ -27,17 +24,18 @@ export function Header() {
     setMenuOpen(false);
   }, []);
 
-  // Bei Routenwechsel alles schliessen
-  useEffect(() => {
-    close();
-  }, [pathname, close]);
+  // Bei Routenwechsel alles schliessen (während des Renderns, statt per Effekt)
+  const [lastPath, setLastPath] = useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
+    setPanel(null);
+    setMenuOpen(false);
+    setPageCtaVisible(false);
+  }
 
   useEffect(() => {
     const targets = Array.from(document.querySelectorAll("main .btn-primary"));
-    if (!targets.length) {
-      setPageCtaVisible(false);
-      return;
-    }
+    if (!targets.length) return;
     const visible = new Set<Element>();
     const io = new IntersectionObserver((entries) => {
       for (const e of entries) {
@@ -48,26 +46,6 @@ export function Header() {
     });
     targets.forEach((t) => io.observe(t));
     return () => io.disconnect();
-  }, [pathname]);
-
-  useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 8);
-      const hero = document.querySelector<HTMLElement>("[data-hero-dark]");
-      const h = headerRef.current?.offsetHeight ?? 64;
-      setOverDark(!!hero && hero.getBoundingClientRect().bottom > h);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    const main = document.getElementById("inhalt");
-    const mo = main ? new MutationObserver(onScroll) : null;
-    if (main) mo?.observe(main, { childList: true, subtree: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      mo?.disconnect();
-    };
   }, [pathname]);
 
   useEffect(() => {
@@ -120,24 +98,16 @@ export function Header() {
   const studioActive = nav.studio.some((l) => isActive(l.href));
 
   return (
-    <header
-      ref={headerRef}
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
-        menuOpen
-          ? "bg-ink text-paper"
-          : overDark
-            ? `header-dark text-paper ${scrolled || panel ? "bg-night" : "bg-transparent"}`
-            : "bg-paper text-ink"
-      } ${(scrolled || panel) && !overDark ? "shadow-[0_1px_0_var(--color-line)]" : ""}`}
-    >
-      <div className="wrap flex h-[var(--header-h)] items-center justify-between gap-6">
+    <header ref={headerRef} className="sticky top-0 z-50 px-[clamp(10px,2vw,24px)] pt-2.5 text-ink lg:pt-3.5">
+      {/* Schwebende Pille: weiss, feiner Rand, weicher Schatten */}
+      <div className="relative mx-auto flex h-14 max-w-[1180px] items-center justify-between gap-4 rounded-full border border-[rgb(11_29_63/0.08)] bg-white/95 pl-5 pr-2 shadow-float backdrop-blur-md lg:h-16 lg:pl-7">
         <Link href="/" aria-label="eCreator, zur Startseite" className="-m-2 p-2">
-          <Logo variant="lockup" className="h-[26px] w-auto lg:h-[30px]" />
+          <Logo variant="lockup" className="h-[24px] w-auto lg:h-[28px]" />
         </Link>
 
         {/* Desktop-Navigation */}
         <nav aria-label="Hauptnavigation" className="hidden lg:block">
-          <ul className="flex items-center gap-1">
+          <ul className="flex items-center gap-0.5">
             <li onMouseEnter={() => openHover("leistungen")} onMouseLeave={leaveHover}>
               <button
                 type="button"
@@ -178,43 +148,38 @@ export function Header() {
           <Link
             href={cta.primary.href}
             data-cta="header"
-            className={`btn btn-sm ${menuOpen ? "btn-paper" : pageCtaVisible ? "btn-line" : "btn-primary"}`}
+            className={`btn btn-sm max-[359px]:hidden ${pageCtaVisible ? "btn-line" : "btn-primary"}`}
           >
             <span className="hidden sm:inline">{cta.primary.label}</span>
             <span className="sm:hidden">{cta.primary.short}</span>
-            <RingArrow />
+            <BtnArrow />
           </Link>
           <button
             ref={toggleRef}
             type="button"
-            className="t-meta -mr-2 inline-flex h-11 min-w-11 items-center justify-center gap-2 px-2 lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line-strong lg:hidden"
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             aria-label={menuOpen ? "Menü schliessen" : "Menü öffnen"}
             onClick={() => setMenuOpen((v) => !v)}
           >
-            <span aria-hidden className="relative block h-3 w-5">
+            <span aria-hidden className="relative block h-2.5 w-4">
               <span
                 className={`absolute left-0 right-0 top-0 h-px bg-current transition-transform duration-300 ${
-                  menuOpen ? "translate-y-[6px] rotate-[81deg]" : ""
+                  menuOpen ? "translate-y-[4.5px] rotate-45" : ""
                 }`}
               />
               <span
                 className={`absolute bottom-0 left-0 right-0 h-px bg-current transition-transform duration-300 ${
-                  menuOpen ? "-translate-y-[5px] -rotate-[9deg]" : ""
+                  menuOpen ? "-translate-y-[4.5px] -rotate-45" : ""
                 }`}
               />
-            </span>
-            {/* feste Breite: beide Labels im selben Rasterfeld */}
-            <span aria-hidden className="grid max-[479px]:hidden">
-              <span className={`[grid-area:1/1] ${menuOpen ? "invisible" : ""}`}>Menü</span>
-              <span className={`[grid-area:1/1] ${menuOpen ? "" : "invisible"}`}>Schliessen</span>
             </span>
           </button>
         </div>
       </div>
 
-      {/* Mega-Panel Leistungen (Office) */}
+      {/* Mega-Panel Leistungen: Karte unter der Pille */}
       <div
         id="panel-leistungen"
         role="region"
@@ -222,12 +187,12 @@ export function Header() {
         hidden={panel !== "leistungen"}
         onMouseEnter={() => openHover("leistungen")}
         onMouseLeave={leaveHover}
-        className="absolute inset-x-0 top-full hidden border-t border-line bg-paper text-ink shadow-[0_1px_0_var(--color-line)] [--color-line:rgb(11_11_12/0.14)] [--color-line-strong:rgb(11_11_12/0.3)] lg:block"
+        className="card absolute inset-x-[clamp(10px,2vw,24px)] top-full mx-auto mt-2 hidden max-w-[1180px] text-ink lg:block"
       >
-        <div className="wrap grid grid-cols-12 gap-x-[var(--gutter)] py-10">
+        <div className="grid grid-cols-12 gap-x-[var(--gutter)] px-8 py-8">
           <div className="col-span-3 flex flex-col justify-between border-r border-line pr-8">
             <div>
-              <p className="t-meta text-grey-600">Leistungen / System</p>
+              <p className="label-pill">Leistungen</p>
               <p className="t-h3 mt-4 max-w-[14ch]">Jede Leistung ist eine Spur im selben System.</p>
             </div>
             <Link href="/leistungen" className="link t-small mt-8 inline-block font-semibold">
@@ -252,7 +217,7 @@ export function Header() {
         </div>
       </div>
 
-      {/* Studio-Panel (Studio-Modus, schwarz) */}
+      {/* Studio-Panel: dunkle Karte unter der Pille */}
       <div
         id="panel-studio"
         role="region"
@@ -260,11 +225,11 @@ export function Header() {
         hidden={panel !== "studio"}
         onMouseEnter={() => openHover("studio")}
         onMouseLeave={leaveHover}
-        className="studio absolute inset-x-0 top-full hidden lg:block"
+        className="studio absolute inset-x-[clamp(10px,2vw,24px)] top-full mx-auto mt-2 hidden max-w-[1180px] rounded-[var(--radius-card)] shadow-float lg:block"
       >
-        <div className="wrap grid grid-cols-12 gap-x-[var(--gutter)] py-10">
+        <div className="grid grid-cols-12 gap-x-[var(--gutter)] px-8 py-8">
           <div className="col-span-4">
-            <p className="t-meta text-grey-400">Studio / Produktion</p>
+            <p className="label-pill">Studio und Produktion</p>
             <p className="t-h3 mt-4 max-w-[16ch]">Wir produzieren selbst. Mit Preisen, die hier stehen.</p>
           </div>
           <ul className="col-span-8 grid grid-cols-3 border-l border-line">
@@ -280,24 +245,24 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile-Menü (Studio-Modus, Vollbild) */}
+      {/* Mobile-Menü: hell, unter der Pille */}
       <div
         id="mobile-menu"
         hidden={!menuOpen}
-        className="studio fixed inset-x-0 bottom-0 top-[var(--header-h)] overflow-y-auto lg:hidden"
+        className="fixed inset-x-0 bottom-0 top-[calc(var(--header-h)+4px)] overflow-y-auto bg-paper lg:hidden"
       >
         <nav aria-label="Mobile Navigation" className="wrap flex min-h-full flex-col pt-4">
           <ul className="grid grid-cols-2 gap-[var(--gutter)] border-b border-line pb-5">
             <li>
-              <Link href="/content-day" className="block border border-line-strong px-3 py-3">
+              <Link href="/content-day" className="card block px-4 py-3.5">
                 <span className="block font-semibold">Content Day</span>
-                <span className="t-meta text-grey-400">ab CHF 1&apos;990</span>
+                <span className="t-small text-grey-600">ab CHF 1&apos;990</span>
               </Link>
             </li>
             <li>
-              <Link href="/pakete" className="block border border-line-strong px-3 py-3">
+              <Link href="/pakete" className="card block px-4 py-3.5">
                 <span className="block font-semibold">Pakete & Preise</span>
-                <span className="t-meta text-grey-400">ab CHF 3&apos;500 / Mt.</span>
+                <span className="t-small text-grey-600">ab CHF 3&apos;500 / Mt.</span>
               </Link>
             </li>
           </ul>
@@ -307,12 +272,12 @@ export function Header() {
                 <li key={l.href}>
                   <Link href={l.href} className="flex items-baseline justify-between gap-4 py-2.5">
                     <span className="t-h4">{l.label}</span>
-                    {l.note && <span className="t-meta text-grey-400">{l.note}</span>}
+                    {l.note && <span className="t-small text-grey-500">{l.note}</span>}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link href="/leistungen" className="t-meta inline-block py-3 text-grey-400">
+                <Link href="/leistungen" className="t-small inline-block py-3 font-semibold text-violet-deep">
                   Alle Leistungen →
                 </Link>
               </li>
@@ -324,7 +289,7 @@ export function Header() {
                 <li key={l.href}>
                   <Link href={l.href} className="flex items-baseline justify-between gap-4 py-2.5">
                     <span className="t-h4">{l.label}</span>
-                    {l.note && <span className="t-meta text-grey-400">{l.note}</span>}
+                    {l.note && <span className="t-small text-grey-500">{l.note}</span>}
                   </Link>
                 </li>
               ))}
@@ -344,12 +309,12 @@ export function Header() {
               </Link>
             </li>
           </ul>
-          <div className="sticky bottom-0 mt-auto bg-ink pb-[max(1rem,env(safe-area-inset-bottom))] pt-5">
+          <div className="sticky bottom-0 mt-auto bg-paper pb-[max(1rem,env(safe-area-inset-bottom))] pt-5">
             <Link href={cta.primary.href} className="btn btn-primary w-full" data-cta="menu">
               <span>{cta.primary.label}</span>
-              <RingArrow />
+              <BtnArrow />
             </Link>
-            <div className="t-meta mt-3 grid grid-cols-2 gap-4 text-grey-400">
+            <div className="t-small mt-3 grid grid-cols-2 gap-4 text-grey-600">
               <a href={site.phoneHref} className="py-2">
                 Anrufen {site.phone.replace("+41 ", "0")}
               </a>
@@ -389,8 +354,8 @@ function MobileGroup({
     <details className="group border-b border-line" open={defaultOpen}>
       <summary className="flex cursor-pointer items-center justify-between py-4">
         <span className="t-h3">{title}</span>
-        <span className="t-meta text-grey-400 group-open:hidden">öffnen +</span>
-        <span className="t-meta hidden text-grey-400 group-open:inline">schliessen −</span>
+        <span aria-hidden className="text-xl leading-none text-grey-500 group-open:hidden">+</span>
+        <span aria-hidden className="hidden text-xl leading-none text-grey-500 group-open:inline">−</span>
       </summary>
       <div className="pb-4">{children}</div>
     </details>

@@ -44,6 +44,7 @@ export const googleAdsPage = {
 
   /** Die Kette: Suchanfrage → Anzeige → Landingpage → Anfrage. */
   chain: {
+    meta: "Ablauf",
     label: "Beispiel einer Suchanfrage",
     query: "Gipser Thalwil Offerte",
     title: "Vier Glieder, eine Kette.",
@@ -96,6 +97,8 @@ export const googleAdsPage = {
   keywords: {
     meta: "Keyword-Strategie",
     title: "Nicht jede Suche ist eine Anfrage.",
+    /** Akzentwort im Titel (violett) */
+    accent: "Anfrage",
     lead: "Die wichtigste Arbeit passiert vor der ersten Anzeige: entscheiden, bei welchen Suchen du erscheinst und bei welchen bewusst nicht. Begriffe, bei denen deine Anzeige nie erscheinen soll, heissen bei Google auszuschliessende Keywords.",
     columns: ["Suchbegriff", "Absicht", "Was wir tun"],
     caption: "Beispiele für einen Gipserbetrieb am Zürichsee",
@@ -150,6 +153,7 @@ export const googleAdsPage = {
     amount: advanced.price.amount,
     unit: advanced.price.unit ?? "pro Monat",
     title: `Google Ads gehört zum Paket ${advanced.name}.`,
+    accent: advanced.name,
     text: `Im Paket ${pro.name} ist Google Ads nicht regulär enthalten. ${advanced.name} verbindet Social und Search mit Website, SEO und Server-Side Tracking. ${advanced.minTerm}.`,
     facts: [
       { k: advanced.name, v: `Google Ads enthalten, CHF ${advanced.price.amount} ${advanced.price.unit ?? "pro Monat"}` },

@@ -2,7 +2,7 @@ import { contentDay, podcastStudio, socialRecruiting } from "@/content/offers";
 import { site } from "@/content/site";
 
 /**
- * Seite /podcast-studio (Vertrag C7, docs/PAGES.md).
+ * Seite /podcast-studio (Vertrag C7, docs/PAGES.md). Version 4: helle Seite, das Interview im dunklen Panel.
  * Preise und Leistungsumfang nur aus offers.ts (Briefing, FACTS P07).
  * UNKLAR laut FACTS 9.1 Punkt 7 und darum NICHT behauptet: Standort des Studios, Anzahl Mikrofone,
  * Kameras und Plätze, Betreuung während der Aufnahme, Format und Weg der Datenübergabe, Parkplätze,
@@ -58,6 +58,8 @@ export const podcastStudioPage = {
   studio: {
     meta: "Das Studio",
     title: "Die Technik steht schon.",
+    /** Akzentwort (violett) */
+    accent: "Technik",
     text: "Du setzt dich hin, sprichst und nimmst auf. Aufbauen und verkabeln musst du nichts.",
     photos: {
       wide: { label: "Totale: das Studio mit den Sprecherplätzen", spec: "Echtes Foto aus dem Studio, Querformat 3:2" },
@@ -78,6 +80,7 @@ export const podcastStudioPage = {
   formats: {
     meta: "Formate",
     title: "Für Unternehmen, die reden wollen.",
+    accent: "reden",
     lead: "Aber kein eigenes Studio aufbauen. Vier Formate, für die sich eine Aufnahme lohnt.",
     items: [
       {

@@ -1,11 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { PageHeader } from "@/components/page/PageHeader";
-import { FactsTable, RelatedLinks, Section, SectionIntro } from "@/components/page/Blocks";
+import { NumberChip, RelatedLinks, Section, SectionIntro } from "@/components/page/Blocks";
 import { Faq } from "@/components/page/Faq";
 import { FinalCta } from "@/components/blocks/FinalCta";
 import { Arrow, ArrowLink, ButtonLink } from "@/components/ui/ButtonLink";
 import { Meta } from "@/components/ui/Meta";
+import { withAccent } from "@/lib/accent";
 import { pageMeta } from "@/lib/metadata";
 import { cta, site } from "@/content/site";
 import { services } from "@/content/services";
@@ -16,10 +18,45 @@ export const metadata = pageMeta(page.meta);
 
 const host = (url: string) => url.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
+/** Schlüssel / Wert in einer Karte: feine Linien statt schwarzer Regel. */
+function Rows({ rows }: { rows: { k: string; v: ReactNode }[] }) {
+  return (
+    <dl className="divide-y divide-line">
+      {rows.map((r) => (
+        <div key={r.k} className="grid grid-cols-[minmax(0,36%)_minmax(0,1fr)] gap-3 py-3.5 first:pt-0 last:pb-0">
+          <dt className="t-small min-w-0 pt-[0.1em] text-grey-600">{r.k}</dt>
+          <dd className="t-body">{r.v}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/** Ringe, die von Stufe zu Stufe grösser werden: Sitz → Region → Kanton → Deutschschweiz */
+function Radius({ level }: { level: number }) {
+  return (
+    <svg aria-hidden viewBox="0 0 44 44" className="h-11 w-11">
+      {[0, 1, 2, 3].map((k) => (
+        <circle
+          key={k}
+          cx="22"
+          cy="22"
+          r={5 + k * 5.5}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          className={k <= level ? "text-violet" : "text-line-strong"}
+        />
+      ))}
+      <circle cx="22" cy="22" r="2.5" className="fill-violet" />
+    </svg>
+  );
+}
+
 /**
- * Standortseite, ehrlich: Sitz Neerach, Einsatzgebiet Deutschschweiz. Schlicht wie die bisherige Website.
- * Aufbau: dunkler Kopf mit Koordinaten darunter, Einsatzgebiet in vier gleichen Spalten, Zusammenarbeit (drei Spalten),
- * Adresse + Datenblatt (ohne eingebettete Karte), Leistungs-Index, Webprojekt aus dem Kanton, FAQ.
+ * Standortseite, ehrlich: Sitz Neerach, Einsatzgebiet Deutschschweiz. Hell und ruhig.
+ * Aufbau: Kopf mit Koordinaten-Karte, Einsatzgebiet in vier Karten, Zusammenarbeit (drei Karten auf Band),
+ * Adresse + Datenblatt-Karte (ohne eingebettete Karte), Leistungen als Link-Karten, Webprojekt aus dem Kanton, FAQ.
  * LocalBusiness/ProfessionalService-Schema kommt global aus layout.tsx.
  */
 export default function StandortPage() {
@@ -32,7 +69,7 @@ export default function StandortPage() {
       <PageHeader
         crumbs={page.crumbs}
         meta={header.meta}
-        title={header.title}
+        title={header.title.map((l) => withAccent(l, header.accent))}
         lead={header.lead}
         actions={
           <>
@@ -56,26 +93,27 @@ export default function StandortPage() {
         }
       />
 
-      {/* Einsatzgebiet: vier Stufen von Neerach bis Deutschschweiz, gleich gross nebeneinander */}
+      {/* Einsatzgebiet: vier Stufen von Neerach bis Deutschschweiz als gleich grosse Karten */}
       <Section space="l" rule="none" labelledBy="gebiet-title">
-        <SectionIntro id="gebiet-title" meta={[scale.meta]} title={scale.title} />
-        <ol className="grid border-t border-ink sm:grid-cols-2 sm:gap-x-[var(--gutter)] lg:grid-cols-4">
+        <SectionIntro id="gebiet-title" meta={[scale.meta]} title={withAccent(scale.title, scale.accent)} />
+        <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {scale.rows.map((r, i) => (
             <li
               key={r.place}
-              className="border-b border-line py-6 md:py-8"
+              className="card p-6 md:p-7"
               data-reveal
               style={{ ["--d" as string]: `${i * 90}ms` }}
             >
-              <p className="t-meta text-grey-600">{r.label}</p>
-              <h3 className="t-h3 mt-3">{r.place}</h3>
+              <Radius level={i} />
+              <p className="t-meta mt-5 text-grey-600">{r.label}</p>
+              <h3 className="t-h3 mt-2">{r.place}</h3>
               <p className="t-small mt-2 max-w-[40ch] text-grey-700">{r.text}</p>
             </li>
           ))}
         </ol>
       </Section>
 
-      {/* Zusammenarbeit: drei Arten von Nähe */}
+      {/* Zusammenarbeit: drei Arten von Nähe, als Karten auf grauem Band */}
       <Section mode="band" space="l" rule="none" labelledBy="zusammen-title">
         <SectionIntro
           id="zusammen-title"
@@ -87,13 +125,13 @@ export default function StandortPage() {
             </>
           }
         />
-        <dl className="grid border-t border-ink md:grid-cols-3">
+        <dl className="grid gap-5 md:grid-cols-3">
           {together.items.map((it, i) => (
-            <div
-              key={it.title}
-              className={`border-b border-line py-6 md:border-b-0 md:py-8 md:pr-6 ${i > 0 ? "md:border-l md:pl-6" : ""}`}
-            >
-              <dt className="t-h4">{it.title}</dt>
+            <div key={it.title} className="card p-6 md:p-8">
+              <span aria-hidden>
+                <NumberChip n={i + 1} />
+              </span>
+              <dt className="t-h4 mt-5">{it.title}</dt>
               <dd className="t-small mt-2 max-w-[40ch] text-grey-700">{it.text}</dd>
             </div>
           ))}
@@ -103,64 +141,64 @@ export default function StandortPage() {
         </div>
       </Section>
 
-      {/* Adresse links, Datenblatt rechts, ohne eingebettete Karte */}
+      {/* Adresse links, Datenblatt als Karte rechts, ohne eingebettete Karte */}
       <section id="adresse" aria-labelledby="adresse-title" className="sec-l scroll-mt-[var(--header-h)]">
         <div className="wrap">
-          <div className="grid-12 gap-y-12">
+          <div className="grid-12 gap-y-12 md:items-center">
             <div className="col-span-4 md:col-span-6">
-              <p className="t-meta text-grey-600">{address.meta}</p>
-              <h2 id="adresse-title" className="t-h2 mt-4">
+              <p className="label-pill">{address.meta}</p>
+              <h2 id="adresse-title" className="t-h2 mt-5">
                 <span className="block">{address.title[0]}</span> <span className="block">{address.title[1]}</span>
               </h2>
               <a
                 href={site.address.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-ink mt-8"
+                className="btn btn-line mt-8"
                 data-cta="standort-maps"
               >
                 <span>{address.mapsLabel}</span>
-                <span className="btn-ring" aria-hidden>
-                  <Arrow className="btn-arrow h-[9px] w-[13px] -rotate-45" />
-                </span>
+                <Arrow className="btn-arrow h-[10px] w-[15px] -rotate-45" />
                 <span className="sr-only"> (öffnet in neuem Tab)</span>
               </a>
               <p className="t-small mt-4 max-w-[40ch] text-grey-600">{address.mapsNote}</p>
             </div>
             <div className="col-span-4 md:col-span-6">
-              <FactsTable
-                caption={address.caption}
-                rows={[
-                  ...address.rows,
-                  {
-                    k: address.phoneLabel,
-                    v: (
-                      <a href={site.phoneHref} className="-my-2.5 inline-flex min-h-11 items-center underline-offset-4 hover:underline">
-                        {phoneLocal}
-                      </a>
-                    ),
-                  },
-                  {
-                    k: address.emailLabel,
-                    v: (
-                      <a href={`mailto:${site.email}`} className="-my-2.5 inline-flex min-h-11 items-center underline-offset-4 hover:underline">
-                        {site.email}
-                      </a>
-                    ),
-                  },
-                ]}
-              />
+              <div className="card p-6 md:p-8">
+                <p className="t-meta mb-4 text-grey-600">{address.caption}</p>
+                <Rows
+                  rows={[
+                    ...address.rows,
+                    {
+                      k: address.phoneLabel,
+                      v: (
+                        <a href={site.phoneHref} className="-my-2.5 inline-flex min-h-11 items-center underline-offset-4 hover:underline">
+                          {phoneLocal}
+                        </a>
+                      ),
+                    },
+                    {
+                      k: address.emailLabel,
+                      v: (
+                        <a href={`mailto:${site.email}`} className="-my-2.5 inline-flex min-h-11 items-center underline-offset-4 hover:underline">
+                          {site.email}
+                        </a>
+                      ),
+                    },
+                  ]}
+                />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Leistungen im Überblick: Index mit Links */}
-      <Section space="l" rule="line" labelledBy="leistungen-title">
+      {/* Leistungen im Überblick: Link-Karten */}
+      <Section mode="band" space="l" rule="none" labelledBy="leistungen-title">
         <SectionIntro id="leistungen-title" meta={[page.services.meta]} title={page.services.title}>
           {page.services.intro}
         </SectionIntro>
-        <ul className="border-t border-ink md:grid md:grid-cols-2 md:gap-x-[var(--gutter)]">
+        <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-5">
           {[
             ...services.map((s) => ({ key: s.slug, name: s.name, href: s.href, text: s.short.replace(/CHF /g, "CHF ") })),
             {
@@ -170,11 +208,14 @@ export default function StandortPage() {
               text: page.services.contentDay.note,
             },
           ].map((s) => (
-            <li key={s.key} className="border-b border-line">
-              <Link href={s.href} className="group grid grid-cols-[1fr_1.25rem] items-baseline gap-4 py-5">
+            <li key={s.key}>
+              <Link
+                href={s.href}
+                className="card group grid h-full grid-cols-[1fr_1.25rem] items-baseline gap-4 p-5 transition-transform duration-300 hover:-translate-y-0.5 md:p-6"
+              >
                 <span>
-                  <span className="t-h4 block transition-colors group-hover:text-grey-600">{s.name}</span>
-                  <span className="t-small mt-1 hidden max-w-[48ch] text-grey-700 sm:block">{s.text}</span>
+                  <span className="t-h4 block transition-colors group-hover:text-violet-deep">{s.name}</span>
+                  <span className="t-small mt-1.5 hidden max-w-[48ch] text-grey-700 sm:block">{s.text}</span>
                 </span>
                 <Arrow className="text-grey-500 transition-transform group-hover:translate-x-1" />
               </Link>
@@ -187,12 +228,12 @@ export default function StandortPage() {
       </Section>
 
       {/* Beleg aus dem Kanton: Trapletti, Thalwil */}
-      <Section space="l" rule="line" labelledBy="beleg-title">
+      <Section space="l" rule="none" labelledBy="beleg-title">
         <SectionIntro id="beleg-title" meta={proof.meta} title={proof.title} />
 
         <div className="grid-12 items-end gap-y-6">
           <figure className="col-span-4 md:col-span-9">
-            <div className="relative aspect-[16/10] overflow-hidden border border-line bg-white">
+            <div className="relative aspect-[16/10] overflow-hidden rounded-[var(--radius-media)] border border-line bg-white shadow-card">
               <Image
                 src={trapletti.desktop}
                 alt={`Startseite von ${host(trapletti.url)} auf dem Desktop: Website für ${trapletti.client}`}
@@ -206,7 +247,7 @@ export default function StandortPage() {
             </figcaption>
           </figure>
           <figure className="col-span-2 md:col-span-3">
-            <div className="relative aspect-[585/1266] overflow-hidden border border-line bg-white">
+            <div className="relative aspect-[585/1266] overflow-hidden rounded-[var(--radius-media)] border border-line bg-white shadow-card">
               <Image
                 src={trapletti.mobile}
                 alt={`Startseite von ${host(trapletti.url)} auf dem Handy`}
@@ -238,28 +279,23 @@ export default function StandortPage() {
             <ArrowLink href={proof.caseHref}>{proof.labels.case}</ArrowLink>
           </div>
         </div>
-        <p className="t-meta mt-8 border-t border-line pt-3 text-grey-600">
+        <p className="t-small mt-8 border-t border-line pt-4 text-grey-600">
           {proof.labels.evidence} <span className="text-grey-400">/</span> {trapletti.evidence}
         </p>
       </Section>
 
-      {/* FAQ */}
+      {/* FAQ: Kopf mittig, Fragen darunter */}
       <Section mode="band" space="l" rule="none" labelledBy="faq-title">
-        <div className="grid-12 gap-y-10">
-          <div className="col-span-4 md:col-span-4">
-            <p className="t-meta text-grey-600">{faq.meta}</p>
-            <h2 id="faq-title" className="t-h2 mt-5">
-              {faq.title}
-            </h2>
-          </div>
-          <div className="col-span-4 md:col-span-8">
-            <Faq items={faq.items} />
-          </div>
+        <SectionIntro id="faq-title" meta={[faq.meta]} title={faq.title} />
+        <div className="mx-auto max-w-[52rem]">
+          <Faq items={faq.items} />
         </div>
       </Section>
 
-      <Section space="s" rule="none">
-        <RelatedLinks links={page.related} />
+      <Section space="m" rule="none">
+        <div className="mx-auto max-w-[52rem]">
+          <RelatedLinks links={page.related} />
+        </div>
       </Section>
 
       <FinalCta title={page.finalCta.title} secondary={cta.contact} />

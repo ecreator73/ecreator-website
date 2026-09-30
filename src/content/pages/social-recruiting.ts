@@ -51,6 +51,8 @@ export const socialRecruitingPage = {
   header: {
     meta: ["Produkt", "Social Recruiting"],
     title: ["Social Recruiting.", "Bewerbungen über Instagram und TikTok."] as [string, string],
+    /** Akzentwort in der H1 (violett), muss wörtlich in einer Titelzeile stehen */
+    accent: "Bewerbungen",
     lead: "Ein Inserat sehen die Leute, die gerade suchen. Mit Videos auf Instagram, Facebook und TikTok erreichst du auch die anderen. Wir drehen mit deinem Team, schalten die Kampagnen und bauen das Bewerber-System, in dem jede Bewerbung landet.",
     packageLink: { label: "Was im Paket ist", href: "#paket" } satisfies LinkRef,
     facts: [
@@ -66,6 +68,7 @@ export const socialRecruitingPage = {
   versus: {
     meta: "Zwei Wege zur Bewerbung",
     title: "Ein Inserat wartet. Ein Video kommt zu den Leuten.",
+    accent: "Video",
     ad: {
       label: "Stelleninserat",
       /** generisches Muster, keine echte Stelle, kein Kunde */
@@ -107,6 +110,7 @@ export const socialRecruitingPage = {
     amount: socialRecruiting.price.amount,
     note: socialRecruiting.price.note,
     title: "Alles, was der Kanal braucht. Zu einem Preis.",
+    accent: "einem Preis",
     groups: [
       { k: "Dreh", items: inc.slice(0, 5) },
       { k: "Kampagnen", items: inc.slice(5, 9) },
@@ -144,10 +148,10 @@ export const socialRecruitingPage = {
       },
     ],
     own: {
-      workId: "ecreator",
-      caption: ["Eigenes Ad", "Für Personalvermittlungen"] as [string, string],
-      label: "Eigenes Ad von eCreator: Recruiting-System für Personalvermittlungen",
-      text: "Unser eigenes Ad richtet sich sogar an Personalvermittlungen. Wir bauen ihnen das Recruiting-System, sie machen die Vermittlung.",
+      workId: "ecreator-recruiting",
+      caption: ["Eigenes Ad", "Recruiting mit Social Ads"] as [string, string],
+      label: "Eigenes Ad von eCreator: Recruiting mit Social Ads",
+      text: "So werben wir selbst für Social Recruiting: Video und Social Ads statt Stellenportal, die Bewerbenden werden vorqualifiziert und landen direkt im Recruiting-CRM.",
     },
   },
 

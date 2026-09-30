@@ -20,6 +20,8 @@ const WORDS = ["Null", "Ein", "Zwei", "Drei", "Vier", "Fünf", "Sechs", "Sieben"
 /** Zahl als Wort (Satzanfang), ab 13 als Ziffer. */
 export const countWord = (n: number) => WORDS[n] ?? String(n);
 
+/* Akzentwort in Titeln: withAccent() aus @/lib/accent, gesteuert über titleAccent. */
+
 /* ==========================================================================
    Hub /cases
    ========================================================================== */
@@ -29,6 +31,8 @@ export type CasesHubCopy = {
   crumb: string;
   headerMeta: string[];
   titleLines: string[];
+  /** Akzentwort in der H1 */
+  titleAccent?: string;
   lead: (n: { cases: number; ads: number; sites: number }) => string;
   jumpTitle: string;
   readCase: string;
@@ -47,7 +51,7 @@ export type CasesHubCopy = {
   spitex: { title: string; adCaption: [string, string]; siteCaption: [string, string] };
   trapletti: { title: string; caption: [string, string] };
   wall: { jump: string; title: (n: number) => string; lead: string; ownAd: [string, string]; ad: string };
-  websites: { jump: string; title: (n: number) => string; lead: string; visit: string };
+  websites: { jump: string; title: (n: number) => string; titleAccent?: string; lead: string; visit: string };
   related: LinkItem[];
   secondary: { label: string; href: string };
 };
@@ -62,6 +66,7 @@ export const casesHub: CasesHubCopy = {
   crumb: "Cases",
   headerMeta: ["Cases", "Ads", "Websites"],
   titleLines: ["Arbeit, die man", "zeigen kann."],
+  titleAccent: "zeigen",
   lead: (n) =>
     `${countWord(n.cases)} Cases, ${countWord(n.ads).toLowerCase()} Ads, ${countWord(n.sites).toLowerCase()} Websites. Zahlen zeigen wir nur mit Quelle, Kundennamen nur mit Beleg.`,
   jumpTitle: "Auf dieser Seite",
@@ -103,6 +108,7 @@ export const casesHub: CasesHubCopy = {
   websites: {
     jump: "Websites",
     title: (n) => `${countWord(n)} Websites, beide live.`,
+    titleAccent: "live",
     lead: "Beide tragen einen Credit von eCreator im Footer. Schau sie dir direkt an.",
     visit: "Website ansehen",
   },
@@ -140,6 +146,8 @@ type DetailBase = {
   crumb: string;
   /** H1 als gesetzte Zeilen, kurz halten */
   titleLines: string[];
+  /** Akzentwort in der H1 */
+  titleAccent?: string;
   /** Überschrift für «Nächster Case» */
   hubTitle: string;
   /** ISO-Datum für Article-Schema */
@@ -158,15 +166,17 @@ type DetailBase = {
   facts: Fact[];
   challenge: { statement: string };
   approach: { title: string };
-  outcome: { title: string; source: string; todo?: string };
+  outcome: { title: string; titleAccent?: string; source: string; todo?: string };
   related: LinkItem[];
   secondary: { label: string; href: string };
 };
 
 export type FinanceDetail = DetailBase & {
   kind: "finance";
-  phases: { title: string; note: string; rows: { k: string; title: string; text: string }[] };
-  formula: { meta: string; lines: string[]; text: string; todo: string };
+  /** label: UI-Label-Pille über dem Titel */
+  phases: { label: string; title: string; note: string; rows: { k: string; title: string; text: string }[] };
+  /** meta: Titel des Abschnitts, label: UI-Label-Pille darüber */
+  formula: { label: string; meta: string; lines: string[]; text: string; todo: string };
   result: {
     cpl: { label: string; before: string; after: string; note: string };
     funnel: {
@@ -202,6 +212,7 @@ export const caseDetails: Record<string, CaseDetailCopy> = {
       "Lead-Generierung für Vorsorge, Krankenkasse und Steuern: 600 qualifizierte Leads in drei Monaten, rund 10 Franken pro Lead. So war der Case aufgebaut.",
     crumb: "Finanzdienstleister",
     titleLines: ["600 qualifizierte", "Leads in drei", "Monaten."],
+    titleAccent: "600",
     hubTitle: "Lead-Generierung für Vorsorge, Krankenkasse und Steuern.",
     published: "2026-02-21",
     modified: "2026-09-29",
@@ -217,6 +228,7 @@ export const caseDetails: Record<string, CaseDetailCopy> = {
     challenge: { statement: "Drei Themen in einer Kampagne, optimiert auf Klicks statt auf Anfragen." },
     approach: { title: "Getrennt ansprechen, bis zur Anfrage messen." },
     phases: {
+      label: "Ablauf",
       title: "Umsetzung in drei Phasen.",
       note: "Phasen und Tracking-Setup laut Case Study.",
       rows: [
@@ -238,6 +250,7 @@ export const caseDetails: Record<string, CaseDetailCopy> = {
       ],
     },
     formula: {
+      label: "Methodik",
       meta: "Die Formel hinter den Creatives",
       lines: ["Das richtige Problem.", "Ein Nutzen in Franken.", "Ein niedriger Einstieg.", "Sauberes Tracking."],
       text: "So fasst die Case Study die Creatives zusammen: das Problem der Zielgruppe benennen, den Nutzen in Franken zeigen, einen kostenlosen ersten Schritt anbieten und jede Anfrage messen.",
@@ -264,6 +277,7 @@ export const caseDetails: Record<string, CaseDetailCopy> = {
     },
     outcome: {
       title: "Das Resultat laut Case Study.",
+      titleAccent: "Resultat",
       source: "Quelle: Case Study auf ecreator.ch, 21.02.2026 (Funnel-Split). Zahlen laut eCreator, Kunde dort anonymisiert.",
     },
     related: [
@@ -281,6 +295,7 @@ export const caseDetails: Record<string, CaseDetailCopy> = {
       "Video-Ads und Website für die Spitex Nächstenpflege: eine Botschaft für pflegende Angehörige, vom ersten Video im Feed bis zur Anmeldung auf der Website.",
     crumb: "Spitex Nächstenpflege",
     titleLines: ["Eine Botschaft,", "drei Spuren."],
+    titleAccent: "Botschaft",
     hubTitle: "Eine Botschaft, drei Spuren: Video, Kampagne, Website.",
     published: "2026-09-29",
     modified: "2026-09-29",
@@ -322,6 +337,7 @@ export const caseDetails: Record<string, CaseDetailCopy> = {
       "Neue Website für die Trapletti Gipser Maler GmbH in Thalwil: klare Leistungen, Referenzen und eine Offertanfrage, die auf jeder Seite sichtbar ist.",
     crumb: "Trapletti",
     titleLines: ["Eine Website,", "gebaut für", "Offertanfragen."],
+    titleAccent: "Offertanfragen",
     hubTitle: "Eine Handwerker-Website, gebaut für Offertanfragen.",
     published: "2026-09-29",
     modified: "2026-09-29",

@@ -177,7 +177,7 @@ export function RingSystem() {
             </div>
           </li>
         ))}
-        <li className="border-t border-ink pt-5">
+        <li className="border-t border-line-strong pt-5">
           <p className="t-meta text-grey-600">Station 09 führt zurück zu 01. Ein System endet nicht.</p>
         </li>
       </ol>

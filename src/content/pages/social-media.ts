@@ -51,6 +51,8 @@ export const socialMediaPage = {
   header: {
     meta: ["Leistung", "Nachfrage erzeugen"],
     title: ["Social Media", "mit Plan, Produktion", "und Budget."],
+    /** Akzentwort in der H1 (violett), muss wörtlich in einer Titelzeile stehen */
+    accent: "Plan",
     lead: "Wir planen, was du zeigst, drehen es selbst und bringen es mit bezahlten Kampagnen zu den Leuten, die du erreichen willst. Auf Instagram, Facebook, TikTok und, wo es passt, LinkedIn.",
     facts: [
       { k: "Kanäle", v: "Instagram, Facebook, TikTok, LinkedIn" },
@@ -64,6 +66,7 @@ export const socialMediaPage = {
   contrast: {
     meta: "Abgrenzung",
     title: "Kein Posting-Service. Ein Teil des Systems.",
+    accent: "Systems",
     lead: "Beiträge sind bei uns kein Selbstzweck. Sie holen Aufmerksamkeit, bauen Vertrauen auf oder führen zur Anfrage, und wir messen, was davon passiert.",
     rows: [
       { not: "Posten, weil Dienstag ist.", but: "Jeder Beitrag hat eine Aufgabe: Aufmerksamkeit, Vertrauen oder Anfrage." },
@@ -107,6 +110,7 @@ export const socialMediaPage = {
   plan: {
     meta: ["Redaktionsplan", "Beispielstruktur"],
     title: "Ein Monat, geplant, bevor gedreht wird.",
+    accent: "geplant",
     lead: "So ist ein Monat aufgebaut: Jede Woche hat einen Beitrag für Aufmerksamkeit, einen für Vertrauen und einen für die Anfrage. Die Formate sind Beispiele. Was drinsteht, kommt aus deinem Angebot.",
     roles: [
       { name: "Aufmerksamkeit", text: "Neue Leute stoppen" },

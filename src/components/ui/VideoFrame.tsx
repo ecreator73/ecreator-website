@@ -38,9 +38,9 @@ export function VideoFrame({
     const v = ref.current;
     if (!v || mode !== "ambient") return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Reduzierte Bewegung: nichts startet automatisch, der Knopf zeigt «abspielen»
     if (reduce) {
       userPaused.current = true;
-      setPaused(true);
       return;
     }
     const io = new IntersectionObserver(
@@ -89,7 +89,7 @@ export function VideoFrame({
   };
 
   return (
-    <div className={`relative overflow-hidden bg-ink-2 ${className}`} style={{ aspectRatio: ratio }}>
+    <div className={`relative overflow-hidden rounded-[var(--radius-media)] bg-ink-2 ${className}`} style={{ aspectRatio: ratio }}>
       <video
         ref={ref}
         className="absolute inset-0 h-full w-full object-cover"
@@ -110,7 +110,7 @@ export function VideoFrame({
           className="group absolute inset-0 flex items-start justify-start p-3 text-left focus-visible:outline-offset-[-6px] focus-visible:outline-paper md:p-4"
           aria-label={`${label} abspielen (mit Ton)`}
         >
-          <span className="flex items-center gap-2.5 bg-paper py-2 pl-2 pr-3.5 text-ink transition-colors group-hover:bg-violet">
+          <span className="flex items-center gap-2.5 rounded-full bg-paper py-1.5 pl-1.5 pr-3.5 text-ink shadow-float transition-colors group-hover:bg-violet group-hover:text-white">
             <span className="flex h-8 w-8 items-center justify-center rounded-full border-[1.5px] border-current">
               <svg aria-hidden viewBox="0 0 12 14" className="ml-0.5 h-3 w-2.5">
                 <path d="M0 0l12 7-12 7z" fill="currentColor" />

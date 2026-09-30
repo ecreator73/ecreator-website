@@ -1,13 +1,13 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { PageHeader } from "@/components/page/PageHeader";
-import { FactsTable, RelatedLinks, Section, SectionIntro, Steps } from "@/components/page/Blocks";
+import { NumberChip, RelatedLinks, Section, SectionIntro } from "@/components/page/Blocks";
 import { FinalCta } from "@/components/blocks/FinalCta";
-import { TeamStrip } from "@/components/blocks/TeamStrip";
 import { Arrow, ArrowLink, ButtonLink } from "@/components/ui/ButtonLink";
-import { Meta } from "@/components/ui/Meta";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { VideoFrame } from "@/components/ui/VideoFrame";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { withAccent } from "@/lib/accent";
 import { pageMeta } from "@/lib/metadata";
 import { abs, personSchema } from "@/lib/schema";
 import { cta, site } from "@/content/site";
@@ -32,10 +32,35 @@ function aboutPageSchema() {
   };
 }
 
+/** Schlüssel / Wert in einer Karte: feine Linien statt schwarzer Regel. */
+function Rows({ rows }: { rows: { k: string; v: ReactNode }[] }) {
+  return (
+    <dl className="divide-y divide-line">
+      {rows.map((r) => (
+        <div key={r.k} className="grid grid-cols-[minmax(0,40%)_minmax(0,1fr)] gap-3 py-3.5 first:pt-0 last:pb-0">
+          <dt className="t-small min-w-0 hyphens-auto pt-[0.1em] text-grey-600">{r.k}</dt>
+          <dd className="t-body">{r.v}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/** Kleines Symbol-Feld in Karten (violett getönt) */
+function IconBadge({ children, tone = "violet" }: { children: ReactNode; tone?: "violet" | "grey" }) {
+  const cls = tone === "violet" ? "bg-violet/10 text-violet-deep" : "bg-paper-2 text-ink";
+  return (
+    <span aria-hidden className={`t-small flex h-10 w-10 flex-none items-center justify-center rounded-xl font-semibold tnum ${cls}`}>
+      {children}
+    </span>
+  );
+}
+
 /**
- * Über uns: persönlich und belegt, schlicht wie die bisherige Website.
- * Aufbau: dunkler Kopf mit Kurzfakten, Haltung (mittig), Team mit Porträts, Studio-Band mit eigenem Ad,
- * Arbeitsweise (Kette, Prinzipien, Ablauf), Grenzen in zwei Spalten, Datenblatt mit Belegen.
+ * Über uns: persönlich und belegt, hell und ruhig.
+ * Aufbau: Kopf mit Kurzfakten als Karte, Haltung (Band) mit Claim-Karte, Team als Porträtkarten,
+ * Studio-Panel mit eigenem Ad, Arbeitsweise (Prinzipien als Häkchen-Liste, Kette als Karte, Ablauf in drei Karten),
+ * Grenzen als 2×2-Karten, Firmendaten und Belege als Karten.
  */
 export default function UeberUnsPage() {
   const { header, stance, team, ownAd, method, refusals, facts } = page;
@@ -55,7 +80,7 @@ export default function UeberUnsPage() {
       <PageHeader
         crumbs={page.crumbs}
         meta={header.meta}
-        title={header.title}
+        title={header.title.map((l) => withAccent(l, header.accent))}
         lead={header.lead}
         actions={
           <>
@@ -65,25 +90,38 @@ export default function UeberUnsPage() {
             <ArrowLink href={header.teamLink.href}>{header.teamLink.label}</ArrowLink>
           </>
         }
-        aside={<FactsTable caption={header.glanceCaption} rows={header.glance} />}
+        aside={
+          /* Kurzfakten als 2×2-Raster in der Karte, ohne eigene Linien */
+          <div className="text-center">
+            <p className="t-meta text-grey-600">{header.glanceCaption}</p>
+            <dl className="mt-5 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+              {header.glance.map((r) => (
+                <div key={r.k}>
+                  <dt className="t-small text-grey-600">{r.k}</dt>
+                  <dd className="t-body mt-0.5 font-semibold">{r.v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        }
       />
 
-      {/* Haltung: zwei Sätze, mittig gesetzt wie auf der bisherigen Website */}
-      <Section space="l" rule="none" labelledBy="haltung-title">
+      {/* Haltung: Satz mittig, der Claim als ruhige Karte darunter */}
+      <Section mode="band" space="l" rule="none" labelledBy="haltung-title">
         <SectionIntro
           id="haltung-title"
           meta={[stance.meta]}
           title={
             <>
-              <span lang="en">{stance.mega}</span>{" "}
-              <span className="t-h4 mt-3 block normal-case text-grey-600">{stance.megaDe}</span>
+              <span lang="en">{withAccent(stance.mega, stance.accent)}</span>{" "}
+              <span className="t-h4 mt-3 block text-grey-600">{stance.megaDe}</span>
             </>
           }
         >
           {stance.text}
         </SectionIntro>
 
-        <div className="mx-auto max-w-[46rem] border-t border-line pt-10 text-center md:pt-12">
+        <div className="card mx-auto max-w-[46rem] p-7 text-center md:p-10">
           <h3 className="t-h3" lang="en">
             {stance.claim[0]} <span className="text-grey-500">{stance.claim[1]}</span>
           </h3>
@@ -92,43 +130,40 @@ export default function UeberUnsPage() {
         </div>
       </Section>
 
-      {/* Team: Porträts, Bios, Bildplatz fürs Team-Shooting */}
-      <section id="team" aria-labelledby="team-title" className="sec-l scroll-mt-[var(--header-h)] border-t border-line">
+      {/* Team: Porträtkarten mit Bio, danach Bildplatz fürs Team-Shooting */}
+      <section id="team" aria-labelledby="team-title" className="sec-l scroll-mt-[var(--header-h)]">
         <div className="wrap">
           <SectionIntro id="team-title" meta={[team.meta]} title={team.title}>
             {team.lead}
           </SectionIntro>
 
-          <div className="hidden md:block">
-            <TeamStrip detailed />
-          </div>
-
-          {/* Handy: TeamStrip zeigt Bios erst ab md und die Rollen kollidieren in drei Spalten. Darum hier Porträt + Bio pro Person. */}
-          <dl className="border-t border-ink md:hidden">
+          {/* Handy: Porträt links neben Name und Rolle, Bio darunter. Ab md: Porträt oben, alles gestapelt. */}
+          <ul className="grid gap-5 md:grid-cols-3">
             {corePeople.map((p) => (
-              <div key={p.id} className="grid grid-cols-[38%_1fr] gap-x-4 border-b border-line py-5">
-                <div className="relative aspect-[4/5] overflow-hidden bg-paper-2">
+              <li key={p.id} className="card grid grid-cols-[38%_minmax(0,1fr)] content-start overflow-hidden md:grid-cols-1">
+                <div className="relative aspect-[4/5] bg-paper-2">
                   {p.portrait && (
                     <Image
                       src={p.portrait}
                       alt={`Porträt von ${p.name}`}
                       fill
-                      sizes="38vw"
-                      className="object-cover object-top grayscale"
+                      sizes="(min-width: 768px) 30vw, 38vw"
+                      className="object-cover object-top"
                       style={p.objectPosition ? { objectPosition: p.objectPosition } : undefined}
                     />
                   )}
                 </div>
-                <dt>
-                  <span className="t-h4 block">{p.name}</span>
-                  <span className="t-meta mt-1.5 block text-grey-600">{p.roleShort}</span>
-                </dt>
-                <dd className="t-small col-span-2 mt-4 text-grey-700">
-                  {p.bio}
+                <div className="self-center px-4 py-4 md:self-auto md:px-6 md:pb-0 md:pt-6">
+                  <h3 className="t-h4">{p.name}</h3>
+                  <p className="t-small mt-1 text-grey-600">{p.roleShort}</p>
+                  <p className="t-small mt-1 hidden text-grey-500 md:block">{p.focus.join(" · ")}</p>
+                </div>
+                <div className="col-span-2 border-t border-line px-4 pb-4 pt-4 md:col-span-1 md:border-t-0 md:px-6 md:pb-6 md:pt-4">
+                  <p className="t-small text-grey-700">{p.bio}</p>
                   {(p.email || p.linkedin) && (
-                    <span className="mt-2 flex flex-wrap gap-x-5">
+                    <p className="mt-2 flex flex-wrap gap-x-5">
                       {p.email && (
-                        <a href={`mailto:${p.email}`} className="t-meta inline-flex min-h-11 items-center underline underline-offset-4">
+                        <a href={`mailto:${p.email}`} className="t-small inline-flex min-h-11 items-center font-semibold underline underline-offset-4">
                           {p.email}
                         </a>
                       )}
@@ -137,26 +172,31 @@ export default function UeberUnsPage() {
                           href={p.linkedin}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="t-meta inline-flex min-h-11 items-center underline underline-offset-4"
+                          className="t-small inline-flex min-h-11 items-center font-semibold underline underline-offset-4"
                         >
                           LinkedIn von {p.name.split(" ")[0]}
                           <span className="sr-only"> (öffnet in neuem Tab)</span>
                         </a>
                       )}
-                    </span>
+                    </p>
                   )}
-                </dd>
-              </div>
+                </div>
+              </li>
             ))}
-          </dl>
+          </ul>
 
-          <div className="mt-14 md:mt-20">
-            <Placeholder label={team.placeholder.label} spec={team.placeholder.spec} ratio="3 / 1" className="min-h-44" />
+          <div className="mt-12 md:mt-16">
+            <Placeholder
+              label={team.placeholder.label}
+              spec={team.placeholder.spec}
+              ratio="3 / 1"
+              className="min-h-44 rounded-[var(--radius-media)]"
+            />
           </div>
         </div>
       </section>
 
-      {/* Eigenes Ad im Studio-Band: Video links, Text rechts */}
+      {/* Eigenes Ad im Studio-Panel: Video links, Text rechts */}
       <section aria-labelledby="ad-title" className="studio">
         <div className="wrap sec-m">
           <div className="mx-auto grid max-w-[60rem] items-center gap-10 md:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] md:gap-16">
@@ -170,7 +210,7 @@ export default function UeberUnsPage() {
               </figcaption>
             </figure>
             <div>
-              <Meta className="text-grey-400" items={ownAd.meta} />
+              <p className="label-pill">{ownAd.meta.join(" · ")}</p>
               <h2 id="ad-title" className="t-h2 mt-5" data-reveal>
                 {ownAd.title}
               </h2>
@@ -185,93 +225,115 @@ export default function UeberUnsPage() {
         </div>
       </section>
 
-      {/* Arbeitsweise: Kopf links, Kette rechts, danach Prinzipien und Ablauf */}
+      {/* Arbeitsweise: Kopf mit Prinzipien links, die Kette als Karte rechts, danach der Ablauf in drei Karten */}
       <Section mode="band" space="l" rule="none" labelledBy="method-title">
-        <div className="grid-12 gap-y-12">
-          <div className="col-span-4 md:col-span-5">
-            <div className="md:sticky md:top-[calc(var(--header-h)+2rem)]">
-              <p className="t-meta text-grey-600">{method.meta}</p>
-              <h2 id="method-title" className="t-h2 mt-4" data-reveal>
-                {method.title}
-              </h2>
-              <p className="t-lead mt-5 max-w-[44ch] text-grey-700">{method.lead}</p>
-            </div>
-          </div>
+        <div className="grid-12 gap-y-12 lg:items-center">
+          <div className="col-span-4 md:col-span-12 lg:col-span-5">
+            <p className="label-pill">{method.meta}</p>
+            <h2 id="method-title" className="t-h2 mt-5" data-reveal>
+              {withAccent(method.title, method.accent)}
+            </h2>
+            <p className="t-lead mt-5 max-w-[44ch] text-grey-700">{method.lead}</p>
 
-          <div className="col-span-4 md:col-span-7">
-            <p className="t-meta mb-4 text-grey-600">{method.chainLabel}</p>
-            <ol className="border-t border-ink">
-              {method.chain.map((c, i) => (
-                <li
-                  key={c.word}
-                  className="grid grid-cols-[1.5rem_1fr] gap-x-3 border-b border-line py-5 md:grid-cols-[2rem_minmax(0,1.1fr)_minmax(0,1fr)] md:items-baseline md:gap-x-6 md:py-7"
-                  data-reveal
-                  style={{ ["--d" as string]: `${i * 80}ms` }}
-                >
-                  <Arrow className="mt-1.5 text-grey-500 md:mt-0" />
-                  <h3 className="t-h4">{c.word}</h3>
-                  <p className="t-small col-start-2 mt-1.5 max-w-[36ch] text-grey-700 md:col-start-3 md:mt-0">{c.text}</p>
+            <h3 className="t-h4 mt-10">{method.principlesLabel}</h3>
+            <ul className="check-list mt-5 space-y-3">
+              {method.principles.map((pr) => (
+                <li key={pr} className="t-body">
+                  {pr}
                 </li>
               ))}
-            </ol>
-            <p className="t-meta mt-4 flex items-center gap-2 text-grey-600">
-              <Arrow className="-rotate-90" />
-              {method.loopNote}
-            </p>
+            </ul>
+          </div>
+
+          <div className="col-span-4 md:col-span-12 lg:col-span-6 lg:col-start-7">
+            <div className="card p-6 md:p-8">
+              <p className="t-meta text-grey-600">{method.chainLabel}</p>
+              <ol className="mt-3 divide-y divide-line">
+                {method.chain.map((c, i) => (
+                  <li
+                    key={c.word}
+                    className="flex gap-4 py-4 md:py-5"
+                    data-reveal
+                    style={{ ["--d" as string]: `${i * 80}ms` }}
+                  >
+                    <IconBadge>
+                      <Arrow />
+                    </IconBadge>
+                    <div className="min-w-0">
+                      <h3 className="t-h4">{c.word}</h3>
+                      <p className="t-small mt-1 max-w-[44ch] text-grey-700">{c.text}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <p className="t-small flex items-center gap-2 border-t border-line pt-4 text-grey-600">
+                <Arrow className="-rotate-90" />
+                {method.loopNote}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Prinzipien als schlichte Liste */}
         <div className="mt-16 md:mt-24">
-          <p className="t-meta mb-4 text-grey-600">{method.principlesLabel}</p>
-          <ul className="grid border-t border-ink sm:grid-cols-2 sm:gap-x-[var(--gutter)] lg:grid-cols-5">
-            {method.principles.map((pr) => (
-              <li key={pr} className="t-h4 border-b border-line py-4">
-                {pr}
+          <h3 className="t-h3 text-center">{method.stepsTitle}</h3>
+          <ol className="mt-8 grid gap-5 md:mt-10 md:grid-cols-3">
+            {method.steps.map((s, i) => (
+              <li key={s.title} className="card flex flex-col p-6 md:p-8">
+                <span aria-hidden className="flex self-start">
+                  <NumberChip n={i + 1} />
+                </span>
+                <h4 className="t-h4 mt-5">{s.title}</h4>
+                <p className="t-small mt-2 text-grey-700">{s.text}</p>
+                {s.meta && (
+                  <div className="mt-auto pt-5">
+                    <p className="t-small border-t border-line pt-4 font-medium text-grey-600">{s.meta}</p>
+                  </div>
+                )}
               </li>
             ))}
-          </ul>
-        </div>
-
-        <div className="mt-16 md:mt-24">
-          <h3 className="t-h3 mb-8 md:mb-10">{method.stepsTitle}</h3>
-          <Steps steps={method.steps} />
+          </ol>
         </div>
       </Section>
 
-      {/* Was wir nicht tun: vier Grenzen in zwei Spalten */}
+      {/* Was wir nicht tun: vier Grenzen als 2×2-Karten */}
       <Section space="l" rule="none" labelledBy="nein-title">
         <SectionIntro id="nein-title" meta={[refusals.meta]} title={refusals.title}>
           {refusals.intro}
         </SectionIntro>
-        <ul className="grid border-t border-ink md:grid-cols-2 md:gap-x-[var(--gutter)]">
+        <ul className="mx-auto grid max-w-[64rem] gap-5 md:grid-cols-2">
           {refusals.items.map((r) => (
-            <li key={r.no} className="border-b border-line py-6 md:py-8">
-              <h3 className="t-h4">{r.no}</h3>
+            <li key={r.no} className="card p-6 md:p-8">
+              <IconBadge tone="grey">
+                <svg viewBox="0 0 12 12" className="h-3 w-3">
+                  <path d="M2 2l8 8M10 2l-8 8" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
+              </IconBadge>
+              <h3 className="t-h4 mt-5">{r.no}</h3>
               <p className="t-body mt-2 max-w-[52ch] text-grey-700">{r.why}</p>
             </li>
           ))}
         </ul>
       </Section>
 
-      {/* Firmendaten und Belege als Datenblatt */}
-      <Section space="l" rule="line" labelledBy="fakten-title">
-        <SectionIntro id="fakten-title" meta={[facts.meta]} title={facts.title}>
+      {/* Firmendaten, Belege und Kundenstimme als drei Karten */}
+      <Section mode="band" space="l" rule="none" labelledBy="fakten-title">
+        <SectionIntro id="fakten-title" meta={[facts.meta]} title={withAccent(facts.title, facts.accent)}>
           {facts.intro}
         </SectionIntro>
 
-        <div className="grid-12 gap-y-14">
-          <div className="col-span-4 md:col-span-6">
-            <FactsTable caption={facts.companyCaption} rows={facts.company} />
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="card p-6 md:p-8">
+            <h3 className="t-h4 mb-5">{facts.companyCaption}</h3>
+            <Rows rows={facts.company} />
           </div>
 
-          <div className="col-span-4 md:col-span-5 md:col-start-8">
-            <p className="t-meta py-3 text-grey-600">{facts.proofCaption}</p>
-            <ul className="border-t border-ink">
+          <div className="card p-6 md:p-8">
+            <h3 className="t-h4 mb-2">{facts.proofCaption}</h3>
+            <ul className="divide-y divide-line">
               {facts.proofs.map((p) => (
-                <li key={p.v} className="border-b border-line py-4">
-                  <p className="t-meta text-grey-600">{p.k}</p>
-                  <p className="t-h4 mt-1.5">{p.v}</p>
+                <li key={p.v} className="py-4 last:pb-0">
+                  <p className="t-small text-grey-600">{p.k}</p>
+                  <p className="t-h4 mt-1">{p.v}</p>
                   <p className="t-small mt-1 text-grey-700">{p.note}</p>
                   <a
                     href={p.href}
@@ -286,27 +348,29 @@ export default function UeberUnsPage() {
                 </li>
               ))}
             </ul>
-
-            <figure className="mt-12">
-              <p className="t-meta text-grey-600">{facts.quoteLabel}</p>
-              <blockquote className="t-h3 mt-3">«{pinelli.quote}»</blockquote>
-              <figcaption className="mt-5">
-                <p className="font-semibold">{pinelli.person}</p>
-                <p className="t-small text-grey-700">
-                  {pinelli.role}, {pinelli.company}
-                </p>
-                <p className="t-meta mt-2 text-grey-500">{pinelli.source}</p>
-              </figcaption>
-              <div className="mt-5">
-                <ArrowLink href={facts.casesLink.href}>{facts.casesLink.label}</ArrowLink>
-              </div>
-            </figure>
           </div>
+
+          <figure className="card flex flex-col p-6 md:col-span-2 md:p-8 lg:col-span-1">
+            <p className="label-pill self-start">{facts.quoteLabel}</p>
+            <blockquote className="t-h3 mt-6">«{pinelli.quote}»</blockquote>
+            <figcaption className="mt-6 border-t border-line pt-5">
+              <p className="font-semibold">{pinelli.person}</p>
+              <p className="t-small text-grey-700">
+                {pinelli.role}, {pinelli.company}
+              </p>
+              <p className="t-meta mt-2 text-grey-500">{pinelli.source}</p>
+            </figcaption>
+            <div className="mt-auto pt-6">
+              <ArrowLink href={facts.casesLink.href}>{facts.casesLink.label}</ArrowLink>
+            </div>
+          </figure>
         </div>
       </Section>
 
-      <Section space="s" rule="line">
-        <RelatedLinks links={page.related} />
+      <Section space="m" rule="none">
+        <div className="mx-auto max-w-[52rem]">
+          <RelatedLinks links={page.related} />
+        </div>
       </Section>
 
       <FinalCta title={page.finalCta.title} secondary={cta.contact} />

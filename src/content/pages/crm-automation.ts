@@ -49,6 +49,8 @@ export const crmPage = {
   header: {
     meta: ["Leistung", "Infrastruktur"],
     title: ["CRM und Automation:", "kein Lead bleibt liegen."],
+    /** Akzentwort im Titel (violett), muss wörtlich in einer Titelzeile stehen */
+    accent: "kein Lead",
     lead: "Wir bauen CRM-Systeme und Automatisierungen für KMU. Jede Anfrage landet an einem Ort, mit Quelle, und bekommt einen nächsten Schritt. Nachfassen, Termine, Offerten und Auswertung laufen im selben System.",
     secondaryLink: { label: "Wenn / Dann ansehen", href: "#automationen" },
   },

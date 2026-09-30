@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { strategyCall } from "@/content/site";
-import { RingArrow } from "@/components/ui/ButtonLink";
+import { BtnArrow } from "@/components/ui/ButtonLink";
 
 /**
  * Terminbuchung (Google Calendar Appointment Schedules).
@@ -37,7 +37,7 @@ export function BookingEmbed() {
       <div>
         <button type="button" onClick={() => setLoad(true)} className="btn btn-primary w-full sm:w-auto" data-cta="booking-load">
           <span>Kalender laden und Termin wählen</span>
-          <RingArrow />
+          <BtnArrow />
         </button>
         <p className="t-small mt-4 max-w-[52ch] text-grey-700">
           Der Kalender wird von Google bereitgestellt. Beim Laden werden Daten an Google übertragen. Lieber ohne Google?{" "}

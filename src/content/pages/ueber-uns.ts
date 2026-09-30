@@ -33,6 +33,8 @@ export const ueberUnsPage = {
   header: {
     meta: ["Über uns", "eCreator GmbH"],
     title: ["Wir sind", "eCreator."],
+    /** Akzentwort in der H1 */
+    accent: "eCreator",
     lead: "Wir bauen Marketing, das Kunden bringt: Content, Kampagnen, Websites und CRM aus einem Team im Kanton Zürich. Wer dich berät, arbeitet auch an deinem Projekt.",
     teamLink: { label: "Das Team kennenlernen", href: "#team" },
     glanceCaption: "Auf einen Blick",
@@ -47,6 +49,8 @@ export const ueberUnsPage = {
   stance: {
     meta: "Haltung",
     mega: "Systems over campaigns.",
+    /** Akzentwort im Titel (violett) */
+    accent: "Systems",
     megaDe: "Systeme statt Kampagnen.",
     text: "Eine Kampagne startet, läuft und endet. Ein System lernt aus jeder Runde: welche Botschaft zieht, welche Seite überzeugt, welche Anfrage zum Kunden wird. Darum bauen wir zuerst die Basis und optimieren dann entlang echter Zahlen.",
     claim: ["We create customers,", "not clicks."],
@@ -78,6 +82,7 @@ export const ueberUnsPage = {
   method: {
     meta: "Arbeitsweise",
     title: "Lieber passende Anfragen als viele.",
+    accent: "passende",
     lead: "Wir bauen Systeme, die vorqualifizieren. Das Video erklärt Angebot und Nutzen, die Seite liefert den Beweis, und das Tracking zeigt, was wirklich funktioniert. Optimiert wird auf Qualität, also auf Termine und Abschlüsse, nicht bloss auf Formulareinträge.",
     chainLabel: "Die Kette",
     chain: [
@@ -143,6 +148,7 @@ export const ueberUnsPage = {
   facts: {
     meta: "Firmendaten",
     title: "Alles nachprüfbar.",
+    accent: "nachprüfbar",
     intro:
       "Wir zeigen nur, was du selbst prüfen kannst: den Registereintrag, unsere Google-Bewertungen und Websites, in deren Footer unser Name steht.",
     companyCaption: "Handelsregister",

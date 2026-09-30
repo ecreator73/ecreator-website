@@ -11,7 +11,7 @@ export function RecruitingBand() {
     <section aria-labelledby="recruiting-title" className="sec-l border-t border-ink">
       <div className="wrap grid-12 gap-y-12">
         <div className="col-span-4 md:col-span-7 lg:col-span-7">
-          <p className="t-meta text-grey-600">Produkt / Social Recruiting</p>
+          <p className="label-pill">Produkt · Social Recruiting</p>
           <h2 id="recruiting-title" className="t-h2 mt-6 max-w-[14ch]" data-reveal>
             Neue Leute über Instagram und TikTok finden.
           </h2>

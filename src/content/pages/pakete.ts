@@ -70,6 +70,8 @@ export const paketePage = {
   header: {
     meta: ["Pakete", "Einzelprodukte", "Projekte"],
     title: ["Zwei Pakete.", "Klare Preise."],
+    /** Akzentwort im Titel (violett) */
+    accent: "Preise",
     lead: "Pro und Advanced verbinden Werbung, Dreh und Infrastruktur zu einem Monatspreis. Dazu kommen Einzelprodukte mit festem Preis und Projekte, die wir nach Umfang anbieten.",
     secondary: { label: "Pakete im Detail", href: "#vergleich" },
     facts: [
@@ -108,6 +110,7 @@ export const paketePage = {
   budget: {
     meta: "Was dazukommt",
     title: ["Das Werbebudget", "kommt separat dazu."],
+    accent: "separat",
     text: "Paketpreis und Werbebudget sind zwei verschiedene Posten. Das Paket bezahlt unsere Arbeit, das Budget die Anzeigen auf Meta, Google oder TikTok.",
     packageLabel: "Paketpreis",
     packageValue: `${pro.price.amount} / ${advanced.price.amount}`,

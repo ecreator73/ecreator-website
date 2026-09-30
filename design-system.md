@@ -1,55 +1,48 @@
 # eCreator Design System
 
-> Grundlage: `docs/ART-DIRECTION.md` (Version 3: schlicht wie die bisherige Website, Kreislauf als Inhalt). Umsetzung: `src/app/globals.css` (Tokens, Utilities, Komponentenklassen) und `src/components/ui/*` (Primitives).
-> Regel für alles: **schlicht, ruhig, wiedererkennbar wie die bisherige ecreator.ch.** Wenige Grössen, mittige Köpfe, klare Buttons.
+> Grundlage: `docs/ART-DIRECTION.md` (Version 4: hell und luftig nach dem Vorbild anfragenfluss.de, eCreator-Violett als Akzent). Umsetzung: `src/app/globals.css` (Tokens, Utilities, Komponentenklassen) und `src/components/ui/*` (Primitives).
+> Regel für alles: **hell, ruhig, produktartig.** Viel Weiss, Karten mit weicher Tiefe, mittige Köpfe mit Label-Pille, ein Akzentwort in Violett.
 
 ---
 
 ## 1. Farben
 
-| Token | Hex | Rolle | Kontrast |
-|---|---|---|---|
-| `paper` | `#FEFBF6` | Grundfläche «Office», eCreator-Creme aus dem bestehenden Elementor-Kit | Tinte darauf 19.3:1 |
-| `paper-2` | `#F3EEE4` | Bildgründe, Bildplätze | |
-| `white` | `#FFFFFF` | nur Formularfelder/Bildgründe, sparsam | |
-| `ink` | `#0B0B0C` | Text, Linien, Fläche «Studio» | |
-| `ink-2` / `ink-3` | `#151517` / `#222225` | Flächen im Studio, Footer-Wortmarke | |
-| `grey-700` | `#3D3D40` | Fliesstext sekundär | 10.3:1 auf paper |
-| `grey-600` | `#55555A` | Metadaten auf paper | 6.9:1 |
-| `grey-500` | `#6B6B70` | sekundäre Texte, durchgestrichene Begriffe | 5.1:1 auf paper |
-| `grey-400` | `#8E8E93` | Metadaten auf ink | 6.0:1 auf ink |
-| `grey-300` | `#BDBCB7` | Fliesstext auf ink | 10.6:1 auf ink |
-| **`violet`** | **`#7866F4`** | **eCreator Violett** (Live-Site, Elementor Global Kit `--e-global-color-cb393e8`) | 4.2:1 auf paper (nur grosse Schrift/Flächen), 4.7:1 auf ink |
-| `violet-2` | `#8978FF` | bestehende Sekundärfarbe der Marke, violetter Text auf Dunkel | 5.8:1 auf ink |
-| `violet-deep` | `#5A48D8` | abgeleitete Stufe, **nur** für kleinen violetten Text auf Hell | 5.6:1 auf paper |
-| `line` | ink 14 % | Haarlinien | |
-| `line-strong` | ink 30 % | betonte Linien, Formularfelder | |
+| Token | Hex | Rolle |
+|---|---|---|
+| `paper` | `#FFFFFF` | Grundfläche |
+| `paper-2` | `#F5F5F7` | hellgraue Bänder, Footer |
+| `ink` | `#1D1D1F` | Text, primärer Button |
+| `night` | `#111114` | dunkle Panels (`studio`) |
+| `grey-700` / `600` / `500` | `#3A3A3C` / `#56565B` / `#6E6E73` | Fliesstext sekundär / Metadaten / leise Texte (alle ≥ 4.5:1 auf Weiss) |
+| `grey-400` / `300` | `#98989D` / `#C7C7CC` | Text auf dunklen Panels |
+| **`violet`** | **`#7866F4`** | **eCreator Violett:** Akzentwort, Label-Pillen, Leuchten des Primär-Buttons, Netz, aktive Zustände |
+| `violet-2` | `#8978FF` | Violett auf Dunkel |
+| `violet-deep` | `#5A48D8` | kleiner violetter Text auf Weiss (5.6:1) |
+| `line` / `line-strong` | ink 10 % / 20 % | Linien, Formularfelder |
+
+Radien: `--radius-card` 24 px, `--radius-media` 18 px, `--radius-btn` 14 px. Schatten: `shadow-card` (Karten),
+`shadow-float` (Header, Menüs), `--shadow-cta` (violettes Leuchten unter dem Primär-Button).
 
 ### Violett-Regel
-Violett ist ein **Signal** mit festem Budget: primärer Button (Strategie-Call), Zeiger und aktive Sektoren im Kreislauf, Durchstreichen im Manifest, Abschlussblock am Seitenende, Textauswahl, Fokus-Ring auf Creme. **Nicht:** Trenner, Schlusspunkte, Nummern, Anführungszeichen, Porträts, Preise, Verläufe, Glows. Maximal zwei violette Elemente pro Viewport.
+Violett ist Akzent, nicht Fläche: ein Akzentwort pro wichtigem Titel, Label-Pillen, Netz und Leuchten, aktive Navigation.
+Nicht als Button-Fläche mit weisser Schrift (Kontrast 4.2:1 zu knapp für normale Schrift).
 
 ## 2. Typografie
 
-Wie auf der bisherigen Website: **Plus Jakarta Sans** für Titel, **Inter** für Text, dazu **Pinyon Script** nur für die eine
-Schreibschrift-Zeile im Hero. Alle drei lokal über `next/font/google` (keine Requests an Google zur Laufzeit).
-Seit dem Kundenentscheid vom 29.09.2026 gilt: **ruhige Grössen, keine Plakat-Schrift** (siehe ART-DIRECTION §0c).
+**Plus Jakarta Sans** für Titel, **Inter** für Text, **Pinyon Script** nur für die eine Schreibschrift-Zeile im Hero.
+Alle lokal über `next/font/google`. Titel in **Satzschreibung**, fett und eng.
 
 | Utility | Einsatz | Grösse (fluid) | Einstellungen |
 |---|---|---|---|
-| `t-h1` | nur die H1 einer Seite (Hero, Seitenkopf) | 32 → 64 px | Jakarta 700, VERSAL, −0.015em, lh 1.08 |
-| `t-h2` | Sektionstitel, Aussagen, Zitate | 26 → 44 px | Jakarta 700, VERSAL, −0.01em, lh 1.12 |
-| `t-h3` | Karten-/Listentitel | 20 → 26 px | Jakarta 700, Satzschreibung |
-| `t-h4` | kleine Titel | 17 → 20 px | Jakarta 700 |
-| `t-brand` | kurze Labels (Paketnamen, Branchen) | 18 px | Jakarta 700, VERSAL, +0.02em |
-| `t-num` | Zahlen, Preise, Resultate | 28 → 40 px | Jakarta 700, tabellarische Ziffern |
-| `t-lead` | Einleitungen | 17 → 20 px | Inter 400, lh 1.55 |
-| `t-body` / `t-small` | Fliesstext | 17 px / 15 px | Inter 400, lh 1.6 / 1.5 |
-| `t-meta` / `t-meta-lg` | kleine Überzeile (Kicker), Captions | 12 / 13 px | Jakarta 600, VERSAL, +0.1em |
-| `t-script` | nur Hero: «We create customers, not clicks.» | 36 → 48 px | Pinyon Script |
-
-Regeln: Keine Inline-Schriftgrössen über 1.5rem, kein `text-[clamp()]`, keine Breiten-Achse, keine Plakatzahlen.
-Titel-Versalien nur über `t-h1`/`t-h2`. `text-wrap: balance` für Titel, `pretty` für Absätze, Silbentrennung nur in H1/H2
-(lange deutsche Wörter in Versalien auf dem Handy). Zahlen immer mit Schweizer Apostroph (`2'490`).
+| `t-h1` | H1 (Hero bis 68 px, Seitenköpfe bis 60 px) | 36 → 60 px | 700, −0.035em, lh 1.05 |
+| `t-h2` | Sektionstitel | 30 → 48 px | 700, −0.03em, lh 1.08 |
+| `t-h3` / `t-h4` | Karten-, Listentitel | 20 → 24 px / 17 → 19 px | 700 / 650 |
+| `t-num` | Zahlen, Preise | 28 → 40 px | 700, tabellarische Ziffern |
+| `t-lead` | Einleitungen | 17 → 19 px | Inter 400 |
+| `t-body` / `t-small` | Fliesstext | 17 / 15 px | Inter 400 |
+| `t-meta` | kleine Versal-Labels unter Zahlen, Tabellenköpfe, Captions | 12 px | Jakarta 600, +0.08em |
+| `label-pill` | Überzeile über Titeln | 13 px | Inter 500, violett getönte Pille mit Punkt |
+| `text-accent` | Akzentwort im Titel | – | violetter Verlauf |
 
 ## 3. Raster & Abstände
 
@@ -78,17 +71,16 @@ Titel-Versalien nur über `t-h1`/`t-h2`. `text-wrap: balance` für Titel, `prett
 
 ## 6. Buttons & Links
 
-Aufbau wie auf der bisherigen Website: **Pill** mit Text in Versalien (Inter 600) + **runder Pfeil-Knopf** rechts.
-
 | Klasse | Aussehen | Einsatz |
 |---|---|---|
-| `btn btn-primary` | Violett, Tinte, schwarzer Pfeil-Knopf | **nur** Strategie-Call |
-| `btn btn-paper` | Weiss, Tinte, schwarzer Pfeil-Knopf | Hauptbutton auf dunklem Grund (Hero wie live), kontextuelle Handlung auf Dunkel |
-| `btn btn-ink` | Tinte, Creme, heller Pfeil-Knopf | kontextuelle Handlung auf Hell, im violetten Abschlussblock |
-| `btn btn-line` | Kontur | Header-CTA, solange ein primärer Button auf der Seite sichtbar ist |
+| `btn btn-primary` | dunkel, weisse Schrift, violettes Leuchten; auf dunklen Panels automatisch weiss | **nur** Strategie-Call |
+| `btn btn-line` | Kontur | sekundäre Handlung, Header-CTA wenn ein Primär-Button sichtbar ist |
+| `btn btn-paper` | weiss | Handlung auf dunklen Panels |
+| `btn-sm` | kleine Pille | Header |
 | `ArrowLink` | Text + Pfeil, 44 px Trefferfläche | tertiär |
 
-Max. eine violette Handlung pro Viewport (Header schaltet automatisch auf Kontur).
+Weitere Bausteine: `card` (Karte), `check-list` (Häkchen-Liste), `hero-grid` (violettes Netz mit Leuchten),
+`bg-grid` (graues Raster), `section.studio` (dunkles, eingerücktes Panel, automatisch abgerundet).
 
 ## 7. Bildbehandlung
 
