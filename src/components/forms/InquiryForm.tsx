@@ -7,7 +7,7 @@ import { ANLIEGEN, type Anliegen } from "@/content/anliegen";
 import { site } from "@/content/site";
 import { BtnArrow } from "@/components/ui/ButtonLink";
 
-type Status = "idle" | "sending" | "success" | "error";
+type Status = "idle" | "sending" | "success" | "error" | "preview";
 type Errors = Partial<Record<"anliegen" | "name" | "email" | "telefon" | "nachricht" | "datenschutz", string>>;
 
 const isAnliegen = (v: string | null): v is Anliegen => !!v && ANLIEGEN.some((a) => a.value === v);
@@ -57,6 +57,9 @@ export function InquiryForm({ defaultAnliegen = "strategie-call", source }: { de
       if (res.ok && json.ok) {
         setStatus("success");
         formRef.current?.reset();
+      } else if (json.preview) {
+        // Vorschau-Deployment ohne Anfrage-Ziel: nichts geht verloren, Kontakt direkt anbieten
+        setStatus("preview");
       } else {
         if (json.errors) setErrors(json.errors);
         setStatus("error");
@@ -186,9 +189,11 @@ export function InquiryForm({ defaultAnliegen = "strategie-call", source }: { de
           <BtnArrow />
         </button>
         <p className="t-meta text-grey-600" aria-live="polite">
-          {status === "error"
-            ? "Das hat nicht geklappt. Bitte versuche es nochmals oder schreib an " + site.email + "."
-            : "Antwort innerhalb von 24 Stunden."}
+          {status === "preview"
+            ? "In dieser Vorschau ist das Formular noch nicht aktiv. Schreib bitte an " + site.email + " oder ruf an: " + site.phone + "."
+            : status === "error"
+              ? "Das hat nicht geklappt. Bitte versuche es nochmals oder schreib an " + site.email + "."
+              : "Antwort innerhalb von 24 Stunden."}
         </p>
       </div>
     </form>

@@ -17,6 +17,9 @@ export async function POST(request: Request) {
   if (!value) return Response.json({ ok: false, errors }, { status: 422 });
 
   const result = await submitInquiry(value);
+  if (!result.ok && result.error === "preview") {
+    return Response.json({ ok: false, preview: true }, { status: 503 });
+  }
   if (!result.ok) return Response.json({ ok: false, error: "Senden fehlgeschlagen." }, { status: 502 });
   return Response.json({ ok: true, id: result.id });
 }

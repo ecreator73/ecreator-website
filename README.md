@@ -40,6 +40,20 @@ Optional: `.env.example` nach `.env.local` kopieren und `INQUIRY_WEBHOOK_URL` se
 
 Auf dem ursprünglichen Entwicklungsrechner liegt Node portabel unter `C:\Users\Win11\ecreator-os\.tools\node`; Preview-Konfigurationen in Claude Code: `ecreator-editorial` (Dev, Port 3100) und `ecreator-editorial-prod` (Port 3101).
 
+## Vorschau auf Vercel
+
+Seit 02.10.2026 als Vorschau online: **https://ecreator-website.vercel.app** (Vercel-Projekt `ecreator-website`, Team `info-56790304s-projects`). Die Live-Website ecreator.ch und die DNS sind davon nicht berührt.
+
+- **Nicht im Google-Index:** Auf Vercel sendet jede Seite `X-Robots-Tag: noindex, nofollow`, `robots.txt` sperrt alles (`src/lib/preview.ts`, `next.config.ts`, `src/app/robots.ts`). Erst beim Livegang unter ecreator.ch in Vercel `SITE_INDEXING=on` setzen.
+- **Formular:** Ohne `INQUIRY_WEBHOOK_URL` meldet das Formular auf Vercel «in dieser Vorschau nicht aktiv» und nennt E-Mail und Telefon (nichts geht still verloren). Für echte Anfragen die Variable in Vercel setzen.
+- **Deploy von der Platte:** `.vercelignore` hält Recherche, Screenshots, Doku, Skripte, `.env*` und das nicht freigegebene Trading-Video draussen.
+
+```bash
+npx vercel@latest deploy --prod --yes --scope info-56790304s-projects
+```
+
+- **GitHub:** Das Vercel-Projekt ist mit `ecreator73/ecreator-website` verbunden. Ein Push auf `main` löst automatisch einen Produktions-Deploy aus, deshalb vor einem Push sicherstellen, dass `main` dem gewünschten Stand entspricht.
+
 ## Struktur
 
 ```
@@ -103,7 +117,12 @@ scripts/
 4. **Art Direction Version 4: hell und luftig nach dem Vorbild anfragenfluss.de** (Kundenentscheid 29.09.2026): weisser Grund, schwebender Header, Titel in Satzschreibung mit violettem Akzentwort, Label-Pillen, Karten mit weichem Schatten, dunkle Panels eingerückt. Übernommen wurden Muster, keine Inhalte. Vorher: V1 zu nah an Offscript, V2 zu plakativ, V3 dunkel und in Versalien (ART-DIRECTION.md §0 bis §0d).
 5. **Du-Form** wie auf der bisherigen Website, Schweizer Rechtschreibung.
 6. `/produkt-rechner` liefert **410 Gone** (interne Seite, wird nicht migriert).
-7. **Startseite: Probleme und CRM-Ansicht** (`ProblemGrid`, `PartnerSystem`, Texte in `src/content/pages/home.ts`): Die Grafiken der Problem-Karten sind illustrativ und ohne Zahlen. Die CRM-Ansicht ist eine Beispielansicht mit Demo-Daten und sichtbar so beschriftet; sie zeigt keine echten Kundenzahlen und keine Personen.
+7. **Startseite: Probleme, «Warum Kunden kommen. Und bleiben.» und CRM-Ansicht** (`ProblemGrid`, `WhyClients`, `CrmMockup`, Texte in `src/content/pages/home.ts`): Die Grafiken der Problem-Karten (laufen als Schleife mit Timer, Pause-Knopf; einzige Zahl ist der Ø CPL von CHF 12 als eCreator-Angabe) und die Umsatz-Grafik bei Punkt 04 (0 → Build → Grow → Scale → Keep growing) sind illustrativ und ohne Zahlen; die Umsatz-Grafik ist als «Schematische Darstellung» beschriftet. Die CRM-Ansicht ist eine Beispielansicht mit Demo-Daten und sichtbar so beschriftet; sie zeigt keine echten Kundenzahlen und keine Personen.
+8. **Case Studies nach Gestaltungsvorlage des Kunden** (30.09.2026): dünner Rahmen, auf dem Desktop volle Seitenbreite, grosses Video im Querformat, Name unten links auf Verlauf, Play-Knopf in der Mitte; rechts Branche, Kunde, Leistungen als Häkchen, Kennzahlen (aus `cases.ts`), Zitat wörtlich aus dem Interview. Aus der Vorlage **nicht** übernommen, weil nicht belegt: «+80'000 Mehrumsatz», «5.0 Kundenbewertung» (echte Google-Bewertung 4.7 aus 12, wird bewusst nicht gezeigt) und das dortige Zitat. Das Interview läuft als 16:9-Vorschau (1280×720); die Social Ads sind im Hochformat gedreht und stehen unbeschnitten in einem 16:9-Rahmen (Handy 4:3) vor ihrem weichgezeichneten Standbild.
+9. **Header-Logo mit Tagline** «We create customers, not clicks.» wie in der Logo-Datei (Kundenwunsch 30.09.2026), dafür grösser gesetzt (Desktop 46 px hoch).
+10. **Violettes Netz** nicht nur im Hero (Kundenwunsch 30.09.2026): Utility `net` in `globals.css` (Mitte und Grösse über `--net-at` / `--net-size`), Linienstärke über `--net-line`; eingesetzt über die ganze Probleme-Section, hinter dem Titel der Case Studies, hinter der CRM-Ansicht und hinter dem Kreislauf. Alle dunklen Panels (`section.studio`) haben oben rechts ein feines Netz beim violetten Leuchten.
+11. **Startseite ohne Leistungen-Section; Team als ein gemeinsames Teamfoto** statt Einzelporträts (Kundenwunsch 30.09.2026). Ein echtes Gruppenfoto fehlt noch, bis dahin steht ein beschrifteter Bildplatz (`TeamPhoto`, Eintrag `homeTeam.photo.src` in `src/content/pages/home.ts`).
+12. **Social Recruiting auf der Startseite** (Briefing 30.09.2026, `SocialRecruiting` + `RecruitingFlow`): kompakt, ohne Preis und Pakete. Eine Figur wandert durch Gesehen → Beworben → Im CRM → Qualifiziert → Eingestellt und verwandelt sich dabei (Story-Ad, Kurzbewerbung, CRM-Zeile, neu im Team); auf dem Handy an Ort und Stelle mit Story-Balken. Das Ad ist bewusst typografisch (keine echte Person, keine Kundendaten). Gesteuert durch Scrollen (01.10.2026): Die Fläche bleibt stehen (sticky), die Scroll-Position bestimmt Position und Teilschritte, rückwärts läuft rückwärts; Klick auf eine Station scrollt dorthin; bei reduzierter Bewegung statisch und per Klick umschaltbar.
 
 ## Offene Punkte für eCreator (vor Livegang)
 
@@ -116,6 +135,7 @@ scripts/
 - [ ] Partner-Badges im Hero (Google Partner, Meta Business Partner, TikTok Marketing Partner): nur zeigen, solange der Partnerstatus bei allen drei aktiv ist, sonst in `src/content/site.ts` (`partners`) entfernen
 - [ ] Kundenlogos im Laufband (Stand 30.09.2026, u. a. Allianz und Swiss Life): schriftliche Freigabe der Marken für die Nutzung als Referenz; Ausblenden über `needsApproval` in `src/content/work.ts`
 - [ ] Case Studies Startseite (`src/content/pages/home.ts`): Zahl Asset Management prüfen (gesetzt: «600+ Leads in 3 Monaten» laut veröffentlichter Case Study; Angabe «in einem Monat» nicht belegt); Resultat für Baba's Döner nachliefern (Platzhalter)
+- [ ] «Ø CHF 12 pro Lead bei unseren Kunden» (Startseite, Karte «Lead-Kosten zu hoch», eCreator-Angabe 01.10.2026): vor Livegang mit Ads-Daten über alle Konten belegen (`homeCplAverage` in `src/content/pages/home.ts`)
 - [ ] CRM-Ansicht auf der Startseite: optional durch einen echten, anonymisierten Screenshot aus einem Kunden-CRM ersetzen (nur mit Freigabe), sonst bleibt die beschriftete Demo-Ansicht
 
 **Fakten**
@@ -132,7 +152,7 @@ scripts/
 - [ ] TikTok-Account @ecreator.gmbh bestätigen
 
 **Material**
-- [ ] Team-Shooting am Set (neue Porträts)
+- [ ] Team-Shooting am Set: ein gemeinsames Teamfoto für die Startseite (Querformat, Datei nach `public/team/`, dann `homeTeam.photo.src` in `src/content/pages/home.ts` setzen) und neue Porträts
 - [ ] Behind-the-Scenes-Fotos eines Content Days, Fotos vom Podcast-Studio
 - [ ] Weitere Video-Testimonials (Bildplätze vorbereitet)
 

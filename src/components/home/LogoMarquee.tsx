@@ -15,8 +15,8 @@ const logoSize = (w: number, h: number, area = 2600) => {
 /**
  * Kundenlogos als endloses Laufband, ohne Rahmen, mit weichen Rändern.
  * Die Liste läuft zweimal hintereinander (zweite Kopie aria-hidden), damit die Schleife nahtlos ist.
- * Pause per Knopf (WCAG 2.2.2) und beim Überfahren. Bei reduzierter Bewegung steht alles still und bricht um.
- * Beim Überfahren eines Logos erscheinen die Originalfarben (weisse Logos werden einfach schwarz).
+ * Pause nur per Knopf (WCAG 2.2.2); beim Überfahren läuft das Band weiter. Bei reduzierter Bewegung steht alles still
+ * und bricht um. Beim Überfahren eines Logos erscheinen die Originalfarben (weisse Logos werden einfach schwarz).
  */
 export function LogoMarquee({ logos, label = "Kunden, Auswahl" }: { logos: LogoItem[]; label?: string }) {
   const [paused, setPaused] = useState(false);

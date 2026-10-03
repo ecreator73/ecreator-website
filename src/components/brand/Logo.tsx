@@ -1,8 +1,8 @@
 /**
  * eCreator Logo, aus den vom Kunden gelieferten SVGs (ecreator-black.svg / ecreator-white.svg).
  * Pfade unverändert, Farbe über currentColor.
- * - variant="lockup": Zeichen + Wortmarke (Wortmarke optisch auf das Zeichen zentriert), für Header
- * - variant="full": Original inkl. Tagline «WE CREATE CUSTOMERS, NOT CLICKS.»
+ * - variant="lockup": Zeichen + Wortmarke (Wortmarke optisch auf das Zeichen zentriert), ohne Tagline
+ * - variant="full": Original inkl. Tagline «WE CREATE CUSTOMERS, NOT CLICKS.», für Header und Footer
  * - variant="mark": nur das Zeichen (Ringe mit Schnitt)
  * Farben wie in der Logo-Datei «eCreator-01 (2)» (30.09.2026): Zeichen und Tagline violett, Wortmarke in currentColor.
  * tone="mono" färbt alles in currentColor (z.B. auf dunklen Flächen).

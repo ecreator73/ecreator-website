@@ -1,0 +1,31 @@
+# Nicht auf Vercel hochladen (Deploy direkt von der Platte per Vercel-CLI).
+# Führende Schrägstriche: nur Einträge auf oberster Ebene, keine gleichnamigen Unterordner.
+
+# interne Recherche (Rohkopien der Live-Site, Originalmedien, Personendaten), QA-Kritik, Screenshots
+/_research
+/docs
+/.shots
+/_shots
+/scripts
+
+# lokale Daten und Werkzeuge
+/.data
+/.claude
+/.next
+/node_modules
+/tsconfig.tsbuildinfo
+
+# Umgebungsvariablen: nie hochladen (Werte gehören in die Vercel-Projekteinstellungen)
+/.env*
+!/.env.example
+
+# Video ohne Freigabe (needsApproval in src/content/work.ts)
+/public/work/all-time-high*
+
+# Projekt-Notizen (nicht Teil der Website)
+/README.md
+/design-system.md
+/seo-map.md
+/migration-map.md
+/AGENTS.md
+/CLAUDE.md

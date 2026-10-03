@@ -299,6 +299,24 @@
   mask-image: radial-gradient(78% 70% at 50% 45%, #000 0%, rgb(0 0 0 / 0.85) 30%, rgb(0 0 0 / 0.35) 60%, transparent 84%);
 }
 
+/*
+ * Dasselbe Netz für weitere Stellen (Section-Köpfe, hinter Grafiken): läuft zu den Rändern der Box weich aus.
+ * Mitte und Grösse der Ellipse über --net-at und --net-size, z.B. [--net-at:50%_30%]; Linienstärke über --net-line.
+ */
+@utility net {
+  background-image:
+    radial-gradient(var(--net-size, closest-side) at var(--net-at, 50% 50%), rgb(120 102 244 / 0.14), transparent),
+    linear-gradient(rgb(120 102 244 / var(--net-line, 0.12)) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(120 102 244 / var(--net-line, 0.12)) 1px, transparent 1px);
+  background-size:
+    auto,
+    44px 44px,
+    44px 44px;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(var(--net-size, closest-side) at var(--net-at, 50% 50%), #000 0%, rgb(0 0 0 / 0.7) 40%, transparent 100%);
+  mask-image: radial-gradient(var(--net-size, closest-side) at var(--net-at, 50% 50%), #000 0%, rgb(0 0 0 / 0.7) 40%, transparent 100%);
+}
+
 /* feines graues Raster als Flächenhintergrund */
 @utility bg-grid {
   background-image:
@@ -346,10 +364,27 @@
 
 /* Dunkle Abschnitte als eingerückte, abgerundete Panels mit violettem Schimmer */
 section.studio {
+  position: relative;
+  isolation: isolate;
   margin-inline: clamp(8px, 1.4vw, 20px);
   border-radius: clamp(20px, 2.4vw, 32px);
   overflow: hidden;
   background-image: radial-gradient(60% 55% at 85% 0%, rgb(120 102 244 / 0.2), transparent 70%);
+}
+/* feines violettes Netz oben rechts, wo das Leuchten sitzt */
+section.studio::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(157 140 255 / 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(157 140 255 / 0.1) 1px, transparent 1px);
+  background-size: 44px 44px;
+  background-position: -1px -1px;
+  -webkit-mask-image: radial-gradient(60% 75% at 85% 0%, #000 0%, rgb(0 0 0 / 0.5) 45%, transparent 80%);
+  mask-image: radial-gradient(60% 75% at 85% 0%, #000 0%, rgb(0 0 0 / 0.5) 45%, transparent 80%);
 }
 section.studio + section.studio {
   margin-top: 12px;
@@ -526,7 +561,7 @@ section.studio + section.studio {
     gap: clamp(2.5rem, 5vw, 4.5rem);
     padding-right: clamp(2.5rem, 5vw, 4.5rem);
   }
-  .marquee:hover .marquee-track,
+  /* Läuft beim Überfahren weiter (Kundenwunsch); anhalten nur über den Pause-Knopf (WCAG 2.2.2) */
   .marquee.is-paused .marquee-track {
     animation-play-state: paused;
   }
@@ -840,6 +875,7 @@ section.studio + section.studio {
   to {
     transform: none;
     opacity: 1;
+    clip-path: inset(0 0 0 0);
   }
 }
 
@@ -1006,11 +1042,6 @@ section.studio + section.studio {
   }
 
   /* Kleine Grafiken (Probleme, CRM-Ansicht): wachsen und ploppen beim Sichtbarwerden */
-  .viz-grow {
-    transform-origin: left center;
-    transition: transform 0.9s var(--ease-cut);
-    transition-delay: var(--d, 0ms);
-  }
   .viz-grow-y {
     transform-origin: bottom center;
     transition: transform 0.8s var(--ease-cut);
@@ -1022,8 +1053,11 @@ section.studio + section.studio {
       transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     transition-delay: var(--d, 0ms);
   }
-  .js [data-reveal="viz"]:not(.is-in) .viz-grow {
-    transform: scaleX(0);
+  /* Linie, die sich von links nach rechts aufdeckt */
+  .viz-wipe {
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 1.3s var(--ease-cut);
+    transition-delay: var(--d, 0ms);
   }
   .js [data-reveal="viz"]:not(.is-in) .viz-grow-y {
     transform: scaleY(0);
@@ -1032,10 +1066,1053 @@ section.studio + section.studio {
     opacity: 0;
     transform: translateY(6px) scale(0.92);
   }
-  .js [data-reveal="viz"]:not(.is-in) :is(.viz-grow, .viz-grow-y, .viz-pop) {
+  .js [data-reveal="viz"]:not(.is-in) .viz-wipe {
+    clip-path: inset(0 100% 0 0);
+  }
+  .js [data-reveal="viz"]:not(.is-in) :is(.viz-grow-y, .viz-pop, .viz-wipe) {
     animation: viz-failsafe 0.01s linear 3s forwards;
   }
 
+}
+
+/* ==========================================================================
+   Probleme (Startseite): Grafiken als Schleife mit Timer (CSS-Keyframes, gemeinsamer Takt --cycle).
+   ProblemAnim.tsx setzt data-state: idle (vor dem Start leer), run (Schleife), static (reduzierte Bewegung:
+   fertiges Bild) und data-paused (Pause-Knopf). Ohne JavaScript bleibt das fertige Bild stehen.
+   --off versetzt die Karten leicht, --i staffelt die Elemente innerhalb einer Grafik.
+   ========================================================================== */
+
+@layer components {
+  .pv {
+    --cycle: 7s;
+  }
+  .pv-toggle {
+    position: absolute;
+    top: -2.75rem;
+    right: 0;
+    display: flex;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--color-grey-600);
+    transition: color 0.2s ease;
+  }
+  .pv-toggle:hover {
+    color: var(--color-ink);
+  }
+
+  /* fertige Grundzustände (statisch, ohne JS) */
+  .pv-bar,
+  .pv-bench,
+  .pv-reach {
+    transform-origin: left center;
+  }
+  .pv-draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+  .pv-shine::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.65), transparent);
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+
+  /* vor dem Start leer, damit die erste Runde nicht springt */
+  .js .pv[data-state="idle"] :is(.pv-bar, .pv-area, .pv-badge, .pv-bench, .pv-bench-label, .pv-q, .pv-tile) {
+    opacity: 0;
+  }
+  .js .pv[data-state="idle"] .pv-draw {
+    stroke-dashoffset: 1;
+  }
+
+  /* 1 · Aufrufe, Besuche, Anfragen */
+  .pv[data-state="run"] .pv-bar {
+    animation: pv-bar var(--cycle) var(--ease-cut) infinite both;
+    animation-delay: calc(var(--off, 0s) + var(--i, 0) * 0.35s);
+  }
+  .pv[data-state="run"] .pv-pulse {
+    animation:
+      pv-bar var(--cycle) var(--ease-cut) infinite both,
+      pv-pulse 1.3s ease-out infinite;
+    animation-delay: calc(var(--off, 0s) + var(--i, 0) * 0.35s), 0s;
+  }
+  .pv[data-state="run"] .pv-shine::after {
+    opacity: 1;
+    animation: pv-shine 2.2s ease-in-out infinite;
+  }
+
+  /* 2 · Kosten pro Lead steigen, Ø CHF 12 bei unseren Kunden */
+  .pv[data-state="run"] .pv-draw {
+    animation: pv-draw var(--cycle) var(--ease-cut) infinite both;
+    animation-delay: var(--off, 0s);
+  }
+  .pv[data-state="run"] .pv-area {
+    animation: pv-area var(--cycle) ease infinite both;
+    animation-delay: var(--off, 0s);
+  }
+  .pv[data-state="run"] .pv-badge {
+    animation: pv-badge var(--cycle) cubic-bezier(0.34, 1.56, 0.64, 1) infinite both;
+    animation-delay: var(--off, 0s);
+  }
+  .pv[data-state="run"] .pv-bench {
+    animation: pv-bench var(--cycle) var(--ease-cut) infinite both;
+    animation-delay: var(--off, 0s);
+  }
+  .pv[data-state="run"] .pv-bench-label {
+    animation: pv-bench-label var(--cycle) var(--ease-cut) infinite both;
+    animation-delay: var(--off, 0s);
+  }
+
+  /* 3 · Leads kommen herein, nur einzelne passen */
+  .pv[data-state="run"] .pv-q {
+    animation: pv-q var(--cycle) ease infinite both;
+    animation-delay: calc(var(--off, 0s) + var(--i, 0) * 40ms);
+  }
+  .pv[data-state="run"] .pv-q-good {
+    animation-name: pv-q-good;
+  }
+
+  /* 4 · Posts erscheinen unregelmässig, Reichweite bleibt klein */
+  .pv[data-state="run"] .pv-tile {
+    animation: pv-tile var(--cycle) cubic-bezier(0.34, 1.56, 0.64, 1) infinite both;
+    animation-delay: calc(var(--off, 0s) + var(--i, 0) * 0.28s);
+  }
+  .pv[data-state="run"] .pv-reach {
+    animation: pv-reach var(--cycle) var(--ease-cut) infinite both;
+    animation-delay: calc(var(--off, 0s) + var(--i, 0) * 0.28s);
+  }
+
+  /* Pause-Knopf */
+  .pv[data-paused] :is(.pv-bar, .pv-draw, .pv-area, .pv-badge, .pv-bench, .pv-bench-label, .pv-q, .pv-tile, .pv-reach),
+  .pv[data-paused] .pv-shine::after {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes pv-bar {
+  0%,
+  5% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  24%,
+  88% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  95%,
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+@keyframes pv-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgb(201 69 58 / 0.45);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 7px rgb(201 69 58 / 0);
+  }
+}
+@keyframes pv-shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  55%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+@keyframes pv-draw {
+  0%,
+  5% {
+    stroke-dashoffset: 1;
+    opacity: 1;
+  }
+  38%,
+  88% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  95%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+@keyframes pv-area {
+  0%,
+  25% {
+    opacity: 0;
+  }
+  40%,
+  88% {
+    opacity: 1;
+  }
+  95%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes pv-badge {
+  0%,
+  36% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  42%,
+  88% {
+    opacity: 1;
+    transform: none;
+  }
+  95%,
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+@keyframes pv-bench {
+  0%,
+  48% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  62%,
+  88% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  95%,
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+@keyframes pv-bench-label {
+  0%,
+  60% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  66%,
+  88% {
+    opacity: 1;
+    transform: none;
+  }
+  95%,
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+@keyframes pv-q {
+  0%,
+  3% {
+    opacity: 0;
+    transform: scale(0.3);
+    background-color: #d9d9de;
+  }
+  9%,
+  40% {
+    opacity: 1;
+    transform: none;
+    background-color: #d9d9de;
+  }
+  48%,
+  87% {
+    opacity: 1;
+    transform: none;
+    background-color: rgb(201 69 58 / 0.25);
+  }
+  94%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+    background-color: rgb(201 69 58 / 0.25);
+  }
+}
+@keyframes pv-q-good {
+  0%,
+  3% {
+    opacity: 0;
+    transform: scale(0.3);
+    background-color: #d9d9de;
+    box-shadow: 0 0 0 0 rgb(27 122 67 / 0);
+  }
+  9%,
+  40% {
+    opacity: 1;
+    transform: none;
+    background-color: #d9d9de;
+    box-shadow: 0 0 0 0 rgb(27 122 67 / 0);
+  }
+  48%,
+  87% {
+    opacity: 1;
+    transform: scale(1.12);
+    background-color: var(--color-ok);
+    box-shadow: 0 0 0 3px rgb(27 122 67 / 0.2);
+  }
+  94%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+    background-color: var(--color-ok);
+    box-shadow: 0 0 0 3px rgb(27 122 67 / 0);
+  }
+}
+@keyframes pv-tile {
+  0%,
+  4% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+  12%,
+  88% {
+    opacity: 1;
+    transform: none;
+  }
+  95%,
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+@keyframes pv-reach {
+  0%,
+  22% {
+    transform: scaleX(0);
+  }
+  34%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* ==========================================================================
+   Recruiting-Flow (Startseite): eine Figur wandert durch fünf Stationen und verwandelt sich.
+   Story-Ad → Kurzbewerbung → Zeile im CRM → qualifiziert → neu im Team.
+   Gesteuert durch Scrollen (RecruitingFlow.tsx): data-phase = Gestalt, Klassen a1–a3 / q1–q5 / h1–h3 = Teilschritte,
+   --x = Position auf der Linie, --feed = Feed-Scroll im Handy, --fill = Story-Balken.
+   ========================================================================== */
+
+@layer components {
+  /* Scroll-Strecke: die Fläche bleibt stehen, solange die Strecke durchläuft */
+  .rf-scroll[data-mode="scroll"] {
+    height: 230svh;
+  }
+  /* fixierte Fläche vertikal mittig im Bild (unter dem Header) */
+  .rf-scroll[data-mode="scroll"] .rf-pin {
+    position: sticky;
+    top: max(calc(var(--header-h) + 0.75rem), calc(50svh - 9.5rem));
+  }
+
+  .rf {
+    position: relative;
+  }
+  .rf-stage {
+    position: relative;
+    height: 15.5rem;
+  }
+
+  /* Die Figur: Grösse, Form und Fläche wechseln je Gestalt, der Inhalt blendet über */
+  .rf-token {
+    /* Ankerpunkt der Figur auf der Station (x) und Grösse; ab Tablet etwas grösser */
+    --ox: 50%;
+    position: absolute;
+    bottom: 0.4rem;
+    left: var(--x, 10%);
+    translate: calc(-1 * var(--ox)) 0;
+    transform-origin: var(--ox) 100%;
+    scale: var(--s, 1);
+    width: var(--w);
+    height: var(--h);
+    border-radius: var(--r);
+    background-color: var(--bg);
+    box-shadow: var(--sh);
+    transition:
+      left 0.3s var(--ease-cut),
+      translate 0.6s var(--ease-cut),
+      transform-origin 0.6s var(--ease-cut),
+      width 0.6s var(--ease-cut),
+      height 0.6s var(--ease-cut),
+      border-radius 0.6s var(--ease-cut),
+      background-color 0.4s ease,
+      box-shadow 0.4s ease;
+  }
+  .rf:is([data-phase="feed"], [data-phase="ad"], [data-phase="tap"]) .rf-token {
+    --w: 7.25rem;
+    --h: 13.25rem;
+    --r: 1.35rem;
+    --bg: var(--color-night);
+    --sh: 0 1px 2px rgb(17 17 20 / 0.12), 0 22px 44px -22px rgb(17 17 20 / 0.6);
+  }
+  .rf:is([data-phase="form"], [data-phase="sent"]) .rf-token {
+    --w: 12.5rem;
+    --h: 10.75rem;
+    --r: 1.1rem;
+    --bg: rgb(255 255 255 / 1);
+    --sh: 0 1px 2px rgb(11 29 63 / 0.06), 0 18px 40px -22px rgb(11 29 63 / 0.35);
+  }
+  .rf:is([data-phase="crm"], [data-phase="qualified"]) .rf-token {
+    --w: 16.5rem;
+    --h: 12rem;
+    --r: 1rem;
+    --bg: rgb(255 255 255 / 0);
+    --sh: 0 0 0 rgb(0 0 0 / 0), 0 0 0 rgb(0 0 0 / 0);
+  }
+  .rf[data-phase="hired"] .rf-token {
+    /* der neue Avatar (rechts in der Gruppe) steht genau auf der Station */
+    --ox: calc(100% - 1.55rem);
+    --w: 10.5rem;
+    --h: 5.5rem;
+    --r: 1rem;
+    --bg: rgb(255 255 255 / 0);
+    --sh: 0 0 0 rgb(0 0 0 / 0), 0 0 0 rgb(0 0 0 / 0);
+  }
+
+  .rf-face {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.2s ease,
+      visibility 0s linear 0.2s;
+  }
+  .rf:is([data-phase="feed"], [data-phase="ad"], [data-phase="tap"]) .rf-face-ad,
+  .rf:is([data-phase="form"], [data-phase="sent"]) .rf-face-form,
+  .rf:is([data-phase="crm"], [data-phase="qualified"]) .rf-face-crm,
+  .rf[data-phase="hired"] .rf-face-team {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.4s ease 0.3s,
+      visibility 0s;
+  }
+
+  /* 1 · Story-Ad: der Feed scrollt mit (--feed), stoppt beim Ad, Tipp auf den Button */
+  .rf-face-ad {
+    padding: 0.3rem;
+  }
+  .rf-screen {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 1.05rem;
+    background: #2a2a2e;
+  }
+  .rf-strip {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 300%;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    transform: translateY(calc(var(--feed, 1) * -66.6667%));
+    transition: transform 0.25s var(--ease-cut);
+  }
+  .rf-post {
+    position: relative;
+    background: linear-gradient(165deg, #3b3b41, #242428);
+  }
+  .rf-post + .rf-post {
+    background: linear-gradient(200deg, #4a4a52, #2b2b30);
+  }
+  .rf-post::before,
+  .rf-post::after {
+    content: "";
+    position: absolute;
+    left: 0.6rem;
+    height: 0.32rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.22);
+  }
+  .rf-post::before {
+    bottom: 1.55rem;
+    width: 55%;
+  }
+  .rf-post::after {
+    bottom: 1rem;
+    width: 32%;
+  }
+  .rf-ad {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.7rem 0.6rem 0.65rem;
+    background:
+      linear-gradient(rgb(157 140 255 / 0.1) 1px, transparent 1px) 0 0 / 14px 14px,
+      linear-gradient(90deg, rgb(157 140 255 / 0.1) 1px, transparent 1px) 0 0 / 14px 14px,
+      var(--color-night);
+    color: #fff;
+  }
+  .rf-ad-sponsor {
+    font-size: 0.5rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.55);
+  }
+  .rf-ad-title {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+  .rf-ad-title em {
+    display: block;
+    font-style: normal;
+    color: var(--color-violet-2);
+  }
+  .rf-ad-btn {
+    display: block;
+    border-radius: 999px;
+    background: var(--color-violet);
+    padding: 0.38rem 0;
+    text-align: center;
+    font-size: 0.5625rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+  }
+  .rf[data-phase="ad"] .rf-ad-btn {
+    animation: rf-pulse 0.7s ease 0.1s;
+  }
+  .rf[data-phase="tap"] .rf-ad-btn {
+    background: var(--color-violet-deep);
+  }
+  .rf-tap {
+    position: absolute;
+    left: 50%;
+    bottom: 0.95rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: -0.75rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.7);
+    opacity: 0;
+  }
+  .rf[data-phase="tap"] .rf-tap {
+    animation: rf-tap 0.55s ease-out both;
+  }
+
+  /* 2 · Kurzbewerbung: drei Antworten (a1–a3), dann senden */
+  .rf-face-form {
+    display: flex;
+    flex-direction: column;
+    padding: 0.8rem 0.85rem 0.75rem;
+    color: var(--color-ink);
+  }
+  .rf-form-title {
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+  .rf-form-list {
+    margin-top: 0.55rem;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .rf-form-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    border-bottom: 1px solid rgb(11 29 63 / 0.08);
+    padding-bottom: 0.35rem;
+    font-size: 0.625rem;
+    color: var(--color-grey-500);
+  }
+  .rf-form-list b {
+    border-radius: 999px;
+    background: rgb(120 102 244 / 0.1);
+    padding: 0.1rem 0.45rem;
+    font-weight: 600;
+    color: var(--color-violet-deep);
+    opacity: 0;
+    transform: translateY(3px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+  .rf.a1 .rf-form-list li:nth-child(1) b,
+  .rf.a2 .rf-form-list li:nth-child(2) b,
+  .rf.a3 .rf-form-list li:nth-child(3) b {
+    opacity: 1;
+    transform: none;
+  }
+  .rf-send {
+    position: relative;
+    display: grid;
+    margin-top: auto;
+    height: 1.55rem;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--color-ink);
+    font-size: 0.5625rem;
+    font-weight: 600;
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  .rf-send > span {
+    grid-area: 1 / 1;
+    transition:
+      opacity 0.25s ease,
+      transform 0.3s ease;
+  }
+  .rf-send .b {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  .rf[data-phase="sent"] .rf-send {
+    background: var(--color-violet);
+  }
+  .rf[data-phase="sent"] .rf-send .a {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  .rf[data-phase="sent"] .rf-send .b {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* 3 + 4 · CRM: die Bewerbung kommt oben an; Qualifizierung in Teilschritten q1–q5 */
+  .rf-face-crm {
+    display: grid;
+    align-content: end;
+    gap: 0.45rem;
+  }
+  .rf-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 0.5rem;
+    height: 3.35rem;
+    padding: 0 0.65rem;
+    border: 1px solid rgb(11 29 63 / 0.07);
+    border-radius: 0.85rem;
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(11 29 63 / 0.05);
+    transition:
+      transform 0.5s var(--ease-cut),
+      opacity 0.35s ease,
+      border-color 0.35s ease,
+      box-shadow 0.35s ease;
+  }
+  .rf-avatar {
+    display: grid;
+    width: 1.9rem;
+    height: 1.9rem;
+    place-items: center;
+    border-radius: 999px;
+    background: #ececf0;
+    color: var(--color-grey-400);
+  }
+  .rf-avatar svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  .rf-row-text {
+    display: grid;
+    min-width: 0;
+    line-height: 1.2;
+  }
+  .rf-row-text b {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .rf-row-text small {
+    font-size: 0.5625rem;
+    color: var(--color-grey-500);
+  }
+  .rf-bars {
+    display: grid;
+    gap: 0.3rem;
+  }
+  .rf-bars i {
+    display: block;
+    height: 0.3rem;
+    width: 70%;
+    border-radius: 999px;
+    background: #e6e6ea;
+  }
+  .rf-bars i + i {
+    width: 45%;
+  }
+  .rf-crit {
+    display: flex;
+    gap: 0.22rem;
+  }
+  .rf-crit i {
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 999px;
+    background: var(--color-grey-300);
+    transition: background-color 0.3s ease;
+  }
+  .rf-pill {
+    display: grid;
+    min-width: 2.6rem;
+    place-items: center;
+    border-radius: 999px;
+    background: #ececf0;
+    padding: 0.18rem 0.5rem;
+    font-size: 0.5625rem;
+    font-weight: 600;
+    color: var(--color-grey-600);
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+  .rf-pill > span {
+    grid-area: 1 / 1;
+    transition: opacity 0.25s ease;
+  }
+  .rf-pill .b {
+    opacity: 0;
+  }
+  .rf-row-me {
+    opacity: 0;
+    transform: translateX(-1.5rem);
+  }
+  .rf-row-ghost {
+    opacity: 0;
+  }
+  .rf.c1 .rf-row-me,
+  .rf[data-phase="qualified"] .rf-row-me {
+    opacity: 1;
+    transform: none;
+  }
+  .rf:is([data-phase="crm"], [data-phase="qualified"]) .rf-row-ghost {
+    opacity: 1;
+    transition-delay: 0.25s;
+  }
+  .rf.q1 .rf-crit i:nth-child(1),
+  .rf.q2 .rf-crit i:nth-child(2),
+  .rf.q3 .rf-crit i:nth-child(3) {
+    background: var(--color-violet);
+  }
+  .rf.q4 .rf-row-me {
+    border-color: rgb(120 102 244 / 0.45);
+    box-shadow:
+      0 0 0 3px rgb(120 102 244 / 0.12),
+      0 10px 24px -14px rgb(90 72 216 / 0.45);
+    transition-delay: 0s;
+  }
+  .rf.q4 .rf-row-me .rf-pill {
+    background: var(--color-violet);
+    color: #fff;
+  }
+  .rf.q4 .rf-row-me .rf-pill .a,
+  .rf.q4 .rf-pill-ghost:has(.b) .a {
+    opacity: 0;
+  }
+  .rf.q4 .rf-pill .b {
+    opacity: 1;
+  }
+  .rf.q5 .rf-row-fade {
+    opacity: 0.35;
+    transition-delay: 0s;
+  }
+
+  /* 5 · Neu im Team: das Team ist da, der Neue rückt dazu (h1), dann das Label (h2) */
+  .rf-face-team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.55rem;
+    padding-bottom: 0.2rem;
+  }
+  .rf-team {
+    display: flex;
+    align-items: center;
+  }
+  .rf-mate,
+  .rf-new {
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+  }
+  .rf-mate {
+    width: 2.6rem;
+    height: 2.6rem;
+    margin-left: -0.6rem;
+    border: 2px solid var(--color-paper-2);
+    background: #e4e4e9;
+    color: var(--color-grey-400);
+    opacity: 0;
+    transform: translateX(0.75rem);
+    transition:
+      opacity 0.35s ease,
+      transform 0.45s var(--ease-cut);
+  }
+  .rf-mate:first-child {
+    margin-left: 0;
+  }
+  .rf-mate svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+  .rf-new {
+    position: relative;
+    width: 3.1rem;
+    height: 3.1rem;
+    margin-left: -0.45rem;
+    background: var(--color-violet);
+    color: #fff;
+    box-shadow:
+      0 0 0 3px var(--color-paper-2),
+      0 0 0 6px rgb(120 102 244 / 0.25);
+    opacity: 0;
+    transform: scale(0.4);
+    transition:
+      opacity 0.3s ease,
+      transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .rf-new-person svg {
+    width: 1.7rem;
+    height: 1.7rem;
+  }
+  .rf-check {
+    position: absolute;
+    right: -0.2rem;
+    bottom: -0.2rem;
+    display: grid;
+    width: 1.15rem;
+    height: 1.15rem;
+    place-items: center;
+    border: 2px solid var(--color-paper-2);
+    border-radius: 999px;
+    background: var(--color-ok);
+    color: #fff;
+  }
+  .rf-check svg {
+    width: 0.55rem;
+    height: 0.55rem;
+  }
+  .rf-team-label {
+    border-radius: 999px;
+    background: rgb(120 102 244 / 0.1);
+    padding: 0.18rem 0.6rem;
+    font-size: 0.625rem;
+    font-weight: 600;
+    color: var(--color-violet-deep);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .rf[data-phase="hired"] .rf-mate {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.3s;
+  }
+  .rf[data-phase="hired"] .rf-mate:nth-child(2) {
+    transition-delay: 0.36s;
+  }
+  .rf[data-phase="hired"] .rf-mate:nth-child(3) {
+    transition-delay: 0.42s;
+  }
+  .rf.h1 .rf-new {
+    opacity: 1;
+    transform: none;
+  }
+  .rf.h2 .rf-team-label {
+    opacity: 1;
+  }
+
+  /* Linie mit Stationen */
+  .rf-track {
+    position: relative;
+    height: 4.25rem;
+  }
+  .rf-line,
+  .rf-fill {
+    position: absolute;
+    top: 0.42rem;
+    left: 10%;
+    height: 2px;
+    border-radius: 2px;
+  }
+  .rf-line {
+    right: 10%;
+    background: rgb(29 29 31 / 0.12);
+  }
+  .rf-fill {
+    width: calc(var(--x, 10%) - 10%);
+    background: var(--color-violet);
+    transition: width 0.3s var(--ease-cut);
+  }
+  .rf-steps li {
+    position: absolute;
+    top: 0;
+    translate: -50% 0;
+  }
+  .rf-step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0 0.3rem 0.3rem;
+    cursor: pointer;
+  }
+  .rf-mark {
+    position: absolute;
+    left: 50%;
+    top: -2.1rem;
+    width: 1.15rem;
+    height: 1.15rem;
+    translate: -50% 0;
+    color: rgb(90 72 216 / 0.7);
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity 0.35s ease,
+      transform 0.45s var(--ease-cut);
+  }
+  /* Spur läuft eine Station hinter der Figur, damit nichts überlappt */
+  .rf-step[data-trail="on"] .rf-mark {
+    opacity: 1;
+    transform: none;
+  }
+  .rf-dot {
+    width: 0.95rem;
+    height: 0.95rem;
+    border: 2px solid var(--color-grey-300);
+    border-radius: 999px;
+    background: var(--color-paper-2);
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+  .rf-step[data-state="done"] .rf-dot {
+    border-color: var(--color-violet);
+    background: var(--color-violet);
+  }
+  .rf-step[data-state="now"] .rf-dot {
+    border-color: var(--color-violet);
+    background: #fff;
+    box-shadow: 0 0 0 5px rgb(120 102 244 / 0.18);
+  }
+  .rf-label {
+    font-family: var(--font-display);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-grey-500);
+    transition: color 0.3s ease;
+  }
+  .rf-step[data-state="done"] .rf-label {
+    color: var(--color-ink);
+  }
+  .rf-step[data-state="now"] .rf-label,
+  .rf-step:hover .rf-label {
+    color: var(--color-violet-deep);
+  }
+
+  /* Handy: Story-Balken (füllen sich mit dem Scrollen) und aktueller Schritt */
+  .rf-story {
+    display: none;
+    gap: 0.3rem;
+    margin-bottom: 1.25rem;
+  }
+  .rf-seg {
+    flex: 1;
+    height: 3px;
+    overflow: hidden;
+    border-radius: 3px;
+    background: rgb(29 29 31 / 0.12);
+  }
+  .rf-seg > span {
+    display: block;
+    width: calc(var(--fill, 0) * 100%);
+    height: 100%;
+    background: var(--color-violet);
+    transition: width 0.2s linear;
+  }
+  .rf-now {
+    display: none;
+    margin-top: 0.9rem;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-violet-deep);
+  }
+
+  @media (min-width: 768px) {
+    .rf-scroll[data-mode="scroll"] .rf-pin {
+      top: max(calc(var(--header-h) + 1rem), calc(50svh - 12.5rem));
+    }
+    .rf-stage {
+      height: 17.25rem;
+    }
+    .rf-token {
+      --s: 1.22;
+    }
+  }
+  @media (min-width: 1280px) {
+    .rf-scroll[data-mode="scroll"] {
+      height: 250svh;
+    }
+    .rf-scroll[data-mode="scroll"] .rf-pin {
+      top: max(calc(var(--header-h) + 1rem), calc(50svh - 12.5rem));
+    }
+  }
+  @media (max-width: 767.98px) {
+    .rf-stage {
+      height: 14.5rem;
+    }
+    .rf-token {
+      left: 50%;
+    }
+    .rf-story {
+      display: flex;
+    }
+    .rf-now {
+      display: block;
+    }
+    /* Stationen nur für Screenreader */
+    .rf-track {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+}
+
+@keyframes rf-pulse {
+  50% {
+    transform: scale(1.06);
+  }
+}
+@keyframes rf-tap {
+  0% {
+    opacity: 0.75;
+    transform: scale(0.4);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

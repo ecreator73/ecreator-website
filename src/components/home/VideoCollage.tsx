@@ -75,7 +75,8 @@ export function VideoCollage() {
 
   return (
     <section id="arbeit" aria-labelledby="arbeit-title" className="relative">
-      <div className="wrap pt-6 text-center md:pt-10">
+      {/* steht nach den Case Studies: normaler Section-Abstand oben (wie sec-l) */}
+      <div className="wrap pt-[clamp(4.5rem,8vw,7rem)] text-center">
         <p className="label-pill">Echte Arbeiten, keine Mockups</p>
         <h2 id="arbeit-title" className="t-h2 mx-auto mt-5 max-w-[20ch]">
           Ads, die wir <span className="text-accent">selbst</span> gedreht haben.

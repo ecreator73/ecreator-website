@@ -66,13 +66,41 @@ herauszoomen, die übrigen Videos ploppen nacheinander herein), Kundenlogos zeig
 abwechselnd links und rechts; das Interview mit Costantino Pinelli steckt jetzt in der ersten Karte (keine separate
 Kundenstimme mehr). Pakete-Sektion auf der Startseite entfernt (Pakete bleiben unter /pakete).
 
-Nachtrag 30.09.2026 (zweite Runde): Case-Karten kompakter, Video im Hochformat in Originalgrösse (bleibt scharf). Neu
-nach der Video-Collage zwei Abschnitte nach dem Muster von anfragenfluss.de: **«Wo heute Kunden verloren gehen.»** zeigt
-vier typische Probleme als Karten mit kleiner animierter Grafik und roten ✕-Listen (Videos und Webseite ohne Anfragen,
-liegengebliebene Anfragen, schlechte Lead-Qualität, Content ohne Wirkung und Wiedererkennung). Danach **«Warum unsere
-Partner glücklich sind.»** mit Häkchen-Liste links und einer CRM-Beispielansicht rechts (Kennzahlen, Leads pro Woche nach
-Quelle, Pipeline). Die Grafiken sind illustrativ und ohne Zahlen; die CRM-Ansicht zeigt Demo-Daten und ist sichtbar so
-beschriftet. Warnfarbe `alert` (#C9453A) und Erfolgsfarbe `ok` (#1B7A43) nur in diesen Grafiken.
+Nachtrag 30.09.2026 (zweite Runde): Neu nach der Video-Collage zwei Abschnitte nach dem Muster von anfragenfluss.de:
+**«Wo heute Kunden verloren gehen.»** zeigt vier typische Probleme als Karten mit kleiner animierter Grafik und roten
+✕-Listen (Videos und Webseite ohne Anfragen, Lead-Kosten zu hoch mit «Ø CHF 12 bei unseren Kunden», schlechte Lead-Qualität,
+Content ohne Wirkung und Wiedererkennung). Die Grafiken laufen als Schleife mit Timer (7 s, Karten leicht versetzt,
+startet sichtbar, Pause-Knopf, reduzierte Bewegung: fertiges Bild). Danach **«Warum Kunden kommen. Und bleiben.»** (Texte von eCreator): Gründe 01 bis 03 links (Mehr Umsatz
+als Ziel, Alles aus einer Hand, Direkter Kontakt), daneben eine CRM-Beispielansicht (Kennzahlen, Leads pro Woche nach
+Quelle, Pipeline); darunter Punkt 04 «Langfristiger Wachstumspartner» als breite Karte mit Text links und einer kompakten,
+schematischen Umsatz-Grafik rechts (Kurve mit Fläche über 0 → Build → Grow → Scale → Keep growing, gestrichelte
+Verlängerung, grünes «steigt»). Die Grafiken sind illustrativ und ohne Zahlen; die CRM-Ansicht zeigt Demo-Daten und ist
+sichtbar so beschriftet. Warnfarbe `alert` (#C9453A) und Erfolgsfarbe `ok` (#1B7A43) nur in diesen Grafiken.
+
+Case Studies nach Gestaltungsvorlage des Kunden (dunkles Beispiel, «das Gute übernehmen»), hell umgesetzt: weisse
+Fläche mit dünnem Rahmen ohne Schatten und nur 8 bis 10 px Innenabstand (Kundenwunsch «nur eine kleine Umrandung»),
+auf dem Desktop in voller Seitenbreite (84rem), damit die Textspalte Luft hat; grosses Video im Querformat (16:9), Name unten links auf dunklem Verlauf mit «Kundenstimme im Video», runder
+weisser Play-Knopf in der Mitte; rechts Kicker «Branche · Case Study», grosser Titel, Leistungen als violette Häkchen in
+einer Zeile, Trennlinie, Kennzahlen-Reihe, Zitat mit violetter Linie, Link. Hochformat-Ads unbeschnitten im 16:9-Rahmen
+(Handy 4:3) vor ihrem weichgezeichneten Standbild. Header-Logo wieder mit Tagline wie in der Logo-Datei.
+
+Das violette Netz ist jetzt ein wiederkehrendes Element (Utility `net`, Linienstärke über `--net-line`): bei Probleme über die
+ganze Section (hinter Titel und Karten, kräftiger, Kundenwunsch 01.10.2026), hinter dem Titel der Case Studies,
+hinter der CRM-Ansicht (wie ein Produktbild) und hinter dem Kreislauf; auf allen dunklen Panels fein oben rechts beim
+Leuchten. Nicht hinter der Video-Collage (direkt nach dem Hero wäre es doppelt) und nicht hinter Fliesstext.
+
+Reihenfolge seit 03.10.2026 (Kundenwunsch): Case Studies direkt unter den Kundenlogos, danach Video-Collage (mit normalem
+Section-Abstand oben), Probleme, «Warum Kunden kommen», Manifest, Studio, Kreislauf, Social Recruiting, Team, Abschluss-CTA.
+Startseite ohne Leistungen-Section (Leistungen stehen im Menü und unter /leistungen). Team auf der Startseite als ein
+gemeinsames Teamfoto statt Einzelporträts; bis zum Team-Shooting ein beschrifteter Bildplatz.
+
+Social Recruiting (Briefing «Dein nächster Mitarbeiter scrollt gerade.»): keine Karten nebeneinander, keine Icons als
+Hauptelement, kein Dashboard. Eine einzige Figur erzählt den Prozess, indem sie sich verwandelt: dunkles Story-Ad im Feed
+(Feed scrollt, stoppt, Tipp auf «Jetzt bewerben») → weisse Kurzbewerbung (drei Antworten erscheinen) → Zeile im CRM (kommt
+oben an) → qualifiziert (dieselben drei Antworten werden violett, Status «Passt», die anderen treten zurück) → violetter
+Avatar rückt ins Team. Violett ist die Linie, die den Weg zeigt; an erledigten Stationen bleibt eine feine Spur. Handy:
+eigene Variante an Ort und Stelle mit Story-Fortschrittsbalken. Gesteuert durch Scrollen (Kundenwunsch 01.10.2026): Die
+Fläche bleibt stehen, die Scroll-Position bestimmt stufenlos Position und Teilschritte, rückwärts scrollen läuft rückwärts.
 
 Die Abschnitte 1 bis 9 unten beschreiben Version 2; wo sie §0c/§0d widersprechen, gilt §0d.
 

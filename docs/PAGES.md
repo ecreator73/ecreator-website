@@ -131,7 +131,7 @@ Verbindlich für alle Unterseiten. Vorher lesen: `docs/ART-DIRECTION.md`, `desig
 
 ### C17 · `/ueber-uns`
 - **Keyword:** Marketingagentur Kanton Zürich / eCreator Team · **H1:** «Wir sind eCreator.»
-- Inhalt: Haltung (Systems over campaigns, We create customers not clicks), wie wir arbeiten (Mission FACTS M10 in eigenen Worten), Team (`TeamStrip detailed`), Firmendaten (GmbH seit 2026 im HR des Kantons Zürich, Sitz Neerach), was wir nicht tun (keine Gewinnspiel-Leads, keine Versprechen ohne Messung). Kein Gründungsjahr 2023.
+- Inhalt: Haltung (Systems over campaigns, We create customers not clicks), wie wir arbeiten (Mission FACTS M10 in eigenen Worten), Team (Porträtkarten mit Bio), Firmendaten (GmbH seit 2026 im HR des Kantons Zürich, Sitz Neerach), was wir nicht tun (keine Gewinnspiel-Leads, keine Versprechen ohne Messung). Kein Gründungsjahr 2023.
 - **Art Direction:** persönlich: grosse Porträts, Zitat-artige Haltungssätze, eCreator-Ad als «so sieht unser Büro aus». Bildplatz «Team-Shooting» (TODO echtes Shooting).
 - Schema: AboutPage + Person-Schemas der drei.
 

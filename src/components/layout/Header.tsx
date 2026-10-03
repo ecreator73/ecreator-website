@@ -100,9 +100,10 @@ export function Header() {
   return (
     <header ref={headerRef} className="sticky top-0 z-50 px-[clamp(10px,2vw,24px)] pt-2.5 text-ink lg:pt-3.5">
       {/* Schwebende Pille: weiss, feiner Rand, weicher Schatten */}
-      <div className="relative mx-auto flex h-14 max-w-[1180px] items-center justify-between gap-4 rounded-full border border-[rgb(11_29_63/0.08)] bg-white/95 pl-5 pr-2 shadow-float backdrop-blur-md lg:h-16 lg:pl-7">
-        <Link href="/" aria-label="eCreator, zur Startseite" className="-m-2 p-2">
-          <Logo variant="lockup" className="h-[24px] w-auto lg:h-[28px]" />
+      <div className="relative mx-auto flex h-14 max-w-[1180px] items-center justify-between gap-2 rounded-full border border-[rgb(11_29_63/0.08)] bg-white/95 pl-5 pr-2 shadow-float backdrop-blur-md sm:gap-4 lg:h-16 lg:pl-7">
+        {/* Logo wie in der Datei «eCreator-01 (2)», mit Tagline «We create customers, not clicks.» */}
+        <Link href="/" aria-label="eCreator, zur Startseite" className="-m-2 flex-none p-2">
+          <Logo variant="full" className="h-[28px] w-auto min-[375px]:h-[32px] sm:h-[38px] lg:h-[46px]" />
         </Link>
 
         {/* Desktop-Navigation */}

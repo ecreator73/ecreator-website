@@ -18,7 +18,7 @@ const SOURCE_TONE: Record<Source, string> = {
 const KPIS = [
   { label: "Neue Leads", value: "42", note: "diese Woche" },
   { label: "Termine", value: "11", note: "gebucht" },
-  { label: "Kosten pro Lead", value: "CHF 18", note: "Durchschnitt" },
+  { label: "Kosten pro Lead", value: "CHF 12", note: "Durchschnitt" },
   { label: "Abschlüsse", value: "4", note: "diese Woche" },
 ];
 

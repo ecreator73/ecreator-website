@@ -5,8 +5,8 @@ import type { Testimonial } from "@/content/testimonials";
 import { VideoFrame } from "@/components/ui/VideoFrame";
 
 /**
- * Interview als Medienblock einer Case-Karte: scharfe Hochformat-Vorschau (stumm, in Schleife),
- * per Klick das ganze Interview im Querformat mit Ton und Untertiteln in einem Dialog.
+ * Interview als Medienblock eines Case: Vorschau im Querformat (stumm, in Schleife), Name unten links auf einem
+ * Verlauf, runder Play-Knopf in der Mitte. Der Knopf öffnet das ganze Interview mit Ton und Untertiteln in einem Dialog.
  */
 export function CaseInterview({ t }: { t: Testimonial }) {
   const v = t.video!;
@@ -22,28 +22,37 @@ export function CaseInterview({ t }: { t: Testimonial }) {
   return (
     <div className="relative">
       <VideoFrame
-        src={v.portraitLoop ?? v.loop ?? v.src}
-        poster={v.portraitPoster ?? v.poster}
+        src={v.loop ?? v.src}
+        poster={v.loopPoster ?? v.poster}
+        ratio="16 / 9"
         label={`Ausschnitt aus dem Video-Interview mit ${t.person}`}
         className="shadow-float"
       />
-      <span className="pointer-events-none absolute left-3 top-3 rounded-xl bg-ink/70 px-2.5 py-1.5 text-paper backdrop-blur-sm">
-        <span className="block text-[0.875rem] font-semibold leading-tight">{t.person}</span>
-        <span className="block text-[0.75rem] text-grey-300">{t.role}</span>
-      </span>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 rounded-b-[var(--radius-media)] bg-gradient-to-t from-black/75 via-black/30 to-transparent"
+      />
+      <div className="pointer-events-none absolute bottom-4 left-4 right-16 text-white sm:bottom-6 sm:left-6">
+        <p className="t-meta hidden items-center gap-2 text-white/85 sm:flex">
+          <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-violet" />
+          Kundenstimme im Video
+        </p>
+        <p className="mt-1.5 font-display text-[clamp(1.125rem,1rem+0.6vw,1.5rem)] font-bold leading-tight">{t.person}</p>
+        <p className="mt-0.5 text-[0.875rem] text-white/75">
+          {t.role}
+          <span className="hidden sm:inline">, {t.company}</span>
+        </p>
+      </div>
       <button
         type="button"
         onClick={open}
-        className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-paper py-1.5 pl-1.5 pr-3.5 text-ink shadow-float transition-colors hover:bg-violet hover:text-white"
+        className="absolute left-1/2 top-[42%] flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white text-ink shadow-float transition duration-300 hover:scale-105 hover:bg-violet hover:text-white sm:top-1/2 sm:h-[4.5rem] sm:w-[4.5rem]"
         aria-haspopup="dialog"
         aria-label={`Interview mit ${t.person} abspielen, ${v.duration}, mit Ton und Untertiteln`}
       >
-        <span className="flex h-8 w-8 items-center justify-center rounded-full border-[1.5px] border-current">
-          <svg aria-hidden viewBox="0 0 12 14" className="ml-0.5 h-3 w-2.5">
-            <path d="M0 0l12 7-12 7z" fill="currentColor" />
-          </svg>
-        </span>
-        <span className="text-[0.875rem] font-semibold">Interview ansehen</span>
+        <svg aria-hidden viewBox="0 0 12 14" className="ml-1 h-4 w-3.5">
+          <path d="M0 0l12 7-12 7z" fill="currentColor" />
+        </svg>
       </button>
 
       {/* Ganzes Interview: Querformat, mit Ton und Untertiteln. Schliessen per Knopf, Esc oder Klick daneben. */}

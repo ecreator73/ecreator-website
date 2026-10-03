@@ -1,19 +1,23 @@
 import type { CSSProperties } from "react";
-import { homeProblems, homeProblemsIntro, type HomeProblem } from "@/content/pages/home";
+import { homeCplAverage, homeProblems, homeProblemsIntro, type HomeProblem } from "@/content/pages/home";
 import { withAccent } from "@/lib/accent";
 import { ArrowLink } from "@/components/ui/ButtonLink";
 import { NumberChip } from "@/components/page/Blocks";
+import { ProblemAnim } from "./ProblemAnim";
 
-/** Stagger-Verzögerung für die kleinen Animationen in den Grafiken */
-const d = (ms: number) => ({ ["--d" as string]: `${ms}ms` }) as CSSProperties;
+/** Reihenfolge eines Elements in seiner Grafik (für die gestaffelte Schleife, Klassen pv-*) */
+const nth = (i: number) => ({ ["--i" as string]: i }) as CSSProperties;
 
 /**
- * Probleme der Kunden als 2×2-Karten: oben eine kleine Grafik, die das Problem zeigt
- * (animiert beim Sichtbarwerden), darunter die typischen Symptome mit rotem ✕ und ein Weg zur Lösung.
+ * Probleme der Kunden als 2×2-Karten: oben eine kleine Grafik, die das Problem in einer Schleife zeigt
+ * (Timer, startet sichtbar, Pause-Knopf in ProblemAnim), darunter die typischen Symptome mit rotem ✕
+ * und ein Weg zur Lösung.
  */
 export function ProblemGrid() {
   return (
-    <section aria-labelledby="probleme-title" className="sec-l bg-paper-2">
+    <section aria-labelledby="probleme-title" className="sec-l relative isolate bg-paper-2">
+      {/* Netz über die ganze Section: hinter Titel, Karten und Zwischenräumen, zu den Rändern weich auslaufend */}
+      <div aria-hidden className="net pointer-events-none absolute inset-0 -z-10 [--net-at:50%_42%] [--net-line:0.17] [--net-size:80%_74%]" />
       <div className="wrap">
         <div className="mx-auto mb-10 max-w-[46rem] text-center md:mb-14">
           <p className="label-pill">{homeProblemsIntro.label}</p>
@@ -22,11 +26,13 @@ export function ProblemGrid() {
           </h2>
           <p className="t-lead mx-auto mt-5 max-w-[52ch] text-grey-600">{homeProblemsIntro.text}</p>
         </div>
-        <ul className="mx-auto grid max-w-[62rem] grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-          {homeProblems.map((p, i) => (
-            <ProblemCard key={p.id} p={p} n={i + 1} />
-          ))}
-        </ul>
+        <ProblemAnim>
+          <ul className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+            {homeProblems.map((p, i) => (
+              <ProblemCard key={p.id} p={p} n={i + 1} />
+            ))}
+          </ul>
+        </ProblemAnim>
       </div>
     </section>
   );
@@ -35,12 +41,16 @@ export function ProblemGrid() {
 function ProblemCard({ p, n }: { p: HomeProblem; n: number }) {
   return (
     <li className="card flex flex-col p-3 sm:p-4">
-      <div className="relative h-48 overflow-hidden rounded-2xl bg-paper-2 px-5 pb-5 pt-14" data-reveal="viz" aria-hidden>
+      <div
+        className="relative h-48 overflow-hidden rounded-2xl bg-paper-2 px-5 pb-5 pt-14"
+        style={{ ["--off" as string]: `${(n - 1) * 0.6}s` } as CSSProperties}
+        aria-hidden
+      >
         <span className="absolute left-4 top-4">
           <NumberChip n={n} />
         </span>
         {p.visual === "funnel" && <FunnelViz />}
-        {p.visual === "inbox" && <InboxViz />}
+        {p.visual === "cost" && <CostViz />}
         {p.visual === "quality" && <QualityViz />}
         {p.visual === "content" && <ContentViz />}
       </div>
@@ -74,14 +84,14 @@ function XMark() {
   );
 }
 
-/* ---------------------------------------------------------------- Grafiken (rein illustrativ, ohne Zahlen) */
+/* ---------------------------------------------------------------- Grafiken (illustrativ; Zahl nur beim Ø CPL) */
 
-/** Aufrufe der Videos und Besuche der Webseite sind da, Anfragen kommen kaum */
+/** Aufrufe und Besuche sind da (Schimmer = Bewegung), der Anfragen-Balken bleibt winzig und pulsiert rot */
 function FunnelViz() {
   const rows = [
-    { label: "Aufrufe", w: "100%", tone: "bg-grey-300" },
-    { label: "Besuche", w: "62%", tone: "bg-violet/60" },
-    { label: "Anfragen", w: "5%", tone: "bg-alert" },
+    { label: "Aufrufe", w: "100%", tone: "bg-grey-300 pv-shine" },
+    { label: "Besuche", w: "62%", tone: "bg-violet/60 pv-shine" },
+    { label: "Anfragen", w: "5%", tone: "bg-alert pv-pulse" },
   ];
   return (
     <div className="flex h-full flex-col justify-center gap-3">
@@ -89,7 +99,7 @@ function FunnelViz() {
         <div key={r.label} className="grid grid-cols-[4.5rem_1fr] items-center gap-3">
           <span className="text-[0.8125rem] font-medium text-grey-600">{r.label}</span>
           <span className="h-4 rounded-full bg-white">
-            <span className={`viz-grow block h-full rounded-full ${r.tone}`} style={{ width: r.w, ...d(i * 180) }} />
+            <span className={`pv-bar relative block h-full overflow-hidden rounded-full ${r.tone}`} style={{ width: r.w, ...nth(i) }} />
           </span>
         </div>
       ))}
@@ -97,27 +107,36 @@ function FunnelViz() {
   );
 }
 
-/** Posteingang mit Anfragen, die liegen bleiben */
-function InboxViz() {
-  const rows = [
-    { t: "Website-Anfrage", s: "3 Tage offen" },
-    { t: "Rückruf-Wunsch", s: "niemand zuständig" },
-    { t: "Instagram-Nachricht", s: "unbeantwortet" },
-  ];
+/** Kosten pro Lead steigen (rote Kurve), tief darunter die violette Linie: Ø CHF 12 bei unseren Kunden */
+function CostViz() {
+  const line = "M0 88 L50 82 L100 84 L150 66 L200 58 L250 34 L300 14";
   return (
-    <div className="flex h-full flex-col justify-center gap-2">
-      {rows.map((r, i) => (
-        <div key={r.t} className="viz-pop flex items-center gap-3 rounded-xl bg-white px-3 py-2 shadow-[0_1px_2px_rgb(11_29_63/0.06)]" style={d(i * 160)}>
-          <span className="h-2 w-2 flex-none rounded-full bg-alert" />
-          <span className="min-w-0 flex-1 truncate text-[0.8125rem] font-medium text-ink">{r.t}</span>
-          <span className="flex-none text-[0.75rem] text-alert">{r.s}</span>
-        </div>
-      ))}
+    <div className="relative h-full">
+      <div className="absolute left-0 top-0">
+        <span className="block text-[0.8125rem] font-medium text-grey-600">Kosten pro Lead</span>
+        {/* Legende statt Label an der Linie: die steigende Kurve kreuzt sonst den Text */}
+        <span className="pv-bench-label mt-1 flex items-center gap-1.5 text-[0.6875rem] font-semibold text-violet-deep">
+          <span className="w-4 border-t-2 border-dashed border-violet" />
+          {homeCplAverage.label}
+        </span>
+      </div>
+      <span className="pv-badge absolute right-0 top-0 flex items-center gap-1 rounded-full bg-alert/12 px-2 py-0.5 text-[0.75rem] font-semibold text-alert">
+        <svg aria-hidden viewBox="0 0 10 10" className="h-2.5 w-2.5">
+          <path d="M2 7l3-4 3 4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        steigt
+      </span>
+      <svg viewBox="0 0 300 100" preserveAspectRatio="none" className="absolute inset-x-0 bottom-0 h-[64%] w-full overflow-visible">
+        <path d="M0 99.5H300" stroke="rgb(29 29 31 / 0.12)" strokeWidth="1" />
+        <path d={`${line} L300 100 L0 100 Z`} className="pv-area fill-alert/10" />
+        <path d={line} pathLength={1} className="pv-draw stroke-alert" fill="none" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
+      </svg>
+      <span className="pv-bench absolute inset-x-0 bottom-[13%] border-t-2 border-dashed border-violet" />
     </div>
   );
 }
 
-/** Viele Leads, wenige passende: im Raster sind nur einzelne Punkte grün */
+/** Viele Leads, wenige passende: Punkte kommen herein, dann wird sichtbar, dass nur einzelne passen (grün) */
 function QualityViz() {
   const good = new Set([4, 17, 23]);
   return (
@@ -139,8 +158,8 @@ function QualityViz() {
         {Array.from({ length: 28 }, (_, i) => (
           <span
             key={i}
-            className={`viz-pop aspect-square rounded-full ${good.has(i) ? "bg-ok ring-2 ring-ok/20" : "bg-alert/25"}`}
-            style={d(i * 28)}
+            className={`pv-q aspect-square rounded-full ${good.has(i) ? "pv-q-good bg-ok ring-2 ring-ok/20" : "bg-alert/25"}`}
+            style={nth(i)}
           />
         ))}
       </div>
@@ -148,7 +167,7 @@ function QualityViz() {
   );
 }
 
-/** Beiträge ohne einheitlichen Look (keine Wiedererkennung), mit Lücken im Rhythmus und kaum Reichweite */
+/** Beiträge erscheinen unregelmässig und ohne einheitlichen Look, die Reichweite bleibt klein */
 function ContentViz() {
   const tiles = [
     { v: 0.22, tone: "bg-grey-300/70", shape: "rounded-md" },
@@ -162,14 +181,14 @@ function ContentViz() {
     <div className="grid h-full grid-cols-6 items-center gap-2">
       {tiles.map((t, i) =>
         t === null ? (
-          <span key={i} className="viz-pop flex aspect-[9/16] items-center justify-center rounded-lg border border-dashed border-grey-300" style={d(i * 110)}>
+          <span key={i} className="pv-tile flex aspect-[9/16] items-center justify-center rounded-lg border border-dashed border-grey-300" style={nth(i)}>
             <span className="text-[0.625rem] text-grey-400">leer</span>
           </span>
         ) : (
-          <span key={i} className="viz-pop relative aspect-[9/16] overflow-hidden rounded-lg bg-white shadow-[0_1px_2px_rgb(11_29_63/0.06)]" style={d(i * 110)}>
+          <span key={i} className="pv-tile relative aspect-[9/16] overflow-hidden rounded-lg bg-white shadow-[0_1px_2px_rgb(11_29_63/0.06)]" style={nth(i)}>
             <span className={`absolute left-1/2 top-1.5 aspect-square w-[calc(100%-0.75rem)] -translate-x-1/2 ${t.shape} ${t.tone}`} />
             <span className="absolute bottom-1.5 left-1.5 right-1.5 h-1 rounded-full bg-paper-2">
-              <span className="viz-grow block h-full rounded-full bg-alert/70" style={{ width: `${t.v * 100}%`, ...d(500 + i * 110) }} />
+              <span className="pv-reach block h-full rounded-full bg-alert/70" style={{ width: `${t.v * 100}%`, ...nth(i) }} />
             </span>
           </span>
         ),

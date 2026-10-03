@@ -3,13 +3,12 @@ import { Hero } from "@/components/home/Hero";
 import { VideoCollage } from "@/components/home/VideoCollage";
 import { CaseStudies } from "@/components/home/CaseStudies";
 import { ProblemGrid } from "@/components/home/ProblemGrid";
-import { PartnerSystem } from "@/components/home/PartnerSystem";
+import { WhyClients } from "@/components/home/WhyClients";
 import { Manifest } from "@/components/home/Manifest";
-import { ServiceIndex } from "@/components/home/ServiceIndex";
-import { RecruitingBand } from "@/components/home/RecruitingBand";
+import { TeamPhoto } from "@/components/home/TeamPhoto";
+import { SocialRecruiting } from "@/components/home/SocialRecruiting";
 import { RingSystem } from "@/components/system/RingSystem";
 import { RateCard } from "@/components/blocks/RateCard";
-import { TeamStrip } from "@/components/blocks/TeamStrip";
 import { FinalCta } from "@/components/blocks/FinalCta";
 import { ButtonLink, ArrowLink } from "@/components/ui/ButtonLink";
 import { VideoFrame } from "@/components/ui/VideoFrame";
@@ -30,13 +29,13 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      {/* Case Studies direkt unter den Kundenlogos (Kundenwunsch 03.10.2026): Video und Ergebnisse, Ziel von «Erfahrungen» */}
+      <CaseStudies />
       <VideoCollage />
 
-      {/* Probleme der Kunden, dann das System dagegen (CRM-Beispielansicht) */}
+      {/* Probleme der Kunden, dann warum Kunden kommen und bleiben (mit CRM-Beispielansicht und Wachstumspfad) */}
       <ProblemGrid />
-      <PartnerSystem />
-      {/* Case Studies: Video und Ergebnisse, abwechselnd links und rechts (Ziel von «Erfahrungen») */}
-      <CaseStudies />
+      <WhyClients />
 
       <Manifest />
 
@@ -85,7 +84,7 @@ export default function HomePage() {
       </section>
 
       {/* System als Kreislauf */}
-      <section aria-labelledby="system-title" className="sec-l">
+      <section aria-labelledby="system-title" className="sec-l overflow-x-clip">
         <div className="wrap">
           <div className="mx-auto mb-14 max-w-[46rem] text-center md:mb-16">
             <p className="label-pill">Systems over campaigns</p>
@@ -97,47 +96,19 @@ export default function HomePage() {
               mehr Content und mehr Kapazität im Verkauf.
             </p>
           </div>
-          <RingSystem />
-        </div>
-      </section>
-
-      {/* Leistungen */}
-      <section aria-labelledby="services-title" className="sec-l border-t border-line">
-        <div className="wrap">
-          <div className="mx-auto mb-12 max-w-[46rem] text-center md:mb-14">
-            <p className="label-pill">Leistungen</p>
-            <h2 id="services-title" className="t-h2 mt-4">
-              Acht Leistungen. Einzeln buchbar, am stärksten zusammen.
-            </h2>
-          </div>
-          <ServiceIndex />
-          <div className="mt-10 text-center">
-            <ArrowLink href="/leistungen">Alle Leistungen im Überblick</ArrowLink>
+          {/* Kreislauf auf dem violetten Netz */}
+          <div className="relative isolate">
+            <div aria-hidden className="net pointer-events-none absolute -inset-x-4 -inset-y-10 -z-10 sm:-inset-x-16 sm:-inset-y-16" />
+            <RingSystem />
           </div>
         </div>
       </section>
 
-      <RecruitingBand />
+      {/* Social Recruiting: kompakt, animierte Grafik vom Ad bis zum neuen Mitarbeiter */}
+      <SocialRecruiting />
 
-      {/* Menschen */}
-      <section aria-labelledby="team-title" className="sec-l border-t border-line">
-        <div className="wrap">
-          <div className="mx-auto mb-12 max-w-[46rem] text-center md:mb-14">
-            <p className="label-pill">Team</p>
-            <h2 id="team-title" className="t-h2 mt-4">
-              Claudio, Fabian, Ricardo.
-            </h2>
-            <p className="t-lead mx-auto mt-5 max-w-[50ch] text-grey-700">
-              Du sprichst mit den Leuten, die deine Kampagnen, Videos und Websites bauen. Am Telefon, im Video-Call oder
-              beim Dreh.
-            </p>
-          </div>
-          <TeamStrip />
-          <div className="mt-12 text-center">
-            <ArrowLink href="/ueber-uns">Mehr über eCreator</ArrowLink>
-          </div>
-        </div>
-      </section>
+      {/* Team: ein gemeinsames Teamfoto (Bildplatz, bis das Foto da ist) */}
+      <TeamPhoto />
 
       <FinalCta />
     </>

@@ -74,6 +74,10 @@ export async function submitInquiry(inquiry: Inquiry): Promise<InquiryResult> {
     }
   }
 
+  // Vorschau auf Vercel ohne Webhook: dort ist das Dateisystem schreibgeschützt, eine Ablage ginge verloren.
+  // Ehrlich melden statt still verlieren; das Formular zeigt dann E-Mail und Telefon.
+  if (process.env.VERCEL === "1") return { ok: false, error: "preview" };
+
   // Lokale Ablage (Beurteilungsphase)
   try {
     const dir = path.join(process.cwd(), ".data");

@@ -43,6 +43,9 @@ const legacyRedirects: { source: string; destination: string }[] = [
   { source: "/blog/tracking-werbebudget", destination: "/insights/tracking-werbebudget" },
 ];
 
+/** Vorschau auf Vercel nicht indexieren, bis die Seite unter ecreator.ch live ist (SITE_INDEXING=on, siehe src/lib/preview.ts) */
+const noIndex = process.env.VERCEL === "1" && process.env.SITE_INDEXING !== "on";
+
 const nextConfig: NextConfig = {
   trailingSlash: false,
   poweredByHeader: false,
@@ -66,6 +69,7 @@ const nextConfig: NextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          ...(noIndex ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] : []),
         ],
       },
       {
